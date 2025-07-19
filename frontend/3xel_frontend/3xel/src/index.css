@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  overflow-x: hidden;
+}
+
+body, html, #root {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#file-upload-button {
+  display: none !important;
+}

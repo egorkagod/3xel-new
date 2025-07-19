@@ -1,0 +1,35 @@
+.globalContainer {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+
+    div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .editBtn {
+        display: flex;
+        width: 60%;
+        align-self: center;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border-radius: 100px;
+        border: 1px solid black;
+        padding: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background-color: #d3d3d3;
+        }
+    }
+}

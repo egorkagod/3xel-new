@@ -5,8 +5,8 @@ from rest_framework import serializers
 class RegisterViewSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
-    code = serializers.CharField()
-    first_name = serializers.CharField()
+    email_code = serializers.CharField()
+    name = serializers.CharField()
 
 class LoginViewSerializer(serializers.Serializer):
     email = serializers.EmailField()

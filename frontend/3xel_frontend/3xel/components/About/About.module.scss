@@ -1,0 +1,90 @@
+@font-face {
+    font-family: 'Patrick Hand';
+    src: url('../../public/fonts/patrick_hand/Comfortaa/Comfortaa-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.globalContainer {
+    font-family: 'Patrick Hand', sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 50px;
+    background-image: url('../../public/images/catalogue-bg.avif');
+
+    .section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+
+        .info,
+        .howWork {
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .info,
+        .howWork {
+            background-color: rgb(251, 181, 95);
+        }
+
+        .contacts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+
+            .phoneNumber,
+            .email {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: rgb(247, 238, 209);
+                padding: 10px;
+                gap: 10px;
+                border-radius: 12px;
+
+                a {
+                    text-decoration: none;
+                    transition: all 0.2s ease;
+                    
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+
+        h3 {
+            margin-bottom: 20px;
+        }
+
+        .howWork {
+            grid-column: 1 / 3;
+        }
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    @media (min-width: 768px) {
+        .section {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .section {
+            grid-template-columns: 1fr;
+            gap: 50px;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    }
+}

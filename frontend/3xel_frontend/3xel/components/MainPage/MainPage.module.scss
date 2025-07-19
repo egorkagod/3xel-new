@@ -1,0 +1,22 @@
+.globalContainer {
+    min-width: 100vw;
+    min-height: 100vh;
+    display: grid;
+    gap: 20px;
+    align-items: center;
+    padding: 30px;
+    position: relative;
+    }
+
+@media (min-width: 1024px) {
+    .globalContainer {
+        grid-template-columns: 1fr 1fr;
+        padding: 50px;
+    }
+}
+
+@media (max-width: 1023px) {
+    .globalContainer {
+        grid-template-columns: 1;
+    }
+}

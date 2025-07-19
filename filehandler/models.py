@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 class File(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     name = models.CharField(max_length=250)
     path = models.CharField(max_length=150)
     uploaded_at = models.DateTimeField(auto_now_add=True)

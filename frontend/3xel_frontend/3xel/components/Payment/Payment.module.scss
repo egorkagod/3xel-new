@@ -1,0 +1,184 @@
+.globalContainer {
+    min-width: 100vw;
+    min-height: 100%;
+
+    .leftSide {
+        min-width: 100%;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-image: url('/images/catalogue-bg.avif');
+        box-shadow: inset 2px 2px 15px 2px black;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        gap: 50px;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .paymentBlock {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 50px;
+
+            .contactBlock {
+                display: flex;
+                flex-direction: column;
+                min-width: 100%;
+                gap: 20px;
+
+                input {
+                    all: unset;
+                    border: 2px solid grey;
+                    padding: 10px;
+                    border-radius: 6px;
+                    background-color: white;
+                    transition: all 0.2s ease;
+
+                    &:focus {
+                        border-color: black;
+                    }
+                }
+            }
+
+            .goodsBlock {
+                display: flex;
+                flex-direction: column;
+                min-width: 100%;
+                gap: 20px;
+
+                .item {
+                    display: flex;
+                    border: 1px solid black;
+                    border-radius: 6px;
+                    padding: 5px;
+                    gap: 20px;
+                    background-color: white;
+                    font-size: 14px;
+
+                    .goodInfo {
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+
+
+                        .goodTitle {
+                            display: flex;
+                            justify-content: center;
+                        }
+
+                        .goodProperties {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                        }
+                    }
+                }
+            }
+        }
+
+        .videoBlock {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 50px;
+
+            .instructionsBlock {
+                background-color: rgba(255, 0, 0, 0.3);
+                border-radius: 6px;
+                padding: 10px;
+            }
+        }
+
+        .attachmentBlock {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 12px;
+            width: 80%;
+
+            .retryButton {
+                all: unset;
+                display: flex;
+                gap: 5px;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                padding: 5px;
+                background-color: red;
+                font-weight: 700;
+                border: 1px solid black;
+                border-radius: 12px;
+                width: 50%;
+                transition: all 0.2s ease;
+
+                & img {
+                    transition: all 0.5s ease;
+                }
+
+                &:hover img {
+                    transform: rotate(360deg);
+                }
+
+                &:hover {
+                    background-color: rgb(250, 65, 65);
+                }
+            }
+
+        }
+
+        .toPayBtn {
+            all: unset;
+            border-radius: 100px;
+            color: white;
+            justify-self: flex-end;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 70px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background-color: rgb(40, 40, 40);
+
+            &:hover {
+                background-color: rgb(21, 21, 21);
+            }
+        }
+    }
+
+    .rightSide {
+        min-width: 100%;
+        min-height: 100%;
+        background-color: white;
+        padding: 50px;
+
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .globalContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .leftSide {
+            padding: 50px 50px 50px 200px;
+        }
+    }
+}
+
+@media (max-width: 1023px) {
+    .globalContainer {
+        display: flex;
+        flex-direction: column;
+
+        .leftSide {
+            padding: 10px
+        }
+    }
+}

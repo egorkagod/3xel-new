@@ -1,0 +1,168 @@
+@font-face {
+    font-family: 'Patrick Hand';
+    src: url('/fonts/patrick_hand/Comfortaa/Comfortaa-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.globalContainer {
+    position: absolute;
+    height: 100vh;
+    top: 100%;
+    right: -100%;
+    background-color: rgb(14, 14, 14);
+    transition: all 0.5s ease;
+    padding: 70px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Patrick Hand', sans-serif;
+    font-size: 14px;
+    border-top: 2px solid white;
+
+    &.active {
+        right: 0;
+    }
+
+    .closeBtn {
+        all: unset;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+    .itemContainer {
+        overflow-y: auto;
+        max-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .cartItem {
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid white;
+            border-radius: 6px;
+            padding: 5px;
+            position: relative;
+            background-color: black;
+
+            .productImage {
+                width: 100px;
+                height: 100px;
+            }
+
+            .productInfo {
+                display: flex;
+                justify-content: space-between;
+                flex-direction: column;
+                height: 100%;
+
+                .productTitle {
+                    display: flex;
+                    justify-content: center;
+                }
+
+                .productProperties {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    align-items: center;
+                }
+
+                .colorCircle {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    border: 2px solid grey;
+                }
+            }
+
+            .deleteBtn {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: -30px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .toPayBtn,
+    .clearBtn {
+        all: unset;
+        border-radius: 100px;
+        color: black;
+        justify-self: flex-end;
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 30px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .toPayBtn {
+        background-color: #62f53d;
+
+        &:hover {
+            background-color: rgb(169, 249, 116);
+        }
+    }
+
+    .clearBtn {
+        background-color: rgb(250, 32, 32);
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+
+        &:hover {
+            background-color: rgb(246, 66, 66);
+        }
+    }
+
+    .empty {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+    }
+}
+
+@media (min-width: 1024px) {
+    .globalContainer {
+        width: 50%;
+    }
+
+    .cartItem {
+        width: 70%;
+    }
+}
+
+@media (max-width: 1023px) {
+    .globalContainer {
+        width: 100%;
+        border-top: 1px solid white;
+    }
+
+    .cartItem {
+        width: 80%;
+    }
+}

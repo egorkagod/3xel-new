@@ -6,7 +6,7 @@ from .models import Good, GoodVariant, Order
 
 class OrderViewSerializer(serializers.Serializer):
     goods = serializers.ListField()
-    video_id = serializers.IntegerField()
+    file_id = serializers.IntegerField()
     amount = serializers.IntegerField()
 
 # Model serializers

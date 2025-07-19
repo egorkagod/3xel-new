@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Patrick Hand';
+    src: url('../../../public/fonts/patrick_hand/Comfortaa/Comfortaa-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.globalContainer {
+    color: white;
+    justify-self: center;
+    font-family: 'Patrick Hand', sans-serif;
+    line-height: 1.6;
+
+    .unstyledLink {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .toCotologueBtn {
+        all: unset;
+        margin-top: 20px;
+        border-radius: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        padding: 10px 50px;
+        border: 2px solid white;
+        transition: all 0.2s ease;
+        cursor: pointer;
+
+        &:hover {
+            background-color: white;
+            color: black;
+        }
+    }
+}
+
+@media (min-width: 577px) {
+    .globalContainer {
+        grid-column: 1 / 2;
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 576px) {
+    .globalContainer {
+        grid-row: 2 / 3;
+        font-size: 20px;
+        margin-top: 40px;
+    }
+}

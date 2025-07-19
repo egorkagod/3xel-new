@@ -16,6 +16,9 @@ class EmailCodeView(APIView):
             return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
         
         code = email_rep.send_random_code([email])
+        if not code:
+            return Response({'error': 'Failed with sending code'}, status=status.HTTP_400_BAD_REQUEST)
+
         request.session['email_code'] = code
         request.session['email'] = email
 
@@ -28,24 +31,23 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
 
         email = serializer.validated_data['email']
-        code = serializer.validated_data['code']
+        email_code = serializer.validated_data['email_code']
         password = serializer.validated_data['password']
-        first_name = serializer.validated_data['first_name']
+        name = serializer.validated_data['name']
 
-        if int(code) != request.session.get('email_code'):
+        if int(email_code) != request.session.get('email_code'):
             return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
         elif email != request.session.get('email'):
             return Response({'error': 'Invalid email'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            try:
-                user_rep.create(username=email, email=email, password=password, first_name=first_name)
-                del request.session['email_code']
-                del request.session['email']
-                return Response({'message': 'Registration successful'}, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                print(e) # поправить на Logger
-                return Response({'error': 'Registration failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+            user = user_rep.create(username=email, email=email, password=password, first_name=name)
+            if not user:
+                return Response({'error': 'Failed with creation user'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            del request.session['email_code']
+            del request.session['email']
+            return Response({'message': 'Registration successful'}, status=status.HTTP_200_OK)
+        
 
 class LoginView(APIView):
     def post(self, request):
@@ -53,15 +55,15 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
 
         email = serializer.validated_data['email']
-        code = serializer.validated_data['code']
+        password = serializer.validated_data['password']
 
-        user = authenticate(request, email=email, code=code)
+        user = authenticate(request=request, username=email, password=password)
 
-        if user is not None:
+        if user:
             login(request, user)
             return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Invalid email or code'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid email or password'}, status=status.HTTP_401_UNAUTHORIZED)
         
 
 class LogoutView(APIView):
@@ -73,9 +75,7 @@ class LogoutView(APIView):
     
 
 class UserView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(request):
+    def get(self, request):
         user_id = request.query_params.get('user_id')
         if not user_id:
             return Response({'error': 'User ID is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,5 +89,5 @@ class UserView(APIView):
             return Response({'user': payload}, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    def post(request): # Пока что не меняем данные
+    def post(self, request): # Пока что не меняем данные
         pass

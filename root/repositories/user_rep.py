@@ -2,7 +2,10 @@ from django.contrib.auth.models import User
 
 
 def create(**kwargs):
-    user = User.objects.create_user(**kwargs)
+    try:
+        user = User.objects.create_user(**kwargs)
+    except:
+        user = None
     return user
 
 def get(user_id):

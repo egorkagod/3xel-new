@@ -17,13 +17,13 @@ def upload_chunk(filename, chunk, chunk_number, total_chunks):
     status = _write_that_chunk_upload(filename, chunk_number, total_chunks)
     if status == statuses.ALL_UPLOADED:
         filepath = _get_or_create_filepath(filename, 'uploads')
-        with open(filepath, 'wb') as f:
+        with open(filepath / filename, 'wb') as f:
             for i in range(0, total_chunks):
                 with open(chunks_dir / str(i), 'rb') as chunk_file:
                     f.write(chunk_file.read())
         shutil.rmtree(chunks_dir)
-        File.objects.create(name=filename, path=str(filepath))
-    return status
+        file_id = File.objects.create(name=filename, path=str(filepath))
+    return file_id, status
 
   
 def _get_or_create_filepath(filename, parent_dir='uploads'):

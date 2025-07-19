@@ -39,5 +39,5 @@ class OrderView(APIView):
 
         payment_url = order_service.create(user_id, goods, video_id, amount) # Логика создания заказа вместе с оплатой
         if payment_url:
-            return Response({'payment_url': payment_url}, status=status.HTTP_201_CREATED)
+            return Response({'payment_url': payment_url}, status=status.HTTP_200_OK)
         return Response({'error': 'Failed to create order or init payment'}, status=status.HTTP_400_BAD_REQUEST)

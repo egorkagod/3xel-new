@@ -1,0 +1,18 @@
+.globalContainer {
+    min-width: 100vw;
+    min-height: 100%;
+    position: absolute;
+    z-index: -100;
+    overflow: hidden;
+    left: 0;
+
+    video {
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
