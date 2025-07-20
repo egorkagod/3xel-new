@@ -13,17 +13,25 @@
     gap: 5px;
     font-family: 'Patrick Hand', sans-serif;
     padding: 10px 0;
+    position: relative;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    min-width: 100%;
+    min-height: 100%;
 }
 
 @media (min-width: 1024px) {
     .globalContainer {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 1023px) {
     .globalContainer {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 

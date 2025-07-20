@@ -24,11 +24,17 @@ class GoodVariant(models.Model):
     image = models.ImageField(upload_to='goods/')
     price = models.IntegerField()
 
+    def __str__(self):
+        return self.good + '-' + self.size + '-' + self.color 
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='items')
     good_variant = models.ForeignKey('GoodVariant', on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.quantity} шт ' + self.good_variant 
 
 class Order(models.Model):
     STATUS_CHOICES = (

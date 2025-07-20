@@ -8,11 +8,13 @@
 .globalContainer {
     font-family: 'Patrick Hand', sans-serif;
     line-height: 1.6;
+    font-size: 16px;
     display: flex;
     flex-direction: column;
     padding: 10px;
     gap: 50px;
-    background-image: url('../../public/images/catalogue-bg.avif');
+    background: #fbeed6;
+    color: #3c2f1e;
 
     .section {
         display: grid;
@@ -22,12 +24,13 @@
         .info,
         .howWork {
             padding: 10px;
-            border-radius: 12px;
+            border-radius: 16px;
         }
 
         .info,
         .howWork {
-            background-color: rgb(251, 181, 95);
+            background-color: #fff2db;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
 
         .contacts {
@@ -44,7 +47,8 @@
                 background-color: rgb(247, 238, 209);
                 padding: 10px;
                 gap: 10px;
-                border-radius: 12px;
+                border-radius: 16px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 
                 a {
                     text-decoration: none;

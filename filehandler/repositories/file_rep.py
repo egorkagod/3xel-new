@@ -8,28 +8,35 @@ from .. import statuses
 from filehandler.models import File
 
 
-def upload_chunk(filename, chunk, chunk_number, total_chunks):
+def upload_chunk(user_id, filename, chunk, chunk_number, total_chunks):
     # Логика сохранения части файла
-    chunks_dir = _get_or_create_filepath(filename, 'chunks')
-    with open(chunks_dir / str(chunk_number), 'wb') as f:
+    path = Path(filename) / str(chunk_number)
+    chunk_path = _get_or_create_filepath(path, 'chunks')
+    with open(chunk_path, 'wb') as f:
         f.write(chunk)
 
     status = _write_that_chunk_upload(filename, chunk_number, total_chunks)
+    file_id = -1
     if status == statuses.ALL_UPLOADED:
+        filename += '.mp4' #TODO Поменять когда будут приходить форматы
+        chunks_dir = chunk_path.parent
         filepath = _get_or_create_filepath(filename, 'uploads')
-        with open(filepath / filename, 'wb') as f:
+        with open(filepath, 'wb') as f:
             for i in range(0, total_chunks):
                 with open(chunks_dir / str(i), 'rb') as chunk_file:
                     f.write(chunk_file.read())
         shutil.rmtree(chunks_dir)
-        file_id = File.objects.create(name=filename, path=str(filepath))
+
+        file = File.objects.create(user_id=user_id, name=filename, path=str(filepath))
+        file_id = file.id
+
     return file_id, status
 
   
 def _get_or_create_filepath(filename, parent_dir='uploads'):
     # Логика создания пути к файлу
     filepath = Path(settings.BASE_DIR) / parent_dir / filename
-    filepath.mkdir(parents=True, exist_ok=True)
+    filepath.parent.mkdir(parents=True, exist_ok=True)
     return filepath
 
 def _write_that_chunk_upload(filename, chunk_number, total_chunks):

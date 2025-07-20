@@ -1,6 +1,8 @@
 import classes from './Slider.module.scss'
-import slide1 from '../../../../public/images/slide1.jpg'
-import slide2 from '../../../../public/images/slide2.jpg'
+import slide1 from '/images/slide1.jpg'
+import slide2 from '/images/slide2.jpg'
+import slide3 from '/images/slide3.jpg'
+import slide4 from '/images/slide4.jpg'
 import sliderArrow from '../../../../public/images/slider-arrow.png'
 import { useState } from 'react'
 import classNames from 'classnames'
@@ -10,7 +12,7 @@ export default function Slider() {
     const [activeSlide, setActiveSlide] = useState(0)
 
     const slides = [
-        slide1, slide2
+        slide1, slide2, slide3, slide4
     ]
 
     const toNext = () => {

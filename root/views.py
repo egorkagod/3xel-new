@@ -75,15 +75,10 @@ class LogoutView(APIView):
     
 
 class UserView(APIView):
-    def get(self, request):
-        user_id = request.query_params.get('user_id')
-        if not user_id:
-            return Response({'error': 'User ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        if user_id != request.user.id: # В будущем возможен расширенный доступ
-            return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
-        
-        user = user_rep.get(user_id)
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):                
+        user = user_rep.get(request.user.id)
         if user:
             payload = UserModelSerializer(user).data
             return Response({'user': payload}, status=status.HTTP_200_OK)

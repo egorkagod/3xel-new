@@ -1,6 +1,4 @@
 import classes from './About.module.scss'
-import phoneIcon from '../../public/images/phone-icon.png'
-import mailIcon from '../../public/images/mail-icon.png'
 
 export default function About() {
     return (
@@ -8,19 +6,25 @@ export default function About() {
             <h2>О нас</h2>
             <section className={classes.section}>
                 <div className={classes.info}>
-                    <h3>Добро пожаловать в 3xel — ваш персональный портал в мир уникальных бюстов!</h3>
+                    <h3 style={{ fontSize: '24px' }}>Добро пожаловать в 3xel — ваш персональный портал в мир уникальных бюстов!</h3>
                     <p>
                         Мы — молодая и амбициозная компания, которая только начала свой путь на рынке, но уже готова предложить вам нечто особенное. В 3xel мы превращаем ваши идеи в реальность, создавая бюсты на заказ с использованием передовых технологий и экологичных материалов.
                     </p>
                 </div>
                 <div className={classes.contacts}>
                     <div className={classes.phoneNumber}>
-                        <img src={phoneIcon} alt="phone" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" width='30' height='30'>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0 6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
+                        </svg>
+
                         <span>Остались вопросы?</span>
                         <span>Позвоните нам: <a href="tel:+78989982313">+78989982313</a></span>
                     </div>
                     <div className={classes.email}>
-                        <img src={mailIcon} alt="email" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill='none' viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" width='30' height='30' color='black'>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                        </svg>
+
                         <span>Остались вопросы?</span>
                         <span>Напишите нам: <a href="mailto:example@example.com">example@example.com</a></span>
                     </div>
@@ -28,7 +32,7 @@ export default function About() {
             </section>
             <section className={classes.section}>
                 <div className={classes.howWork}>
-                    <h3>Как мы работаем?</h3>
+                    <h3 style={{ fontSize: '24px' }}>Как мы работаем?</h3>
                     <p>
                         Всё просто! Вы присылаете нам видео, на котором человек обходит вашу модель со всех сторон. Затем вы выбираете тип бюста:<br />
                         •	<b>3D-печать из PLA-пластика.</b> Этот экологичный материал не только безопасен для окружающей среды, но и обеспечивает высокую детализацию и прочность готового изделия. PLA-пластик производится из возобновляемых ресурсов, таких как кукуруза или картофельный крахмал, что делает его отличным выбором для тех, кто заботится о природе.<br />

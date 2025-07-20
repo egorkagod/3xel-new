@@ -11,8 +11,9 @@ import classNames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 import { getCookie } from "../../utils/cookie.js"
 import { toast } from 'react-toastify'
-import { setAuthorized, updateProfile } from '../store/profileSlice.jsx'
+import { setAuthorized } from '../store/profileSlice.jsx'
 import { useDispatch } from 'react-redux'
+import toMainArrowIcon from '/images/arrow-to-main.png'
 
 export default function Login() {
     const [enteredEmail, setEnteredEmail] = useState('')
@@ -48,7 +49,6 @@ export default function Login() {
                 throw new Error("Что-то пошло не так")
             }
 
-            dispatcher(updateProfile(data))
             dispatcher(setAuthorized(true))
             navigate('/')
             toast.success('Вы успешно вошли!')
@@ -61,6 +61,7 @@ export default function Login() {
 
     return (
         <div className={classes.globalContainer}>
+            <button className={classes.toMainBtn} onClick={() => navigate('/')}><img src={toMainArrowIcon} alt="arrow" style={{ width: '30px', height: '30px' }} />На главную</button>
             <VideoFrame></VideoFrame>
             <div className={classes.overlay}>
                 <div className={classes.loginBlock}>

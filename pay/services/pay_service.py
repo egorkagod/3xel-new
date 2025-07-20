@@ -3,6 +3,9 @@ import requests
 import hashlib
 from dotenv import load_dotenv
 
+from django.urls import reverse
+from django.conf import settings
+
 from pay.serializers import InitPaySerializer
 from order.models import Order
 
@@ -22,8 +25,8 @@ def init(order_id, amount):
         'Description': 'Оплата заказа',
         'PayType': 'O',
         'Language': 'ru',
-        'NotificationURL': 'https://example.com/notification',
-        'SuccessURL': 'https://example.com/success',
+        'NotificationURL': settings.SITE_DOMEN + reverse('pay:notification'),
+        'SuccessURL': settings.SITE_DOMEN + '', #TODO Добавить ссылку на профиль пользователя
     }
 
     payload = _sign_by_token(payload)
@@ -33,7 +36,7 @@ def init(order_id, amount):
     serializer.is_valid(raise_exception=True)
 
     if serializer.validated_data['success']:
-        order = Order.objects.filter(id=order_id).first()
+        order = Order.objects.filter(pk=order_id).first()
         order.payment_id = serializer.validated_data['payment_id']
         order.save()
         return serializer.validated_data['payment_url']

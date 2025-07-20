@@ -1,6 +1,6 @@
 .globalContainer {
     width: 100%;
-    height: 400px;
+    height: 450px;
     cursor: pointer;
     position: relative;
     background-position: center;
@@ -26,13 +26,14 @@
         }
 
         .productFooter {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
 
             .colors {
                 display: flex;
-                justify-content: space-between;
+                justify-content: flex-start;
+                flex-wrap: wrap;
                 align-items: center;
                 gap: 5px;
 
@@ -50,7 +51,8 @@
 
             .sizes {
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start;
+                flex-wrap: wrap;
                 align-items: center;
                 gap: 10px;
 
@@ -70,6 +72,10 @@
                 color: black;
                 transition: all 0.2s ease;
                 font-size: 12px;
+                height: fit-content;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 &:hover {
                     background-color: white;

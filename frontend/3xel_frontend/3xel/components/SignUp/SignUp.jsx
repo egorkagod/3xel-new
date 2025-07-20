@@ -5,6 +5,7 @@ import passwordIcon from '/images/password-icon.png'
 import userIcon from '/images/user-icon.png'
 import openedEye from '/images/opened-eye.png'
 import closedEye from '/images/closed-eye.png'
+import toMainArrowIcon from '/images/arrow-to-main.png'
 import { useState } from 'react'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router'
@@ -105,6 +106,7 @@ export default function SignUp() {
 
     return (
         <div className={classes.globalContainer}>
+            <button className={classes.toMainBtn} onClick={() => navigate('/login')}><img src={toMainArrowIcon} alt="arrow" style={{ width: '30px', height: '30px' }} />Назад</button>
             <VideoFrame></VideoFrame>
             <div className={classes.overlay}>
                 <div className={classes.signUpBlock}>
@@ -131,7 +133,7 @@ export default function SignUp() {
                         <div className={classes.formField}>
                             <div className={classes.inputField}>
                                 <img src={passwordIcon} alt="" aria-hidden="true" />
-                                <input type={showPassword ? 'text' : 'password'} name='password' autoComplete='new-password' placeholder='Придумайте пароль' autoCorrect="off" autoCapitalize="off" onFocus={() => setPasswordError('')} onChange={(e) => setPassword(e.target.value)} className={classNames(classes.input, { [classes.notValid]: passwordError })} style={{padding: '10px 30px 10px 10px'}} />
+                                <input type={showPassword ? 'text' : 'password'} name='password' autoComplete='new-password' placeholder='Придумайте пароль' autoCorrect="off" autoCapitalize="off" onFocus={() => setPasswordError('')} onChange={(e) => setPassword(e.target.value)} className={classNames(classes.input, { [classes.notValid]: passwordError })} style={{ padding: '10px 30px 10px 10px' }} />
                                 <button type='button' style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: '50%', right: '0', transform: 'translateY(-50%)' }} onClick={() => setShowPassword(prev => !prev)}><img style={{ width: '25px', height: '25px' }} src={showPassword ? openedEye : closedEye} alt="show password" /></button>
                             </div>
                             <span>{passwordError}</span>
@@ -139,7 +141,7 @@ export default function SignUp() {
                         <div className={classes.formField}>
                             <div className={classes.inputField}>
                                 <img src={passwordIcon} alt="" aria-hidden="true" />
-                                <input type={showConfirmPassword ? 'text' : 'password'} name='confirmPassword' autoComplete='new-password' placeholder='Повторите пароль' autoCorrect="off" autoCapitalize="off" onFocus={() => setConfirmPasswordError('')} onChange={(e) => setConfirmPassword(e.target.value)} className={classNames(classes.input, { [classes.notValid]: confirmPasswordError })} style={{padding: '10px 30px 10px 10px'}} />
+                                <input type={showConfirmPassword ? 'text' : 'password'} name='confirmPassword' autoComplete='new-password' placeholder='Повторите пароль' autoCorrect="off" autoCapitalize="off" onFocus={() => setConfirmPasswordError('')} onChange={(e) => setConfirmPassword(e.target.value)} className={classNames(classes.input, { [classes.notValid]: confirmPasswordError })} style={{ padding: '10px 30px 10px 10px' }} />
                                 <button type='button' style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: '50%', right: '0', transform: 'translateY(-50%)' }} onClick={() => setShowConfirmPassword(prev => !prev)}><img style={{ width: '25px', height: '25px' }} src={showConfirmPassword ? openedEye : closedEye} alt="show password" /></button>
                             </div>
                             <span>{confirmPasswordError}</span>

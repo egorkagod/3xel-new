@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 from . import statuses
 
@@ -22,9 +23,10 @@ class UploadFileView(APIView):
         chunk_number = serializer.validated_data['chunkIndex']
         total_chunks = serializer.validated_data['totalChunks']
         
-        file_id, status = file_rep.upload_chunk(filename, chunk, chunk_number, total_chunks)
-        if status == statuses.ALL_UPLOADED:
-            return Response({'message': 'File uploaded successfully', 'file_id': file_id}, status=status.H)
-        elif status == statuses.UPLOADED:
+        user_id = request.user.id
+        file_id, result = file_rep.upload_chunk(user_id, filename, chunk, chunk_number, total_chunks)
+        if result == statuses.ALL_UPLOADED:
+            return Response({'message': 'File uploaded successfully', 'file_id': file_id}, status=status.HTTP_200_OK)
+        elif result == statuses.UPLOADED:
             return Response({'message': 'Chunk uploaded successfully'}, status=200)
         return Response({'message': 'Error uploading file'}, status=500)

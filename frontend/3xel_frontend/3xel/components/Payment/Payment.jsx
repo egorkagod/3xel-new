@@ -5,6 +5,9 @@ import PaymentForm from './PaymentIntegration/PaymentIntegration'
 import retryIcon from '/images/retry-icon.png'
 import fileIcon from '/images/file-icon.png'
 import successIcon from '/images/success-icon.png'
+import deleteIcon from '/images/cart-delete-btn.png'
+import toMainArrowIcon from '/images/arrow-to-main.png'
+import { useNavigate } from 'react-router'
 
 export default function Payment() {
     const orderItems = useSelector((state) => state.cart.items)
@@ -12,10 +15,13 @@ export default function Payment() {
     const [status, setStatus] = useState(null)
     const [progress, setProgress] = useState(0)
     const [showButton, setShowButton] = useState(false)
+    const [showInput, setShowInput] = useState(true)
+    const navigate = useNavigate()
 
     const fileRef = useRef(null)
     const lastUploadedChunkRef = useRef(0)
     const fileIdRef = useRef(Math.floor(Math.random() * 10 ** 5))
+    const fileInputRef = useRef(null)
 
     const CHUNK_SIZE = 1 * 1024 * 1024
     const MAX_ATTEMPTS = 3
@@ -35,6 +41,7 @@ export default function Payment() {
         const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
 
         setUploading(true)
+        setShowInput(false)
         setStatus('Загрузка...')
 
         for (let chunkIndex = startChunkIndex; chunkIndex < totalChunks; chunkIndex++) {
@@ -69,14 +76,14 @@ export default function Payment() {
             }
 
             if (!success) {
-                setStatus('Ошибка при загрузке файла')
+                setStatus(`Ошибка при загрузке файла ${fileRef.current.name}`)
                 setUploading(false)
                 setShowButton(true)
                 return
             }
         }
 
-        setStatus(`Файл ${file.name} загружен`)
+        setStatus(`Файл ${fileRef.current.name} загружен`)
         setUploading(false)
     }
 
@@ -89,8 +96,20 @@ export default function Payment() {
         event.preventDefault()
     }
 
+    const clearFiles = () => {
+        setShowInput(true)
+        setProgress(0)
+        setShowButton(false)
+        setStatus('')
+        setUploading(false)
+        fileInputRef.current.value = ''
+        fileRef.current = null
+        fileIdRef.current = null
+    }
+
     return (
         <main className={classes.globalContainer}>
+            <button className={classes.toMainBtn} onClick={() => navigate('/catalogue')}><img src={toMainArrowIcon} alt="arrow" style={{ width: '30px', height: '30px' }} />В каталог</button>
             <section className={classes.leftSide}>
                 <div className={classes.paymentBlock}>
                     <div className={classes.contactBlock}>
@@ -108,6 +127,9 @@ export default function Payment() {
                                         borderRadius: '6px',
                                         width: '100px',
                                         height: '100px',
+                                        backgroundSize: 'cover',
+                                        backgroundRepeat: 'no-repeat',
+                                        backgroundPosition: 'center'
                                     }}
                                 ></div>
                                 <div className={classes.goodInfo}>
@@ -189,9 +211,22 @@ export default function Payment() {
                                 width: '100%'
                             }}
                         >
-                            <h3 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={fileIcon} alt="file" style={{ width: '50px', height: '50px' }} />Перетащите файл сюда</h3>
+                            <h3 style={{ display: showInput ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center' }}><img src={fileIcon} alt="file" style={{ width: '50px', height: '50px' }} />Перетащите или <button className={classes.addFileBtn} onClick={() => fileInputRef.current?.click()}>выберите файл</button></h3>
+                            <input type="file" onChange={(e) => {
+                                const fakeEvent = {
+                                    preventDefault: () => { },
+                                    dataTransfer: {
+                                        files: e.target.files,
+                                    },
+                                }
+
+                                handleDrop(fakeEvent)
+                            }} ref={fileInputRef} style={{ display: 'none' }} accept='.mp4, .webm' />
                             {uploading && <p>Загрузка: {progress}%</p>}
-                            {!uploading && status && <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>{status}</p>}
+                            {!uploading && status && <div style={{ display: 'flex', alignItems: 'center', padding: '10px', border: '2px solid black', borderRadius: '6px', gap: '5px' }}>
+                                <button style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', borderRight: '1px solid black' }} onClick={clearFiles}><img style={{ width: '25px', height: '25px' }} src={deleteIcon} alt="delete" /></button>
+                                <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>{status}</p>
+                            </div>}
                             {showButton && <button onClick={retryUpload} className={classes.retryButton}><img src={retryIcon} alt="retry" />Попробовать снова</button>}
                         </div>
                     </div>
