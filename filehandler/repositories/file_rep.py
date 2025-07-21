@@ -8,7 +8,7 @@ from .. import statuses
 from filehandler.models import File
 
 
-def upload_chunk(user_id, filename, chunk, chunk_number, total_chunks):
+def upload_chunk(user_id, filename, format, chunk, chunk_number, total_chunks):
     # Логика сохранения части файла
     path = Path(filename) / str(chunk_number)
     chunk_path = _get_or_create_filepath(path, 'chunks')
@@ -18,7 +18,7 @@ def upload_chunk(user_id, filename, chunk, chunk_number, total_chunks):
     status = _write_that_chunk_upload(filename, chunk_number, total_chunks)
     file_id = -1
     if status == statuses.ALL_UPLOADED:
-        filename += '.mp4' #TODO Поменять когда будут приходить форматы
+        filename = filename + '.' + format
         chunks_dir = chunk_path.parent
         filepath = _get_or_create_filepath(filename, 'uploads')
         with open(filepath, 'wb') as f:

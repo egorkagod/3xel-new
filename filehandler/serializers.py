@@ -7,3 +7,4 @@ class ChunkViewSerializer(serializers.Serializer):
     totalChunks = serializers.IntegerField()
     fileId = serializers.CharField()
     filename = serializers.CharField()
+    format = serializers.CharField()

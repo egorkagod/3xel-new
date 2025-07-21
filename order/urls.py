@@ -7,5 +7,5 @@ app_name = 'order'
 
 urlpatterns = [
     path('catalog/', CatalogView.as_view(), name='catalog'),
-    path('order/', OrderView.as_view(), name='order'),
+    path('create/', OrderView.as_view(), name='order'),
 ]

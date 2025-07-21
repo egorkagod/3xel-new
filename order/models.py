@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from filehandler.models import File
+from pay.models import Payment
 
 
 class Good(models.Model):
@@ -21,7 +22,7 @@ class GoodVariant(models.Model):
     good = models.ForeignKey(Good, on_delete=models.CASCADE, related_name='variants')
     size = models.CharField(max_length=2, choices=SIZE_CHOICES)
     color = models.CharField(max_length=20)
-    image = models.ImageField(upload_to='goods/')
+    image = models.CharField()
     price = models.IntegerField()
 
     def __str__(self):
@@ -45,7 +46,7 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='orders')
-    payment_id = models.CharField(max_length=250, null=True, blank=True)
+    payment = models.ForeignKey(Payment, on_delete=models.PROTECT)
     amount = models.IntegerField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='C')
     video = models.OneToOneField(File, on_delete=models.SET_NULL, null=True)

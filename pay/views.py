@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 
-class NotificationView(APIView):
-    # сюда будет приходить инфа по оплатам
-    pass
+class NotificationView(APIView): # TODO Написать view для получения статусов от Т-Бизнес
+    def post(self, request):
+        print(request.data)
+        return Response(status=status.HTTP_200_OK)
