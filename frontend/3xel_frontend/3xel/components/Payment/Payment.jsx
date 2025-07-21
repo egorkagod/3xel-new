@@ -8,8 +8,10 @@ import deleteIcon from '/images/cart-delete-btn.png'
 import toMainArrowIcon from '/images/arrow-to-main.png'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import { getCookie } from '../../utils/cookie'
 
 export default function Payment() {
+    const csrfToken = getCookie('csrftoken')
     const orderItems = useSelector((state) => state.cart.items)
     const [uploading, setUploading] = useState(false)
     const [status, setStatus] = useState(null)
@@ -20,6 +22,8 @@ export default function Payment() {
     const [id, setId] = useState(null)
     const [redirectURL, setRedirectURL] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
+    const goodsId = orderItems.map(good => good.id)
+    const amount = orderItems.reduce((acc, item) => acc + item.cost, 0)
 
     const fileRef = useRef(null)
     const lastUploadedChunkRef = useRef(0)
@@ -63,6 +67,10 @@ export default function Payment() {
             for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
                 try {
                     const response = await fetch('http://localhost:8000/api-file/upload/', {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
                         method: 'POST',
                         body: formData,
                     })
@@ -121,10 +129,14 @@ export default function Payment() {
         try {
             setIsLoading(true)
             const response = await fetch('http://localhost:8000/api-order/create/', {
-                        method: 'POST',
-                        body: formData,
-                    })
-            
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                method: 'POST',
+                body: JSON.stringify({ video_id: id, goods: goodsId, amount  }),
+            })
+
             if (!response.ok) throw new Error('Произошла ошибка при оплате')
 
             const data = await response.json()
