@@ -68,9 +68,9 @@ export default function Payment() {
                 try {
                     const response = await fetch('http://localhost:8000/api-file/upload/', {
                         headers: {
-                            'Content-Type': 'application/json',
                             'X-CSRFToken': csrfToken,
                         },
+                        credentials: 'include',
                         method: 'POST',
                         body: formData,
                     })
@@ -133,6 +133,7 @@ export default function Payment() {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,
                 },
+                credentials: 'include',
                 method: 'POST',
                 body: JSON.stringify({ video_id: id, goods: goodsId, amount  }),
             })

@@ -11,7 +11,7 @@ from .serializers import ChunkViewSerializer
 
 
 class UploadFileView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
