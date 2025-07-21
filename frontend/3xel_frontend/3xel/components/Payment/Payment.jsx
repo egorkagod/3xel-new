@@ -1,13 +1,13 @@
 import classes from './Payment.module.scss'
 import { useSelector } from 'react-redux'
 import { useRef, useState } from 'react'
-import PaymentForm from './PaymentIntegration/PaymentIntegration'
 import retryIcon from '/images/retry-icon.png'
 import fileIcon from '/images/file-icon.png'
 import successIcon from '/images/success-icon.png'
 import deleteIcon from '/images/cart-delete-btn.png'
 import toMainArrowIcon from '/images/arrow-to-main.png'
 import { useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 
 export default function Payment() {
     const orderItems = useSelector((state) => state.cart.items)
@@ -17,6 +17,9 @@ export default function Payment() {
     const [showButton, setShowButton] = useState(false)
     const [showInput, setShowInput] = useState(true)
     const navigate = useNavigate()
+    const [id, setId] = useState(null)
+    const [redirectURL, setRedirectURL] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const fileRef = useRef(null)
     const lastUploadedChunkRef = useRef(0)
@@ -36,6 +39,8 @@ export default function Payment() {
         }
 
         const file = fileRef.current
+        const chars = file.name.split('.')
+        const format = '.' + chars[chars.length - 1]
         if (!file) return
 
         const totalChunks = Math.ceil(file.size / CHUNK_SIZE)
@@ -51,7 +56,7 @@ export default function Payment() {
             formData.append('chunkIndex', chunkIndex)
             formData.append('totalChunks', totalChunks)
             formData.append('fileId', fileIdRef.current)
-            formData.append('filename', file.name)
+            formData.append('format', format)
 
             let success = false
 
@@ -67,6 +72,11 @@ export default function Payment() {
                     success = true
                     lastUploadedChunkRef.current = chunkIndex + 1
                     setProgress(Math.round(((chunkIndex + 1) / totalChunks) * 100))
+
+                    if (chunkIndex === totalChunks - 1) {
+                        const data = await response.json()
+                        setId(data)
+                    }
                     break
                 } catch (err) {
                     if (attempt < MAX_ATTEMPTS - 1) {
@@ -105,6 +115,26 @@ export default function Payment() {
         fileInputRef.current.value = ''
         fileRef.current = null
         fileIdRef.current = null
+    }
+
+    const toPay = async () => {
+        try {
+            setIsLoading(true)
+            const response = await fetch('http://localhost:8000/api-order/create/', {
+                        method: 'POST',
+                        body: formData,
+                    })
+            
+            if (!response.ok) throw new Error('Произошла ошибка при оплате')
+
+            const data = await response.json()
+
+            window.location.href = data
+        } catch (err) {
+            toast.error(err.message)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -257,8 +287,13 @@ export default function Payment() {
                         Общая стоимость: {orderItems.reduce((acc, item) => acc + item.cost, 0)} руб.
                     </span>
 
-                    <PaymentForm amount={orderItems.reduce((acc, item) => acc + item.cost, 0)} />
-                    <button className={classes.toPayBtn}>Оплатить</button>
+                    <button className={classes.toPayBtn} onClick={toPay}>
+                        {
+                            isLoading ? <span>Загрузка...</span> : (
+                                <span>Оплата</span>
+                            )
+                        }
+                    </button>
                 </div>
             </section>
 

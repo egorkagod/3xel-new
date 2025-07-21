@@ -70,7 +70,10 @@ function App() {
             <Catalogue />
             <Footer></Footer>
           </>} />
-          <Route path='/good/:id' element={<GoodPage />} />
+          <Route path='/good/:id' element={<>
+            <Header></Header>
+            <GoodPage />
+          </>} />
           <Route path='/profile' element={<>
             <Header></Header>
             <Profile></Profile>

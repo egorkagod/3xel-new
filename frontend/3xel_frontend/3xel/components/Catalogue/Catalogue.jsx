@@ -14,6 +14,8 @@ import variantImage4954 from '/images/good-variant-49-54.jpg'
 import variantImage5560 from '/images/good-variant-55-60.jpg'
 import variantImage6166 from '/images/good-variant-61-66.jpg'
 import variantImage67 from '/images/good-variant-67.jpg'
+import { useDispatch } from 'react-redux'
+import { addGoods } from '../store/goodsSlice'
 
 export default function Catalogue() {
 
@@ -467,6 +469,8 @@ export default function Catalogue() {
         }
     ]
 
+    const dispatcher = useDispatch()
+    dispatcher(addGoods(products))
 
     return (
         <main className={classes.globalContainer}>
