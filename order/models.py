@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from filehandler.models import File
 from pay.models import Payment
@@ -12,21 +13,20 @@ class Good(models.Model):
     def __str__(self):
         return self.name
 
-class GoodVariant(models.Model):
-    SIZE_CHOICES = (
-        ('S', 'Small'),
-        ('L', 'Large'),
-        ('XL', 'Extra Large'),
-    )
+def timestamp_filename(instance, filename):
+    ext = filename.split('.')[-1]
+    timestamp = timezone.now().strftime("%Y%m%d_%H%M%S")
+    return f"catalog/images/{timestamp}.{ext}"
 
+class GoodVariant(models.Model):
     good = models.ForeignKey(Good, on_delete=models.CASCADE, related_name='variants')
-    size = models.CharField(max_length=2, choices=SIZE_CHOICES)
+    size = models.IntegerField()
     color = models.CharField(max_length=20)
-    image = models.CharField()
+    image = models.ImageField(upload_to=timestamp_filename)
     price = models.IntegerField()
 
     def __str__(self):
-        return self.good + '-' + self.size + '-' + self.color 
+        return str(self.good) + '-' + str(self.size) + '-' + self.color 
 
 
 class OrderItem(models.Model):

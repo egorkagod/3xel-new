@@ -19,7 +19,7 @@ import { addGoods } from '../store/goodsSlice'
 
 export default function Catalogue() {
 
-    const [products, setProducts] = useState()
+    const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {

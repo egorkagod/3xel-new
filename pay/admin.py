@@ -5,4 +5,4 @@ from .models import Payment
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    fields = ['__all__']
+    fields = None
