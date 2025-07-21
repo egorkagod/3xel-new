@@ -22,7 +22,7 @@ def init(order_id, amount):
     payload = {
         'TerminalKey': os.getenv('TERMINAL_KEY'),
         'Amount': amount,
-        'OrderId': order_id,
+        'OrderId': str(order_id),
         'Description': 'Оплата заказа',
         'PayType': 'O',
         'Language': 'ru',
@@ -32,17 +32,18 @@ def init(order_id, amount):
 
     payload = _sign_by_token(payload)
     response = requests.post(url, headers=headers, json=payload)
+    data = response.json()
 
-    serializer = InitPaySerializer(data=response.json())
-    serializer.is_valid(raise_exception=True)
+    # serializer = InitPaySerializer(data=response.json())
+    # serializer.is_valid(raise_exception=True)
 
-    if serializer.validated_data['success']:
-        payment_id = serializer.validated_data['payment_id']
-        payment = pay_service.create(id=payment_id, ampunt=amount)
+    if data:
+        payment_id = data['PaymentId']
+        payment = pay_service.create(id=payment_id, amount=amount)
         order = Order.objects.filter(pk=order_id).first()
         order.payment = payment
         order.save()
-        return serializer.validated_data['payment_url']
+        return data['PaymentURL']
     else:
         return False
     
@@ -50,10 +51,11 @@ def _sign_by_token(payload):
     payload['Token'] = _get_token(payload)
     return payload
 
-def _get_token(payload): # сделать с мапой
-    payload = _filter_payload(payload)
+def _get_token(payload):
+    payload = payload.copy()
+    # payload = _filter_payload(payload)
     payload['Password'] = os.getenv('TERMINAL_PASSWORD')
-    string = ' '.join(str(item[1]) for item in sorted(payload.items()))
+    string = ''.join([str(item[1]) for item in sorted(payload.items())])
     bytes = string.encode('utf-8')
     hash_object = hashlib.sha256(bytes)
     token = hash_object.hexdigest()

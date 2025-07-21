@@ -83,7 +83,7 @@ export default function Payment() {
 
                     if (chunkIndex === totalChunks - 1) {
                         const data = await response.json()
-                        setId(data.video_id)
+                        setId(data.file_id)
                     }
                     break
                 } catch (err) {

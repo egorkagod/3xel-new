@@ -46,7 +46,7 @@ class Order(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='orders')
-    payment = models.ForeignKey(Payment, on_delete=models.PROTECT)
+    payment = models.ForeignKey(Payment, on_delete=models.PROTECT, null=True) # временно null=True
     amount = models.IntegerField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='C')
     video = models.OneToOneField(File, on_delete=models.SET_NULL, null=True)
