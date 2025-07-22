@@ -8,3 +8,4 @@ media/
 chunks/
 uploads/
 db.sqlite3/
+logging/*

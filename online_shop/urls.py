@@ -6,5 +6,5 @@ urlpatterns = [
     path('api-file/', include('filehandler.urls')),
     path('api-order/', include('order.urls')),
     path('api-root/', include('root.urls')),
-    path('api-pay', include('pay.urls')),
+    path('api-pay/', include('pay.urls')),
 ]
