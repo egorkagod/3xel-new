@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Cart from './Cart/Cart'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 export default function Header() {
     const cartData = useSelector(state => state.cart.items)
@@ -28,6 +29,14 @@ export default function Header() {
 
         return () => document.removeEventListener('mousedown', handleClickOverCart)
     }, [activeCart])
+
+    const toPay = () => {
+        if (isAuthorized) {
+            setActiveCart(false)
+        } else {
+            toast.error('Для оформления заказа необходимо авторизоваться')
+        }
+    }
 
     return (
         <header className={classes.globalContainer}>
@@ -79,7 +88,7 @@ export default function Header() {
 
                 </ul>
             </div>
-            <Cart ref={cartRef} cartData={cartData} isActive={activeCart} onClick={() => setActiveCart(prev => !prev)} toPay={() => setActiveCart(false)}></Cart>
+            <Cart ref={cartRef} cartData={cartData} isActive={activeCart} onClick={() => setActiveCart(prev => !prev)} toPay={toPay}></Cart>
         </header>
     )
 }

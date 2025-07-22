@@ -4,15 +4,17 @@ import classNames from 'classnames'
 import closeBtn from '../../../public/images/close-btn.png'
 import deleteBtn from '/images/cart-delete-btn.png'
 import DeleteModal from './DeleteModal/DeleteModal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { removeFromCart, clearCart } from '../../store/cartSlice'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const Cart = forwardRef(({ isActive, cartData, onClick, toPay }, ref) => {
     const [activeModal, setActiveModal] = useState(false)
     const [activeClearModal, setActiveClearModal] = useState(false)
     const [goodToRemove, setGoodToRemove] = useState()
     const dispatch = useDispatch()
+    const isAuthorized = useSelector(state => state.profile.authorized)
+    const location = useLocation()
 
     return (
         <div ref={ref} className={classNames(classes.globalContainer, { [classes.active]: isActive })}>
@@ -54,7 +56,7 @@ const Cart = forwardRef(({ isActive, cartData, onClick, toPay }, ref) => {
                             </div>
                         ))}
                     </div>
-                    <Link style={{ all: 'unset' }} to='/payment' onClick={toPay}>
+                    <Link style={{ all: 'unset' }} to={isAuthorized ? '/payment' : location.pathname} onClick={toPay}>
                         <button className={classes.toPayBtn}>
                             Оплатить: {cartData.reduce((acc, item) => acc + item.cost, 0)} руб.
                         </button>

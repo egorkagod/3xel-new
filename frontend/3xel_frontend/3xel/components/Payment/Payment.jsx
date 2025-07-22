@@ -126,28 +126,33 @@ export default function Payment() {
     }
 
     const toPay = async () => {
-        try {
-            setIsLoading(true)
-            const response = await fetch('/api-order/create/', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,
-                },
-                credentials: 'include',
-                method: 'POST',
-                body: JSON.stringify({ video_id: id, goods: goodsId, amount  }),
-            })
+        if (id) {
+            try {
+                setIsLoading(true)
+                const response = await fetch('/api-order/create/', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    credentials: 'include',
+                    method: 'POST',
+                    body: JSON.stringify({ video_id: id, goods: goodsId, amount }),
+                })
 
-            if (!response.ok) throw new Error('Произошла ошибка при оплате')
+                if (!response.ok) throw new Error('Произошла ошибка при оплате')
 
-            const data = await response.json()
+                const data = await response.json()
 
-            window.location.href = data.payment_url
-        } catch (err) {
-            toast.error(err.message)
-        } finally {
-            setIsLoading(false)
+                window.location.href = data.payment_url
+            } catch (err) {
+                toast.error(err.message)
+            } finally {
+                setIsLoading(false)
+            }
+        } else {
+            toast.error('Для оплаты необходимо прикрепить видео')
         }
+
     }
 
     return (
