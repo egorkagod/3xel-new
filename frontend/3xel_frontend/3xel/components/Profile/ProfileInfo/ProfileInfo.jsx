@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 export default function ProfileInfo() {
 
     const [editModalIsActive, setEditModalIsActive] = useState(false)
-    const profile = useSelector(state.profile.profileData)
+    const profile = useSelector(state => state.profile.profileData)
     
 
     return (
