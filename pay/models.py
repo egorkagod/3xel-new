@@ -10,7 +10,7 @@ class Payment(models.Model):
     )
 
     id = models.IntegerField(primary_key=True, auto_created=False)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='I')
     amount = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
