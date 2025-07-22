@@ -28,7 +28,7 @@ class GoodVariant(models.Model):
     price = models.IntegerField()
 
     def __str__(self):
-        return str(self.good) + '-' + str(self.size) + '-' + self.color 
+        return f'{self.good} - {self.size}см - {self.color}'
 
 
 class OrderItem(models.Model):
@@ -49,7 +49,7 @@ class Order(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='orders')
-    payment = models.ForeignKey(Payment, on_delete=models.PROTECT, null=True) # временно null=True
+    payment = models.ForeignKey(Payment, on_delete=models.PROTECT, null=True)
     amount = models.IntegerField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='C')
     video = models.OneToOneField(File, on_delete=models.SET_NULL, null=True)
@@ -57,5 +57,5 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.id)
+        return f'{self.id} - {self.created_at}'
     
