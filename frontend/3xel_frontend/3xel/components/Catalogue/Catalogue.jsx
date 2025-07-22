@@ -26,7 +26,7 @@ export default function Catalogue() {
         const fetchData = async () => {
             setIsLoading(true)
             try {
-                const response = await fetch('http://localhost:8000/api-order/catalogue/', {
+                const response = await fetch('/api-order/catalogue/', {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json',

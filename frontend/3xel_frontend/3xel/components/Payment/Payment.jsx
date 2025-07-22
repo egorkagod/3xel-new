@@ -66,7 +66,7 @@ export default function Payment() {
 
             for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
                 try {
-                    const response = await fetch('http://localhost:8000/api-file/upload/', {
+                    const response = await fetch('/api-file/upload/', {
                         headers: {
                             'X-CSRFToken': csrfToken,
                         },
@@ -128,7 +128,7 @@ export default function Payment() {
     const toPay = async () => {
         try {
             setIsLoading(true)
-            const response = await fetch('http://localhost:8000/api-order/create/', {
+            const response = await fetch('/api-order/create/', {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,

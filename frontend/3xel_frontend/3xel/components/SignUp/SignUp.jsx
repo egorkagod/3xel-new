@@ -80,7 +80,7 @@ export default function SignUp() {
         if (!hasError) {
             setIsLoading(true)
             try {
-                const response = await fetch(`http://localhost:8000/api-root/code/?email=${email}`, {
+                const response = await fetch(`/api-root/code/?email=${email}`, {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json',

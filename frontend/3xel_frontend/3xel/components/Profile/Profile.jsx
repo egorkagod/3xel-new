@@ -18,7 +18,7 @@ export default function Profile() {
     
     const unLogin = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api-root/logout/', {
+            const response = await fetch('/api-root/logout/', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
