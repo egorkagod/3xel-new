@@ -1,4 +1,5 @@
 import os
+import uuid
 import requests
 import hashlib
 from dotenv import load_dotenv
@@ -14,14 +15,14 @@ from pay.repositories import pay_service
 load_dotenv()
 
 
-def init(order_id, amount):
+def init(order_id: uuid.UUID, amount: int):
     url = 'https://securepay.tinkoff.ru/v2/Init'
     headers = {
         'Content-Type': 'application/json',
     }
     payload = {
         'TerminalKey': os.getenv('TERMINAL_KEY'),
-        'Amount': amount,
+        'Amount': amount * 100,
         'OrderId': str(order_id),
         'Description': 'Оплата заказа',
         'PayType': 'O',
@@ -47,11 +48,11 @@ def init(order_id, amount):
     else:
         return False
     
-def _sign_by_token(payload):
+def _sign_by_token(payload: dict):
     payload['Token'] = _get_token(payload)
     return payload
 
-def _get_token(payload):
+def _get_token(payload: dict):
     payload = payload.copy()
     # payload = _filter_payload(payload)
     payload['Password'] = os.getenv('TERMINAL_PASSWORD')

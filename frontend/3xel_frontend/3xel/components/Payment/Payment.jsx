@@ -142,7 +142,7 @@ export default function Payment() {
 
             const data = await response.json()
 
-            window.location.href = data
+            window.location.href = data.payment_url
         } catch (err) {
             toast.error(err.message)
         } finally {

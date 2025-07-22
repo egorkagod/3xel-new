@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -19,7 +21,7 @@ def timestamp_filename(instance, filename):
     return f"catalog/images/{timestamp}.{ext}"
 
 class GoodVariant(models.Model):
-    good = models.ForeignKey(Good, on_delete=models.CASCADE, related_name='variants')
+    good = models.ForeignKey(Good, on_delete=models.PROTECT, related_name='variants')
     size = models.IntegerField()
     color = models.CharField(max_length=20)
     image = models.ImageField(upload_to=timestamp_filename)
@@ -35,7 +37,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        return f'{self.quantity} шт ' + self.good_variant 
+        return f'{self.quantity} шт ' + str(self.good_variant)
 
 class Order(models.Model):
     STATUS_CHOICES = (
@@ -45,6 +47,7 @@ class Order(models.Model):
         ('F', 'Finished'),
     )
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='orders')
     payment = models.ForeignKey(Payment, on_delete=models.PROTECT, null=True) # временно null=True
     amount = models.IntegerField()
