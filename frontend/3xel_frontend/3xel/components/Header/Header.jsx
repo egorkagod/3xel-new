@@ -72,7 +72,7 @@ export default function Header() {
 
                         <button ref={cartButtonRef} className={classes.cartBtn} onClick={() => setActiveCart(prev => !prev)}>Корзина: {cartData.length}</button>
                     </li>
-                    {isAuthorized ? (
+                    {!isAuthorized ? (
                         <li className={classes.profileBlockItem}>
                             <Link className={classes.profileBtn} to='/profile/info'>
                                 <button>Профиль</button>

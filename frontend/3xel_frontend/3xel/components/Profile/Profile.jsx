@@ -16,23 +16,23 @@ export default function Profile() {
     const navigate = useNavigate()
     const dispatcher = useDispatch()
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        fetch('/api-root/user/', {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            credentials: 'include',
-        })
-            .then(response => {
-                if (!response.ok) throw new Error(`Ошибка: ${response.status}, ${response.statusText}`)
-                return response.json()
-            })
-            .then(data => { dispatcher(updateProfile(data)); dispatcher(setAuthorized(true)) })
-            .catch(_ => { dispatcher(setAuthorized(false)); navigate('/'); toast.error('Ошибка загрузки профиля, войдите заново') })
-    }, [])
+    //     fetch('/api-root/user/', {
+    //         method: "GET",
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-CSRFToken': csrfToken,
+    //         },
+    //         credentials: 'include',
+    //     })
+    //         .then(response => {
+    //             if (!response.ok) throw new Error(`Ошибка: ${response.status}, ${response.statusText}`)
+    //             return response.json()
+    //         })
+    //         .then(data => { dispatcher(updateProfile(data)); dispatcher(setAuthorized(true)) })
+    //         .catch(_ => { dispatcher(setAuthorized(false)); navigate('/'); toast.error('Ошибка загрузки профиля, войдите заново') })
+    // }, [])
 
     const unLogin = async () => {
         try {
