@@ -45,7 +45,7 @@ function App() {
         return response.json()
       })
       .then(data => { dispatcher(updateProfile(data)); dispatcher(setAuthorized(true)) })
-      .catch(_ => { toast.error('Ошибка загрузки профиля, войдите заново'); dispatcher(setAuthorized(false)) })
+      .catch(_ => { dispatcher(setAuthorized(false)) })
   }, [])
 
   return (

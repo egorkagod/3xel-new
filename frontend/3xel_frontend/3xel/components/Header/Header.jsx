@@ -63,14 +63,20 @@ export default function Header() {
 
                         <button ref={cartButtonRef} className={classes.cartBtn} onClick={() => setActiveCart(prev => !prev)}>Корзина: {cartData.length}</button>
                     </li>
-                    <li className={classes.profileBlockItem}>
-                        <div className={classNames(classes.profileBtn, { [classes.disabled]: !isAuthorized })}>
-                            <Link style={{ all: 'unset' }} to='/profile/info'><button style={{ all: 'unset' }}>Профиль</button></Link>
-                        </div>
-                    </li>
-                    <li>
-                        <Link className={classes.unstyledLink} to="/login"><button className={classNames(classes.loginBtn, { [classes.disabled]: isAuthorized })}>Войти</button></Link>
-                    </li>
+                    {isAuthorized ? (
+                        <li className={classes.profileBlockItem}>
+                            <Link className={classes.unstyledLink} to='/profile/info'>
+                                <button className={classes.profileBtn}>Профиль</button>
+                            </Link>
+                        </li>
+                    ) : (
+                        <li>
+                            <Link className={classes.unstyledLink} to="/login">
+                                <button className={classes.loginBtn}>Войти</button>
+                            </Link>
+                        </li>
+                    )}
+
                 </ul>
             </div>
             <Cart ref={cartRef} cartData={cartData} isActive={activeCart} onClick={() => setActiveCart(prev => !prev)} toPay={() => setActiveCart(false)}></Cart>
