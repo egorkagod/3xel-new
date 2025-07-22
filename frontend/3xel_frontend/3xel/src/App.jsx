@@ -38,9 +38,6 @@ function App() {
       credentials: 'include',
     })
       .then(response => {
-        if (response.status === 403) {
-          return
-        }
         if (!response.ok) throw new Error(`Ошибка: ${response.status}, ${response.statusText}`)
         return response.json()
       })

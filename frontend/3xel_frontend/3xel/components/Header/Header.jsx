@@ -65,8 +65,8 @@ export default function Header() {
                     </li>
                     {isAuthorized ? (
                         <li className={classes.profileBlockItem}>
-                            <Link className={classes.unstyledLink} to='/profile/info'>
-                                <button className={classes.profileBtn}>Профиль</button>
+                            <Link className={classes.profileBtn} to='/profile/info'>
+                                <button>Профиль</button>
                             </Link>
                         </li>
                     ) : (
