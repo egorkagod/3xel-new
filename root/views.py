@@ -81,7 +81,7 @@ class UserView(APIView):
         user = user_rep.get(request.user.id)
         if user:
             payload = UserModelSerializer(user).data
-            return Response({'user': payload}, status=status.HTTP_200_OK)
+            return Response(payload, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     def post(self, request): # Пока что не меняем данные
