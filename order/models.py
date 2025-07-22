@@ -9,6 +9,10 @@ from pay.models import Payment
 
 
 class Good(models.Model):
+    class Meta:
+        verbose_name = 'Вид товара'
+        verbose_name_plural = 'Виды товаров'
+
     name = models.CharField(max_length=250)
     description = models.TextField(null=True, blank=True)
 
@@ -21,6 +25,10 @@ def timestamp_filename(instance, filename):
     return f"catalog/images/{timestamp}.{ext}"
 
 class GoodVariant(models.Model):
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+
     good = models.ForeignKey(Good, on_delete=models.PROTECT, related_name='variants')
     size = models.IntegerField()
     color = models.CharField(max_length=20)
@@ -32,6 +40,10 @@ class GoodVariant(models.Model):
 
 
 class OrderItem(models.Model):
+    class Meta:
+        verbose_name = 'Товар в заказе'
+        verbose_name_plural = 'Товары в заказе'
+
     order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='items')
     good_variant = models.ForeignKey('GoodVariant', on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField()
@@ -40,6 +52,11 @@ class OrderItem(models.Model):
         return f'{self.quantity} шт ' + str(self.good_variant)
 
 class Order(models.Model):
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+
     STATUS_CHOICES = (
         ('C', 'Created'),
         ('P', 'Payed'),
@@ -56,6 +73,10 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def formatted_created_at(self):
+        return self.created_at.strftime("%d.%m.%Y %H:%M") 
+
     def __str__(self):
-        return f'{self.id} - {self.created_at}'
+        return f'{self.id} - {self.formatted_created_at}'
     
