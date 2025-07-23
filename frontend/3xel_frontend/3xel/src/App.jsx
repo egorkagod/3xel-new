@@ -70,6 +70,7 @@ function App() {
           <Route path='/good/:id' element={<>
             <Header></Header>
             <GoodPage />
+            <Footer></Footer>
           </>} />
           <Route path='/profile' element={<>
             <Header></Header>

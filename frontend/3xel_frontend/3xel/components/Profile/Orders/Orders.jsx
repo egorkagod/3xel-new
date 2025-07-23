@@ -42,7 +42,7 @@ export default function Orders() {
                         <div className={classes.activeOrders}>
                             <span className={classes.header}>Активные заказы: {data.length}</span>
                             <div className={classes.ordersList}>
-                                {data.map(order => <OrderItem order={order}></OrderItem>)}
+                                {data.map((order) => <OrderItem order={order} key={order.id}></OrderItem>)}
                             </div>
                         </div>
 

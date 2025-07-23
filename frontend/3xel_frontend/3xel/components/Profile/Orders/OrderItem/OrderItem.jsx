@@ -7,7 +7,7 @@ export default function OrderItem({ order }) {
                 <span>Время создания заказа: {order.created_at}</span>
             </div>
             <div className={classes.main}>
-                <span>{order.order_status}</span>
+                <span>{order.status}</span>
                 <span>{order.amount} руб.</span>
                 <span>{order.payment_status}</span>
             </div>

@@ -21,6 +21,7 @@ export default function Catalogue() {
 
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const dispatcher = useDispatch()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,6 +36,7 @@ export default function Catalogue() {
 
                 const data = await response.json()
                 setProducts(data)
+                dispatcher(addGoods(products))
             } catch (error) {
                 toast.error('Ошибка при загрузке каталога')
                 console.log(error)
@@ -469,9 +471,8 @@ export default function Catalogue() {
     //     }
     // ]
 
-    // const dispatcher = useDispatch()
-    // dispatcher(addGoods(products))
-
+    dispatcher(addGoods(products))
+    
     return (
         <main className={classes.globalContainer}>
             <div className={classes.overlay}></div>
