@@ -5,6 +5,7 @@ from rest_framework import status, generics
 
 from .models import Good
 from .serializers import GoodModelSerializer, OrderViewSerializer, OrderModelSerializer
+from .repositories import order_rep
 from .services import order_service
 
 
@@ -13,20 +14,18 @@ class CatalogView(generics.ListAPIView):
     serializer_class = GoodModelSerializer
 
 
-class OrderView(APIView):
+class OrdersListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        order_id = request.query_params.get('order_id')
+        orders = order_rep.get_all(request.user.id)
+        if orders is not None:
+            payload = OrderModelSerializer(orders, many=True).data
+            return Response(payload, status=status.HTTP_200_OK)
+        return Response({'error': 'Failed to get orders'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not order_id:
-            return Response({'error': 'Order ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        order = order_service.get(user_id=request.user.id, order_id=order_id)
-        payload = OrderModelSerializer(order).data
-        if payload:
-            return Response({'order': payload}, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_403_FORBIDDEN)
+class CreateOrderView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = OrderViewSerializer(data=request.data)

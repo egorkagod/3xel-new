@@ -29,8 +29,9 @@ def get(user_id: int, order_id: uuid.UUID):
 
 def get_all(user_id: int):
     user = User.objects.filter(user_id).first()
-    orders = user.orders.all()
-    return orders
+    if user:
+        orders = user.orders.all()
+        return orders 
 
 def _group_good_variants(goods: list):
     result = {}

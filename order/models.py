@@ -42,7 +42,7 @@ class GoodVariant(models.Model):
 class OrderItem(models.Model):
     class Meta:
         verbose_name = 'Товар в заказе'
-        verbose_name_plural = 'Товары в заказе'
+        verbose_name_plural = 'Товары в заказе '
 
     order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='items')
     good_variant = models.ForeignKey('GoodVariant', on_delete=models.SET_NULL, null=True)

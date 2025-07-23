@@ -1,4 +1,7 @@
-PYTHON := .venv/bin/python
+APP := online_shop
+VENV := .venv
+PYTHON := $(VENV)/bin/python
+GUNICORN := $(VENV)/bin/gunicorn
 
 run:
 	$(PYTHON) manage.py runserver
@@ -11,3 +14,6 @@ makemigrations:
 
 migrate:
 	$(PYTHON) manage.py migrate
+
+gun-start:
+	$(GUNICORN) $(APP).wsgi:application --bind localhost:8000 --daemon
