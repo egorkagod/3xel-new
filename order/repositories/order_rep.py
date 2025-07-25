@@ -28,7 +28,7 @@ def get(user_id: int, order_id: uuid.UUID):
     return None
 
 def get_all(user_id: int):
-    user = User.objects.filter(user_id).first()
+    user = User.objects.filter(pk=user_id).first()
     if user:
         orders = user.orders.all()
         return orders 
