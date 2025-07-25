@@ -36,7 +36,6 @@ export default function Catalogue() {
 
                 const data = await response.json()
                 setProducts(data)
-                dispatcher(addGoods(products))
             } catch (error) {
                 toast.error('Ошибка при загрузке каталога')
                 console.log(error)

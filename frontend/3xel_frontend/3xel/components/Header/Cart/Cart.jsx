@@ -56,7 +56,7 @@ const Cart = forwardRef(({ isActive, cartData, onClick, toPay }, ref) => {
                             </div>
                         ))}
                     </div>
-                    <Link style={{ all: 'unset' }} to={isAuthorized ? '/payment' : location.pathname} onClick={toPay}>
+                    <Link style={{ all: 'unset' }} to={!isAuthorized ? '/payment' : location.pathname} onClick={toPay}>
                         <button className={classes.toPayBtn}>
                             Оплатить: {cartData.reduce((acc, item) => acc + item.cost, 0)} руб.
                         </button>
