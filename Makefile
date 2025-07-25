@@ -22,3 +22,6 @@ gun-start:
 
 frontend:
 	cd $(CURDIR)/frontend/3xel_frontend/3xel && npm run dev
+
+build:
+	cd $(CURDIR)/frontend/3xel_frontend/3xel && npm run build
