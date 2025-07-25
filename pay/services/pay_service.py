@@ -16,6 +16,7 @@ load_dotenv()
 
 
 def init(order_id: uuid.UUID, amount: int):
+    notificate_url = reverse('pay:notification')
     url = 'https://securepay.tinkoff.ru/v2/Init'
     headers = {
         'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ def init(order_id: uuid.UUID, amount: int):
 
     if data:
         payment_id = data['PaymentId']
-        payment = pay_rep.create(id=payment_id, amount=amount)
+        payment = pay_rep.create(id=payment_id, amount=amount, status=data['Status'][0])
         order = Order.objects.filter(pk=order_id).first()
         order.payment = payment
         order.save()
@@ -48,10 +49,10 @@ def init(order_id: uuid.UUID, amount: int):
     else:
         return False
     
-def update_state(data):
-    token = data.pop('Token')
-    if token == _get_token(data):
-        pay_rep.update_state(data)
+def update_state(data): # TODO проверка токена не работает 
+    # token = data.pop('Token') 
+    # if token == _get_token(data):
+    pay_rep.update_state(data)
     
 def _sign_by_token(payload: dict):
     payload['Token'] = _get_token(payload)

@@ -7,14 +7,14 @@ class Payment(models.Model):
             verbose_name_plural = 'Платежи'
 
     STATUS_CHOICES = (
-        ('I', 'INIT'),
+        ('N', 'NEW'),
         ('A', 'AUTHORIZED'),
         ('C', 'CONFIRMED'),
         ('R', 'REJECTED'),
     )
 
     id = models.IntegerField(primary_key=True, auto_created=False)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='I')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='N')
     amount = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 

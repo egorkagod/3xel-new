@@ -3,6 +3,8 @@ VENV := .venv
 PYTHON := $(VENV)/bin/python
 GUNICORN := $(VENV)/bin/gunicorn
 
+.PHONY: run install-requirements makemigrations migrate gun-start frontend
+
 run:
 	$(PYTHON) manage.py runserver
 
@@ -17,3 +19,6 @@ migrate:
 
 gun-start:
 	$(GUNICORN) $(APP).wsgi:application --bind localhost:8000 --daemon
+
+frontend:
+	cd $(CURDIR)/frontend/3xel_frontend/3xel && npm run dev

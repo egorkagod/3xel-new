@@ -1,8 +1,8 @@
 from pay.models import Payment
 
 
-def create(id, amount):
-    payment = Payment.objects.create(id=id, amount=amount)
+def create(id, amount, status):
+    payment = Payment.objects.create(id=id, amount=amount, status=status)
     return payment
 
 def update_state(data: dict):
