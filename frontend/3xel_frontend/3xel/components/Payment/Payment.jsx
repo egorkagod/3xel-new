@@ -9,6 +9,7 @@ import toMainArrowIcon from '/images/arrow-to-main.png'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { getCookie } from '../../utils/cookie'
+import CDEK from './CDEK/CDEK'
 
 export default function Payment() {
     const csrfToken = getCookie('csrftoken')
@@ -315,7 +316,9 @@ export default function Payment() {
                 </div>
             </section>
 
-            <section className={classes.rightSide}>Coming Soon...</section>
+            <section className={classes.rightSide}>
+                <CDEK></CDEK>
+            </section>
         </main>
     )
 }

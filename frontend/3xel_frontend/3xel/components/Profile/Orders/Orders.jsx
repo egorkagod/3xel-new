@@ -9,27 +9,33 @@ export default function Orders() {
     const [data, setData] = useState([])
     const csrfToken = getCookie('csrftoken')
 
-    useEffect(async () => {
-        try {
-            setIsLoading(true)
-            const response = await fetch('api', {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,
-                },
-                credentials: 'include',
-            })
+    useEffect(() => {
 
-            if (!response.ok) throw new Error()
+        async function fetchData() {
+            try {
+                setIsLoading(true)
+                const response = await fetch('api', {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    credentials: 'include',
+                })
 
-            const data = await response.json()
-            setData(data)
-        } catch {
-            toast.error('Не удалось загрузить список заказов')
-        } finally {
-            setIsLoading(false)
+                if (!response.ok) throw new Error()
+
+                const data = await response.json()
+                setData(data)
+            } catch {
+                toast.error('Не удалось загрузить список заказов')
+            } finally {
+                setIsLoading(false)
+            }
         }
+
+        fetchData()
+
     }, [])
 
     return (

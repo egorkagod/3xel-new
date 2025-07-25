@@ -195,11 +195,8 @@
     }
 
     .rightSide {
-        min-width: 100%;
-        min-height: 100%;
         background-color: white;
         padding: 50px;
-
     }
 }
 
@@ -212,13 +209,20 @@
         .leftSide {
             padding: 50px 50px 50px 200px;
         }
+
+        .rightSide {
+            width: 50%;
+            height: 100vh;
+            position: fixed;
+            left: 50%;
+        }
     }
 }
 
 @media (max-width: 1023px) {
     .globalContainer {
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
 
         .leftSide {
             padding-top: 50px;

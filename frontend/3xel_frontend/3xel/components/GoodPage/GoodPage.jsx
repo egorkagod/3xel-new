@@ -1,6 +1,6 @@
 import classes from './GoodPage.module.scss'
 import { useParams } from 'react-router'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import variantImage16 from '/images/good-variant-1-6.jpg'
 import variantImage712 from '/images/good-variant-7-12.jpg'
 import variantImage1318 from '/images/good-variant-13-18.jpg'
