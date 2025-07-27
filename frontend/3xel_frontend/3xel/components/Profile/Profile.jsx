@@ -76,7 +76,7 @@ export default function Profile() {
                     <h2>Профиль.</h2>
                 </aside>
 
-                <main>
+                <main className={classes.main}>
                     <Outlet />
                     <div className={classes.exitBtn} onClick={() => setExitModalIsActive(true)}>
                         <span>Выход</span>
