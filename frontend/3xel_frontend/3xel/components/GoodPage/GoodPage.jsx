@@ -38,8 +38,8 @@ export default function GoodPage() {
         fetchData()
     }, [])
 
-    const [selectedColor, setSelectedColor] = useState(product.variants[0].color)
-    const [selectedSize, setSelectedSize] = useState(product.variants[0].size)
+    const [selectedColor, setSelectedColor] = useState(null)
+    const [selectedSize, setSelectedSize] = useState(null)
     const variantId = useMemo(() => {
         const match = product.variants.find(v => v.size === selectedSize && v.color === selectedColor)
         return match?.id || null
