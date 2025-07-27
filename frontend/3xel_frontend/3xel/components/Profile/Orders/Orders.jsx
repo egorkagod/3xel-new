@@ -3,11 +3,14 @@ import OrderItem from './OrderItem/OrderItem'
 import { useEffect, useState } from 'react'
 import { getCookie } from '../../../utils/cookie'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { updateActiveOrders, updatePastOrders } from '../../store/ordersSlice'
 
 export default function Orders() {
     const [isLoading, setIsLoading] = useState(false)
     const [data, setData] = useState([])
     const csrfToken = getCookie('csrftoken')
+    const dispatcher = useDispatch()
 
     useEffect(() => {
         async function fetchData() {
@@ -26,6 +29,7 @@ export default function Orders() {
 
                 const data = await response.json()
                 setData(data)
+                dispatcher(updateActiveOrders(data))
             } catch {
                 toast.error('Не удалось загрузить список заказов')
             } finally {

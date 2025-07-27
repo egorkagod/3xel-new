@@ -15,24 +15,25 @@ export default function Profile() {
     const csrfToken = getCookie('csrftoken')
     const navigate = useNavigate()
     const dispatcher = useDispatch()
+    const activeOrders = useSelector(state => state.orders.active) 
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     fetch('/api-root/user/', {
-    //         method: "GET",
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'X-CSRFToken': csrfToken,
-    //         },
-    //         credentials: 'include',
-    //     })
-    //         .then(response => {
-    //             if (!response.ok) throw new Error(`Ошибка: ${response.status}, ${response.statusText}`)
-    //             return response.json()
-    //         })
-    //         .then(data => { dispatcher(updateProfile(data)); dispatcher(setAuthorized(true)) })
-    //         .catch(_ => { dispatcher(setAuthorized(false)); navigate('/'); toast.error('Ошибка загрузки профиля, войдите заново') })
-    // }, [])
+        fetch('/api-root/user/', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            credentials: 'include',
+        })
+            .then(response => {
+                if (!response.ok) throw new Error(`Ошибка: ${response.status}, ${response.statusText}`)
+                return response.json()
+            })
+            .then(data => { dispatcher(updateProfile(data)); dispatcher(setAuthorized(true)) })
+            .catch(_ => { dispatcher(setAuthorized(false)); navigate('/'); toast.error('Ошибка загрузки профиля, войдите заново') })
+    }, [])
 
     const unLogin = async () => {
         try {
@@ -67,7 +68,7 @@ export default function Profile() {
                             </li>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                 <Link style={{ all: 'unset' }} to='/profile/my-orders'><button>Мои заказы</button></Link>
-                                <div style={{ display: 'flex', borderRadius: '50%', backgroundColor: 'black', color: 'white', width: '20px', height: '20px', justifyContent: 'center', alignItems: 'center', fontSize: '10px' }}>0</div>
+                                <div style={{ display: 'flex', borderRadius: '50%', backgroundColor: 'black', color: 'white', width: '20px', height: '20px', justifyContent: 'center', alignItems: 'center', fontSize: '10px' }}>{activeOrders.length}</div>
                             </li>
                         </ul>
                     </nav>
