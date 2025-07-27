@@ -19,6 +19,7 @@ jobs:
           script: |
             cd /projects/3xel-new
             git pull origin
+            make npm-install
             make build
             pkill gunicorn
             make gun-start
