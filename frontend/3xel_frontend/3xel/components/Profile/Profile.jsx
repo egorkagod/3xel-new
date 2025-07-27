@@ -76,7 +76,7 @@ export default function Profile() {
                     <h2>Профиль.</h2>
                 </aside>
 
-                <main style={{ display: 'flex', padding: '50px 300px 50px 100px', width: '100%', position: 'relative', height: '100%' }}>
+                <main>
                     <Outlet />
                     <div className={classes.exitBtn} onClick={() => setExitModalIsActive(true)}>
                         <span>Выход</span>
