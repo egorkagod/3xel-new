@@ -16,7 +16,6 @@
 
     .editBtn {
         display: flex;
-        width: 60%;
         align-self: center;
         justify-content: center;
         align-items: center;
@@ -36,11 +35,19 @@
 @media (min-width: 1024px) {
     .globalContainer {
         font-size: 16px;
+
+        .editBtn {
+            width: 60%;
+        }
     }
 }
 
 @media (max-width: 1023px) {
     .globalContainer {
-        font-size: 14px;
+        font-size: 12px;
+
+        .editBtn {
+            width: 100%;
+        }
     }
 }

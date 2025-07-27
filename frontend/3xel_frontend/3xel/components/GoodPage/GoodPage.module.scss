@@ -1,8 +1,15 @@
+@font-face {
+    font-family: 'Patrick Hand';
+    src: url('/fonts/patrick_hand/Comfortaa/Comfortaa-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .globalContainer {
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
     padding: 50px 10px;
     font-size: 16px;

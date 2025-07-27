@@ -54,9 +54,7 @@ export default function Orders() {
 
                     <div className={classes.pastOrders}>
                         <span className={classes.header}>Прошлые заказы</span>
-                        <div>
-                            <span className={classes.empty}>Прошлых нет</span>
-                        </div>
+                        <span className={classes.empty}>Прошлых нет</span>
                     </div>
                 </>) : (
                     <>
@@ -67,9 +65,7 @@ export default function Orders() {
 
                         <div className={classes.pastOrders}>
                             <span className={classes.header}>Прошлые заказы</span>
-                            <div>
-                                <span className={classes.empty}>Прошлых нет</span>
-                            </div>
+                            <span className={classes.empty}>Прошлых нет</span>
                         </div>
                     </>
                 )
