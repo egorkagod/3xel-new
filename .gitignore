@@ -9,3 +9,4 @@ chunks/
 uploads/
 db.sqlite3/
 logging/*
+!logging/.gitkeep
