@@ -73,6 +73,15 @@
                 gap: 30px;
                 width: 100%;
 
+                .policyLink {
+                    text-decoration: none;
+                    color: rgb(0, 0, 149);
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
                 .formField {
                     display: flex;
                     flex-direction: column;
