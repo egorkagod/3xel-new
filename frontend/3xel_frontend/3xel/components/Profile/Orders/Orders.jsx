@@ -42,13 +42,23 @@ export default function Orders() {
             {isLoading ? (
                 <span className={classes.empty}>Список заказов загружается...</span>
             ) : (
-                data ? (<span className={classes.empty}></span>) : (
+                data.length === 0 ? (<>
+                    <div className={classes.activeOrders}>
+                        <span className={classes.header}>Активные заказы: {data.length}</span>
+                        <span className={classes.empty}>Активных нет</span>
+                    </div>
+
+                    <div className={classes.pastOrders}>
+                        <span className={classes.header}>Прошлые заказы</span>
+                        <div>
+                            <span className={classes.empty}>Прошлых нет</span>
+                        </div>
+                    </div>
+                </>) : (
                     <>
                         <div className={classes.activeOrders}>
                             <span className={classes.header}>Активные заказы: {data.length}</span>
-                            <div className={classes.ordersList}>
-                                {data.map((order) => <OrderItem order={order} key={order.id}></OrderItem>)}
-                            </div>
+                            {data.map((order) => <OrderItem order={order} key={order.id}></OrderItem>)}
                         </div>
 
                         <div className={classes.pastOrders}>
