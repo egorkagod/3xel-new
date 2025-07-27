@@ -29,7 +29,6 @@ def init(order_id: uuid.UUID, amount: int):
         'Language': 'ru',
         'NotificationURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'SuccessURL': settings.SITE_DOMEN + '/profile/my-orders/',
-        'FailURL': settings.SITE_DOMEN + '/profile/my-orders/',
     }
 
     payload = _sign_by_token(payload)
@@ -50,13 +49,22 @@ def update_status(data): # TODO проверка токена не работа�
     # if token == _get_token(data):
     pay_rep.update_state(data)
 
-def get_order_status(order_id):
-    url = 'https://securepay.tinkoff.ru/v2/CheckOrder'
-    payload = {
-        'TerminalKey': os.getenv('TERMINAL_KEY'),
-        'OrderId': str(order_id),
-    }
-    payload = _sign_by_token(payload)
+# def get_status(payment_id):
+#     url = 'https://securepay.tinkoff.ru/v2/GetState'
+#     headers = {
+#         'Content-Type': 'application/json',
+#     }
+#     payload = {
+#         'TerminalKey': os.getenv('TERMINAL_KEY'),
+#         'PaymentId': str(payment_id),
+#     }
+#     payload = _sign_by_token(payload)
+
+#     response = requests.post(url, headers=headers, json=payload)
+#     data = response.json()
+
+#     if data['Success']:
+
     
 def _sign_by_token(payload: dict):
     payload['Token'] = _get_token(payload)
