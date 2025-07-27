@@ -1,9 +1,5 @@
 .globalContainer {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    font-size: 14px;
     width: 100%;
-    gap: 10px;
     position: relative;
 
     .activeOrders,
@@ -40,4 +36,23 @@
         transform: translate(-50%, -50%);
     }
 
+}
+
+@media (min-width: 1024px) {
+    .globalContainer {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 10px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1023px) {
+    .globalContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+    }
 }

@@ -17,7 +17,7 @@
     transition: all 0.3s ease;
     z-index: 1000;
     font-family: 'Patrick Hand', sans-serif;
-    
+
     .unstyledLink {
         text-decoration: none;
         color: inherit;
@@ -46,31 +46,31 @@
                 transform: translate(-1px, -1px);
             }
         }
-        
+
     }
 
     .profileBtn {
-            all: unset;
-            display: flex;
-            color: white;
-            justify-content: center;
-            align-items: center;
-            font-size: 12px;  
-            padding: 10px;
-            border-radius: 16px;
-            border: 2px solid white;
-            transition: all 0.2s ease;
-            cursor: pointer;
+        all: unset;
+        display: flex;
+        color: white;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        padding: 10px;
+        border-radius: 16px;
+        border: 2px solid white;
+        transition: all 0.2s ease;
+        cursor: pointer;
 
-            &:hover {
-                color: black;
-                background-color: white;
-            }
-
-            &.disabled {
-                display: none;
-            }
+        &:hover {
+            color: black;
+            background-color: white;
         }
+
+        &.disabled {
+            display: none;
+        }
+    }
 
     @media (min-width: 1024px) {
         .burgerMenuBtn {
@@ -81,7 +81,8 @@
             display: none;
         }
 
-        .navbarNav, .profileBlock {
+        .navbarNav,
+        .profileBlock {
             display: flex;
             list-style-type: none;
             align-items: center;
@@ -137,7 +138,7 @@
                 color: grey;
             }
         }
-        
+
 
         .profileBlockItem {
             display: flex;
@@ -150,8 +151,8 @@
             }
 
             &:hover {
-                    color: grey;
-                }
+                color: grey;
+            }
         }
 
         .loginBtn {
@@ -282,7 +283,8 @@
             color: white;
         }
 
-        .cartIcon, .profileIcon {
+        .cartIcon,
+        .profileIcon {
             display: inline-block;
             width: 30px;
             height: 30px;
