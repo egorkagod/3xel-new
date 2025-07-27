@@ -10,7 +10,6 @@ export default function Orders() {
     const csrfToken = getCookie('csrftoken')
 
     useEffect(() => {
-
         async function fetchData() {
             try {
                 setIsLoading(true)

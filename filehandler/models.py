@@ -13,4 +13,4 @@ class File(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        print(self.name)
+        return self.name
