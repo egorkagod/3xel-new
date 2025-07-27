@@ -7,7 +7,7 @@ from .models import Good, GoodVariant, Order, OrderItem
 class GoodVariantModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = GoodVariant
-        fields = ['size', 'color', 'image', 'price']
+        fields = ['id', 'size', 'color', 'image', 'price']
 
 # Good
 
@@ -16,7 +16,7 @@ class GoodModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Good
-        fields = ['name', 'description', 'variants']
+        fields = ['id', 'name', 'description', 'variants']
 
 # OrderItem
 
