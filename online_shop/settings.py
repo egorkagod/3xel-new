@@ -26,7 +26,7 @@ SITE_DOMEN = 'https://3xel.ru'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rj1=d1y*24_$0jtd*!&koom5g!%r9v=jal5n%#+bghyvjv724x'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
