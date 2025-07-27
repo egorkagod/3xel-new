@@ -50,7 +50,7 @@ export default function ProductCard({ product }) {
                         )}
                     </div>
                     {count === 0 ? (
-                        <button style={{ display: 'flex', alignItems: 'center', gap: '5px' }} className={classes.addToCartBtn} onClick={(e) => {dispatch(addToCart({ id: variantId, title: product.name, background: selectedVariant.image, selectedColor, selectedSize, cost })); e.stopPropagation()}}>
+                        <button style={{ display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: 'black' }} className={classes.addToCartBtn} onClick={(e) => {dispatch(addToCart({ id: variantId, title: product.name, background: selectedVariant.image, selectedColor, selectedSize, cost })); e.stopPropagation()}}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" width='16' height='16'>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                             </svg>
@@ -58,9 +58,9 @@ export default function ProductCard({ product }) {
                             В корзину
                         </button>
                     ) : (
-                        <div style={{ display: count ? 'flex' : 'none', justifyContent: 'space-between', alignItems: 'center', border: '1px solid black', borderRadius: '100px', padding: '10px', gap: '20px', position: 'relative', backgroundColor: 'white', height: 'fit-content' }}>
+                        <div style={{ display: count ? 'flex' : 'none', justifyContent: 'space-between', alignItems: 'center', border: '1px solid black', borderRadius: '100px', padding: '10px', gap: '20px', position: 'relative', backgroundColor: 'black', height: 'fit-content' }}>
                             <button style={{ all: 'unset', color: 'red', cursor: 'pointer', fontSize: '20px' }} onClick={(e) => {dispatch(removeFromCart({ title: product.name, selectedSize, selectedColor })); e.stopPropagation()}}>-</button>
-                            <span style={{ fontSize: '12px' }}>{count}</span>
+                            <span style={{ fontSize: '12px', color: 'white' }}>{count}</span>
                             <button style={{ all: 'unset', color: 'green', cursor: 'pointer', fontSize: '20px' }} onClick={(e) => {dispatch(addToCart({ id: variantId, title: product.name, background: selectedVariant.image, selectedColor, selectedSize, cost })); e.stopPropagation()}}>+</button>
                         </div>
                     )}

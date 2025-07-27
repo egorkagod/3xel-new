@@ -1,7 +1,9 @@
 import classes from './OrderItem.module.scss'
+import { useNavigate } from 'react-router'
 
 export default function OrderItem({ order }) {
 
+    const navigate = useNavigate()
 
     let orderMessage
     let orderColor
@@ -37,7 +39,7 @@ export default function OrderItem({ order }) {
 
 
     return (
-        <div className={classes.globalContainer}>
+        <div className={classes.globalContainer} onClick={() => navigate(`/order/${order.id}`)}>
             <div className={classes.header}>
                 <span>Время создания заказа: {order.created_at}</span>
             </div>

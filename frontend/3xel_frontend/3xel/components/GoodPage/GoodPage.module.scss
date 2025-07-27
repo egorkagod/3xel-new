@@ -16,9 +16,29 @@
 
     }
 
-    .sizes, .colors {
+    .sizes,
+    .colors {
         display: flex;
         flex-direction: column;
         gap: 10px;
+    }
+
+    .addToCartBtn {
+        all: unset;
+        border-radius: 100px;
+        padding: 14px 10px;
+        cursor: pointer;
+        border: 1px solid black;
+        color: white;
+        transition: all 0.2s ease;
+        font-size: 12px;
+        height: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: rgb(28, 28, 28);
+        }
     }
 }
