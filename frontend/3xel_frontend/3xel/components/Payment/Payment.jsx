@@ -317,7 +317,7 @@ export default function Payment() {
             </section>
 
             <section className={classes.rightSide}>
-                <CDEK></CDEK>
+                
             </section>
         </main>
     )
