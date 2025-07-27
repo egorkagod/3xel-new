@@ -26,8 +26,9 @@ class GoodModelSerializer(serializers.ModelSerializer):
 
 
 class OrderModelSerializer(serializers.ModelSerializer):
-    payment_status = serializers.CharField(source='payment.status')
+    payment_status = serializers.CharField(source='payment.get_status_display')
+    status = serializers.CharField(source='get_status_display')
 
     class Meta:
         model = Order
-        fields = ['id', 'status', 'amount', 'created_at', 'payment_status']
+        fields = ['id', 'status', 'amount', 'formatted_created_at', 'payment_status']

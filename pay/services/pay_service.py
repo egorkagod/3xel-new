@@ -16,8 +16,7 @@ load_dotenv()
 
 
 def init(order_id: uuid.UUID, amount: int):
-    notificate_url = reverse('pay:notification')
-    url = 'https://securepay.tinkoff.ru/v2/Init'
+    url = 'https://rest-api-test.tinkoff.ru/v2/Init'
     headers = {
         'Content-Type': 'application/json',
     }
@@ -30,6 +29,7 @@ def init(order_id: uuid.UUID, amount: int):
         'Language': 'ru',
         'NotificationURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'SuccessURL': settings.SITE_DOMEN + '/profile/my-orders/',
+        'FailURL': settings.SITE_DOMEN + '/profile/my-orders/',
     }
 
     payload = _sign_by_token(payload)
@@ -49,10 +49,18 @@ def init(order_id: uuid.UUID, amount: int):
     else:
         return False
     
-def update_state(data): # TODO проверка токена не работает 
+def update_status(data): # TODO проверка токена не работает 
     # token = data.pop('Token') 
     # if token == _get_token(data):
     pay_rep.update_state(data)
+
+def get_order_status(order_id):
+    url = 'https://rest-api-test.tinkoff.ru/v2/CheckOrder'
+    payload = {
+        'TerminalKey': os.getenv('TERMINAL_KEY'),
+        'OrderId': str(order_id),
+    }
+    payload = _sign_by_token(payload)
     
 def _sign_by_token(payload: dict):
     payload['Token'] = _get_token(payload)
