@@ -12,7 +12,7 @@ export default function GoodPage() {
     const dispatch = useDispatch()
     const { id } = useParams()
     const [isLoading, setIsLoading] = useState(false)
-    const [product, setProduct] = useState([])
+    const [product, setProduct] = useState({})
     const [hasError, setHasError] = useState(false)
 
     useEffect(() => {
@@ -36,17 +36,18 @@ export default function GoodPage() {
         }
 
         fetchData()
-    }, [])
+    }, [id])
 
     const [selectedColor, setSelectedColor] = useState(null)
     const [selectedSize, setSelectedSize] = useState(null)
     const variantId = useMemo(() => {
+        if (!product.variants) return null
         const match = product.variants.find(v => v.size === selectedSize && v.color === selectedColor)
         return match?.id || null
     }, [selectedSize, selectedColor, product.variants])
-    const colors = product.variants.map((variant) => variant.color)
+    const colors = product.variants ? product.variants.map((variant) => variant.color) : []
     const uniqueColors = [...new Set(colors)]
-    const sizesAndCosts = product.variants.map(variant => ({ size: variant.size, price: variant.price }))
+    const sizesAndCosts = product.variants ? product.variants.map(variant => ({ size: variant.size, price: variant.price })) : []
     const uniqueSizesAndCosts = [...new Map(sizesAndCosts.map(item => [item.size, item])).values()]
     const count = cartData.filter(item =>
         item.selectedColor === selectedColor &&
