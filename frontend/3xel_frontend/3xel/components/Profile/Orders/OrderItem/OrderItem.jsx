@@ -11,37 +11,30 @@ export default function OrderItem({ order }) {
         payment: order.payment_status
     }
 
-    switch (status) {
-        case (status.order === 'Delivered'): 
-            orderMessage = 'Доставлен'
-            orderColor = '#52C41A'
-            break
-        case (status.order === 'Finished'):
-            orderMessage = 'Завершен'
-            orderColor = '#469121ff'
-        case (status.payment === 'NEW'):
-            orderMessage = 'Создан'
-            orderColor = '#6C757D'
-            break
-        case (status.payment === 'AUTHORIZED'):
-            orderMessage = 'Ожидает подтверждения'
-            orderColor = '#FFA500'
-            break
-        case (status.payment === 'CONFIRMED'):
-            orderMessage = 'Оплачен'
-            orderColor = '#52C41A'
-            break
-        case (status.payment === 'REJECTED'):
-            orderMessage = 'Отклонен'
-            orderColor = '#DC3545'
-            break
-        default:
-            orderMessage = 'Неизвестный статус'
-            orderColor = '#6C757D'
-            break
+    if (status.order === 'Delivered') {
+        orderMessage = 'Доставлен'
+        orderColor = '#52C41A'
+    } else if (status.order === 'Finished') {
+        orderMessage = 'Завершен'
+        orderColor = '#469121'
+    } else if (status.payment === 'NEW') {
+        orderMessage = 'Создан'
+        orderColor = '#6C757D'
+    } else if (status.payment === 'AUTHORIZED') {
+        orderMessage = 'Ожидает подтверждения'
+        orderColor = '#FFA500'
+    } else if (status.payment === 'CONFIRMED') {
+        orderMessage = 'Оплачен'
+        orderColor = '#52C41A'
+    } else if (status.payment === 'REJECTED') {
+        orderMessage = 'Отклонен'
+        orderColor = '#DC3545'
+    } else {
+        orderMessage = 'Неизвестный статус'
+        orderColor = '#6C757D'
     }
 
-    
+
 
     return (
         <div className={classes.globalContainer}>
