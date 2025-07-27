@@ -130,7 +130,7 @@ export default function Payment() {
         if (id) {
             try {
                 setIsLoading(true)
-                const response = await fetch('/api-order/create/', {
+                const response = await fetch('/api-order/order/', {
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRFToken': csrfToken,

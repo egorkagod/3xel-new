@@ -20,9 +20,9 @@ def create(user_id: int, goods: list, video_id: int, amount: int):
     return None
 
 def get(user_id: int, order_id: uuid.UUID):
-    user = User.objects.filter(user_id).first()
+    user = User.objects.filter(pk=user_id).first()
     if user:
-        order = user.orders.filter(order_id).first()
+        order = user.orders.filter(pk=order_id).first()
         if order:
             return order
     return None
