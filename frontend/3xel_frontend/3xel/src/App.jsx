@@ -29,7 +29,7 @@ function App() {
 
     const csrfToken = getCookie('csrftoken')
 
-    fetch('http://localhost:8000/api-root/user/', {
+    fetch('/api-root/user/', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',

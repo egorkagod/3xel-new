@@ -20,7 +20,7 @@ export default function ConfirmEmail() {
         setIsLoading(true)
         setError(false)
         try {
-            const response = await fetch('http://localhost:8000/api-root/register/', {
+            const response = await fetch('/api-root/register/', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

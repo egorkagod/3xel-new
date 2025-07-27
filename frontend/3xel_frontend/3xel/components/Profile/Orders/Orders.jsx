@@ -13,7 +13,7 @@ export default function Orders() {
         async function fetchData() {
             try {
                 setIsLoading(true)
-                const response = await fetch('api', {
+                const response = await fetch('/api-order/orders', {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json',
