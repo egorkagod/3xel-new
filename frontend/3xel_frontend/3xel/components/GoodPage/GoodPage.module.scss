@@ -3,7 +3,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 30px;
     padding: 50px 10px;
     font-size: 16px;
 
@@ -30,7 +30,7 @@
         border: 1px solid black;
         color: white;
         transition: all 0.2s ease;
-        font-size: 12px;
+        font-size: 20px;
         height: fit-content;
         display: flex;
         justify-content: center;
