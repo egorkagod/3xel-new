@@ -30,7 +30,7 @@ export default function ProductCard({ product }) {
     const selectedVariant = product.variants.find(v => v.size === selectedSize && v.color === selectedColor)
 
     return (
-        <div className={classes.globalContainer} style={{ backgroundImage: selectedVariant ? `url(${selectedVariant.image})` : 'none' }} onClick={() => {navigate(`/good/${product.id}`)}}>
+        <div className={classes.globalContainer} style={{ backgroundImage: selectedVariant ? `url(${selectedVariant.image})` : 'none' }} onClick={() => {if (product.id) navigate(`/good/${product.id}`)}}>
             <div className={classes.productInfo}>
 
                 <div className={classes.title} onClick={(e) => e.stopPropagation()}>
