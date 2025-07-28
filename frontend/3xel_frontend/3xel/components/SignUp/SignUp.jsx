@@ -149,7 +149,7 @@ export default function SignUp() {
 
                         <label style={{ display: 'flex', gap: '10px' }}>
                             <input type="checkbox" required />
-                            <span>Я согласен с <a className={classes.policyLink} href="/files/privacy_policy_3xel.pdf" target='_blank'>политикой обработки персональных данных</a></span>
+                            <span>Я согласен(-на) с <a className={classes.policyLink} href="/files/privacy_policy_3xel.pdf" target='_blank'>политикой обработки персональных данных</a></span>
                         </label>
 
                         <button type='submit' className={classes.signUpBtn} disabled={isLoading}>{isLoading ? 'Отправляем...' : 'Зарегистрироваться'}</button>
