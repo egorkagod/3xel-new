@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 
-from root.repositories import email_rep
-from root.exceptions import InvalidCode, EmailMismatchError, FailedToSendCode, CodeResendTooSoonError
+from django.contrib.auth.models import User
+
+from root.repositories import email_rep, user_rep
+from root.exceptions import InvalidCode, EmailMismatchError, FailedToSendCode, CodeResendTooSoonError, UserNotFound
 
 
 def send_random_code(email, session): # TODO добавить логику таймаутов
@@ -19,12 +21,14 @@ def send_random_code(email, session): # TODO добавить логику та�
     
     raise CodeResendTooSoonError
 
-def check_code(session, email, code):
+def check_code(session, email, code, is_registered=False):
     try:
         if int(code) != session.get('email_code'):
             raise InvalidCode
-        elif email != session.get('email'):
+        elif not is_registered and email != session.get('email'):
             raise EmailMismatchError
+        elif is_registered and not User.objects.filter(username=email).first():
+            raise UserNotFound
         return True
     finally:
         session.pop('email_code', None)

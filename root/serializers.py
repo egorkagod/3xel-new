@@ -27,7 +27,6 @@ class UserModelSerializer(serializers.ModelSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField()
     email_code = serializers.CharField()
     password = serializers.CharField()
 
