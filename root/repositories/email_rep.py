@@ -8,7 +8,7 @@ def send(subject, text, recipient_list, from_email=None):
         send_mail(subject=subject,
                 message = text,
                 from_email = from_email,
-                recipient_list = recipient_list)
+                recipient_list = list(recipient_list))
     except Exception as e:
         return e
     

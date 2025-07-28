@@ -8,9 +8,11 @@ class RegisterViewSerializer(serializers.Serializer):
     email_code = serializers.CharField()
     name = serializers.CharField()
 
+
 class LoginViewSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+
 
 class ProfileViewSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -22,3 +24,14 @@ class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['first_name', 'email']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    email_code = serializers.CharField()
+    password = serializers.CharField()
+
+
+class ChangeNameSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    password = serializers.CharField()
