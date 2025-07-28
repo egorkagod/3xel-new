@@ -76,5 +76,9 @@
     .globalContainer {
         display: flex;
         flex-direction: column;
+
+        .globalContainer > div:first-child {
+            height: 400px; 
+        }
     }
 }
