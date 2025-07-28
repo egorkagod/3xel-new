@@ -7,4 +7,3 @@ class CodeResendTooSoonError: pass
 # User service
 class UserExists(Exception): pass
 class UserCreationFailed(Exception): pass
-class UserNotFound(Exception): pass

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 
-from .exceptions import InvalidCode, EmailMismatchError, UserCreationFailed, UserExists, FailedToSendCode, CodeResendTooSoonError, UserNotFound
+from .exceptions import InvalidCode, EmailMismatchError, UserCreationFailed, UserExists, FailedToSendCode, CodeResendTooSoonError
 from .services import email_service, user_service
 from .repositories import user_rep
 from .serializers import LoginViewSerializer, RegisterViewSerializer, UserModelSerializer, ChangePasswordSerializer, ChangeNameSerializer
@@ -110,13 +110,11 @@ class UserView(APIView):
         serializer = ChangePasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        email = serializer.validated_data['email']
         code = serializer.validated_data['email_code']
 
         try:
             email_service.check_code(
                 session=request.session,
-                email=email,
                 code=code,
                 is_registered=True
             )
@@ -124,8 +122,6 @@ class UserView(APIView):
             return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
         except EmailMismatchError:
             return Response({'error': 'Invalid email'}, status=status.HTTP_400_BAD_REQUEST)
-        except UserNotFound:
-            return Response({'error': 'User with this email not found'})
         except Exception as e:
             return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         

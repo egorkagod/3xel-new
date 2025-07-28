@@ -44,7 +44,7 @@ export default function ConfirmPassword() {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ email_code: enteredCode, password: enteredPassword, is_registered: true })
+                body: JSON.stringify({ email_code: enteredCode, password: enteredPassword })
             })
 
             if (!response.ok) throw new Error()
