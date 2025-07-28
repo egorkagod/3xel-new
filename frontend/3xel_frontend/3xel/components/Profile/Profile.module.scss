@@ -143,10 +143,10 @@
         flex-direction: column;
         width: 100%;
         height: 100%;
-        padding: 20px;
 
         aside {
             border-radius: 12px 12px 0 0;
+            padding: 20px;
 
             ul {
                 flex-direction: row;
@@ -156,6 +156,6 @@
     }
 
     .main {
-        padding: 50px 10px 10px 10px;
+        padding: 50px 20px 20px 20px;
     }
 }
