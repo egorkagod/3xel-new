@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '3xel.ru', '217.199.254.198']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '217.199.254.198', '3xel.ru', 'www.3xel.ru']
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
