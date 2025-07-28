@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 
 from .exceptions import InvalidCode, EmailMismatchError, UserCreationFailed, UserExists, FailedToSendCode, CodeResendTooSoonError, UserNotFound
@@ -94,7 +94,10 @@ class LogoutView(APIView):
     
 
 class UserView(APIView):
-    permission_classes = [IsAuthenticated]
+    def get_permissions(self):
+        if self.request.method in ['GET', 'PATCH']:
+            return [IsAuthenticated()]
+        return [AllowAny()]
 
     def get(self, request):                
         user = user_rep.get(request.user.id)
