@@ -5,6 +5,7 @@ import ProfileInfo from '../components/Profile/ProfileInfo/ProfileInfo'
 import Orders from '../components/Profile/Orders/Orders'
 import Login from '../components/Login/Login'
 import ForgotPassword from '../components/ForgotPassword/ForgotPassword'
+import ConfirmPassword from '../components/ForgotPassword/ConfirmPassword/ConfirmPassword'
 import SignUp from '../components/SignUp/SignUp'
 import ConfirmEmail from '../components/ConfirmEmail/ConfirmEmail'
 import MainPage from '../components/MainPage/MainPage'
@@ -82,6 +83,7 @@ function App() {
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='confirm-password' element={<ConfirmPassword />} />
           <Route path='/sign-up' element={<SignUp />} />
           <Route path='/confirm-email' element={<ConfirmEmail />} />
           <Route path='/payment' element={<>

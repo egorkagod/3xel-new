@@ -3,6 +3,7 @@ import cartReducer from './cartSlice'
 import signUpReducer from './signUpSlice'
 import profileReducer from './profileSlice'
 import ordersReducer from './ordersSlice'
+import recoveryReducer from './profileRecovery'
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         signUp: signUpReducer,
         profile: profileReducer,
         orders: ordersReducer,
+        recovery: recoveryReducer,
     },
 })
 
