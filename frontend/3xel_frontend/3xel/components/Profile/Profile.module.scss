@@ -9,7 +9,6 @@
     background-image: url('/images/catalogue-bg.avif');
     min-width: 100vw;
     min-height: 100vh;
-    padding: 50px;
     font-family: 'Patrick Hand', sans-serif;
     display: flex;
     flex-direction: column;
@@ -107,6 +106,11 @@
 }
 
 @media (min-width: 1024px) {
+
+    .globalContainer {
+        padding: 50px;
+    }
+
     .profileContainer {
         display: grid;
         grid-template-columns: 1fr 3fr;
@@ -129,9 +133,16 @@
 }
 
 @media (max-width: 1023px) {
+
+    .globalContainer {
+        padding: 0;
+    }
+
     .profileContainer {
         display: flex;
         flex-direction: column;
+        width: 100%;
+        height: 100%;
 
         aside {
             border-radius: 12px 12px 0 0;
