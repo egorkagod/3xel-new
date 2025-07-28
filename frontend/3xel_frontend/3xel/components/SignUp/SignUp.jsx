@@ -80,7 +80,7 @@ export default function SignUp() {
         if (!hasError) {
             setIsLoading(true)
             try {
-                const response = await fetch(`/api-root/code/?email=${email}&is_registered=${false}`, {
+                const response = await fetch(`/api-root/code/?email=${email}`, {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json',

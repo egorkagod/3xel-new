@@ -27,7 +27,7 @@ export default function ConfirmEmail() {
                     'X-CSRFToken': csrfToken,
                 },
                 credentials: 'include',
-                body: JSON.stringify({ email: enteredEmail, password: enteredPassword, name: enteredName, email_code: enteredCode })
+                body: JSON.stringify({ email: enteredEmail, password: enteredPassword, name: enteredName, email_code: enteredCode, is_registered: false })
             })
 
             if (response.status === 403) {

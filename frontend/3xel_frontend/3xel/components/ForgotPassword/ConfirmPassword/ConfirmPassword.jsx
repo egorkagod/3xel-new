@@ -39,12 +39,12 @@ export default function ConfirmPassword() {
         setIsLoading(true)
         try {
             const response = await fetch('/api-root/user/', {
-                method: "GET",
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ email_code: enteredCode, password: enteredPassword })
+                body: JSON.stringify({ email_code: enteredCode, password: enteredPassword, is_registered: true })
             })
 
             if (!response.ok) throw new Error()
