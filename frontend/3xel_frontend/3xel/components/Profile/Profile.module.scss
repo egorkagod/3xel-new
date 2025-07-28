@@ -153,9 +153,18 @@
                 justify-content: space-between;
             }
         }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        li button {
+            font-size: 14px;
+        }
     }
 
     .main {
         padding: 50px 20px 20px 20px;
     }
+
 }
