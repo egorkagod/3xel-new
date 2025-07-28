@@ -7,7 +7,6 @@ class RegisterViewSerializer(serializers.Serializer):
     password = serializers.CharField()
     email_code = serializers.CharField()
     name = serializers.CharField()
-    is_registered = serializers.BooleanField()
 
 
 class LoginViewSerializer(serializers.Serializer):
@@ -30,7 +29,6 @@ class UserModelSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     email_code = serializers.CharField()
     password = serializers.CharField()
-    is_registered = serializers.BooleanField()
 
 
 class ChangeNameSerializer(serializers.Serializer):

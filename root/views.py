@@ -17,14 +17,18 @@ class EmailCodeView(APIView):
         if not email:
             return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
         
+        is_registered = request.query_params.get('is_registered')
+        if not is_registered:
+            return Response({'error': 'is_registered is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
-            email_service.send_random_code(email, request.session)
+            email_service.send_random_code(email, request.session, is_registered=is_registered)
         except CodeResendTooSoonError:
             return Response({'error': 'Too fast, take it easy'}, status=status.HTTP_400_BAD_REQUEST)
         except FailedToSendCode:
             return Response({'error': 'Failed with sending code'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({'message': 'Code sent successfully'}, status=status.HTTP_200_OK)   
+        return Response({'message': 'Code sent successfully, if email registered'}, status=status.HTTP_200_OK)   
     
 
 class RegisterView(APIView):
