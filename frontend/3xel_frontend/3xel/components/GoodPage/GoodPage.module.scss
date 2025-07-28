@@ -8,8 +8,6 @@
 .globalContainer {
     width: 100vw;
     height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
     padding: 50px 10px;
     font-size: 16px;
@@ -57,5 +55,19 @@
         font-size: 18px;
         line-height: 1.5;
         letter-spacing: 0.05em;
+    }
+}
+
+@media (min-width: 1024px) {
+    .globalContainer {
+        display: grid;
+        grid-template-columns: repeat(3, fr);
+    }
+}
+
+@media (max-width: 1023px) {
+    .globalContainer {
+        display: flex;
+        flex-direction: column;
     }
 }
