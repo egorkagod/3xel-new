@@ -13,6 +13,8 @@ def get(user_id):
     user = User.objects.filter(pk=user_id).first()
     return user
 
-def change_password(user, password):
-    user.set_password(password)
-    user.save()
+def change_password(email, password):
+    user = User.objects.filter(username=email).first()
+    if user:
+        user.set_password(password)
+        user.save()

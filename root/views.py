@@ -126,11 +126,11 @@ class UserView(APIView):
         except Exception as e:
             return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+        email = serializer.validated_data['email']
         password = serializer.validated_data['password']
+        user_rep.change_password(email=email, password=password)
 
-        user_rep.change_password(user=request.user, password=password)
-
-        return Response({'message': 'Password is changed successfully'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Password is changed successfully, if user exists'}, status=status.HTTP_200_OK)
 
     def patch(self, request): # Флоу смены имени по паролю
         serializer = ChangeNameSerializer(data=request.data)
