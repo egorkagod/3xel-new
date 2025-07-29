@@ -19,7 +19,7 @@ export default function Profile() {
 
     useEffect(() => {
 
-        fetch('/api-root/user/', {
+        fetch('http://localhost:8000/api-root/user/', {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

@@ -11,15 +11,13 @@ from .repositories import user_rep
 from .serializers import LoginViewSerializer, RegisterViewSerializer, UserModelSerializer, ChangePasswordSerializer, ChangeNameSerializer
 
 
-class EmailCodeView(APIView):
+class EmailCodeView(APIView): # TODO все еще ошибка
     def get(self, request):
         email = request.query_params.get('email')
         if not email:
             return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        is_registered = request.query_params.get('is_registered')
-        if not is_registered:
-            return Response({'error': 'is_registered is required'}, status=status.HTTP_400_BAD_REQUEST)
+        is_registered = request.query_params.get('is_registered', False)
         
         try:
             email_service.send_random_code(email, request.session, is_registered=is_registered)
@@ -36,7 +34,7 @@ class RegisterView(APIView):
         serializer = RegisterViewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        email = serializer.validated_data['email'],
+        email = serializer.validated_data['email']
         code = serializer.validated_data['email_code']
 
         try:
@@ -56,13 +54,12 @@ class RegisterView(APIView):
         name = serializer.validated_data['name']
 
         try:
-            user = user_service.create(
+            user_service.create(
                 username=email,
                 email=email,
                 password=password,
                 first_name=name
             )
-            login(request, user)
         except UserExists:
             return Response({'error': 'User with this email already exist'}, status=status.HTTP_400_BAD_REQUEST)
         except UserCreationFailed:

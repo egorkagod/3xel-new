@@ -6,26 +6,26 @@ from root.repositories import email_rep
 from root.exceptions import InvalidCode, EmailMismatchError, FailedToSendCode, CodeResendTooSoonError
 
 
-def send_random_code(email, session, is_registered=False): # TODO добавить логику таймаутов
+def send_random_code(email: str, session: dict, is_registered: bool):
     if is_registered and not User.objects.filter(username=email).first():
         return True
 
     previous_created = session.get('created_at')
     now = datetime.now()
     
-    if not previous_created or previous_created - now > timedelta(minutes=2):
+    if not previous_created or now -datetime.fromisoformat(previous_created) > timedelta(minutes=2):
         code = email_rep.send_random_code(email)
         if not code:
             raise FailedToSendCode
         
         session['email_code'] = code
         session['email'] = email
-        session['created_at'] = datetime.now()
+        session['created_at'] = now.isoformat()
         return True
     
     raise CodeResendTooSoonError
 
-def check_code(session, code, email=None, is_registered=False):
+def check_code(session: dict, code: int, email=None, is_registered=False):
     try:
         if int(code) != session.get('email_code'):
             raise InvalidCode
