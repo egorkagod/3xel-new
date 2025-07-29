@@ -71,7 +71,7 @@ export default function GoodPage() {
         <div className={classes.globalContainer}>
             <div style={{ backgroundImage: variantId ? `url(${product.variants.find(v => v.id === variantId).image})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', borderRadius: '12px', boxShadow: '2px 2px 10px black' }} className={classes.image}></div>
             <div className={classes.infoAboutGood}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div className={classes.goodHeader} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <h2>{product.name}</h2>
                     <span style={{ fontSize: '20px' }}>{cost} ₽</span>
                 </div>
