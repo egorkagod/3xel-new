@@ -20,6 +20,7 @@
         width: 100%;
         height: 100%;
         justify-content: space-between;
+        gap: 10px;
 
     }
 
@@ -64,8 +65,8 @@
         grid-template-columns: repeat(3, 1fr);
 
         .image {
-            width: '100%';
-            height: '100%';
+            width: 100%;
+            height: 100%;
         }
     }
 }
@@ -76,8 +77,8 @@
         grid-template-columns: 1fr 1fr;
 
         .image {
-            width: '100%';
-            height: '100%';
+            width: 100%;
+            height: 100%;
         }
     }
 }
@@ -89,8 +90,8 @@
         gap: 20px;
 
         .image {
-            width: '80%';
-            height: '400px';
+            width: 80%;
+            height: 400px;
         }
     }
 }
