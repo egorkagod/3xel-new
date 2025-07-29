@@ -27,11 +27,11 @@ class UserModelSerializer(serializers.ModelSerializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
     email_code = serializers.IntegerField()
     password = serializers.CharField()
 
 
 class ChangeNameSerializer(serializers.Serializer):
-    email = serializers.EmailField()
     name = serializers.CharField()
     password = serializers.CharField()
