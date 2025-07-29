@@ -202,6 +202,12 @@ LOGGING = {
             'filename': BASE_DIR / 'logging' / 'pay.log',
             'formatter': 'verbose',
         },
+        'notification': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logging' / 'notification.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django': {
@@ -211,6 +217,11 @@ LOGGING = {
         },
         'pay': { 
             'handlers': ['pay'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'notification': { 
+            'handlers': ['notification'],
             'level': 'INFO',
             'propagate': True,
         },

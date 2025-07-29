@@ -13,6 +13,6 @@ pay_logger = logging.getLogger('pay')
 class NotificationView(APIView):
     def post(self, request):
         data = request.data
-        pay_logger.info(f"Получены данные от Т-Бизнес: {data}")
+        pay_logger.info(f"{data}")
         pay_service.update_status(data)
         return Response(status=status.HTTP_200_OK)

@@ -3,6 +3,7 @@ import uuid
 import requests
 import hashlib
 from dotenv import load_dotenv
+import logging
 
 from django.urls import reverse
 from django.conf import settings
@@ -13,6 +14,8 @@ from pay.repositories import pay_rep
 
 
 load_dotenv()
+
+notification_logger = logging.getLogger('notification')
 
 
 def init(order_id: uuid.UUID, amount: int):
@@ -45,8 +48,8 @@ def init(order_id: uuid.UUID, amount: int):
     return False
     
 def update_status(data): # TODO проверка токена не работает 
-    # token = data.pop('Token') 
-    # if token == _get_token(data):
+    token = data.pop('Token') 
+    notification_logger.info(f"{token} | {_get_token(data)}")
     pay_rep.update_state(data)
 
 # def get_status(payment_id):
