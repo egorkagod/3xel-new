@@ -104,6 +104,7 @@ export default function GoodPage() {
                 </div>
             </div>
             <div className={classes.description}>
+                    <h3>Описание:</h3>
                     {product.description}
             </div>
         </div>
