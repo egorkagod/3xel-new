@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from filehandler.models import File
 from pay.models import Payment
+from online_shop.utils import EnumWithDescriptions
 
 
 class Good(models.Model):
@@ -50,6 +51,16 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.quantity} шт ' + str(self.good_variant)
+    
+
+class OrderStatus(EnumWithDescriptions):
+    NEW = 'NEW', 'Создан'
+    PROCESSING = 'PROCESSING', 'В обработке'
+    SHIPPED = 'SHIPPED', 'Отправлен'
+    DELIVERED = 'DELIVERED', 'Доставлен'
+    CANCELED = 'CANCELED', 'Отменён'
+    RETURNED = 'RETURNED', 'Возврат'
+
 
 class Order(models.Model):
     class Meta:
@@ -57,18 +68,15 @@ class Order(models.Model):
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
-    STATUS_CHOICES = (
-        ('C', 'Created'),
-        ('P', 'Payed'),
-        ('D', 'Delivered'),
-        ('F', 'Finished'),
-    )
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='orders')
     payment = models.ForeignKey(Payment, on_delete=models.PROTECT, null=True)
     amount = models.IntegerField()
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='C')
+    status = models.CharField(
+        max_length=32,
+        choices=OrderStatus.choices(),
+        default=OrderStatus.NEW.value,
+    )    
     video = models.OneToOneField(File, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
