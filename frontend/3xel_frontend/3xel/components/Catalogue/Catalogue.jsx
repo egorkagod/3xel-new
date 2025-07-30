@@ -53,11 +53,16 @@ export default function Catalogue() {
     return (
         <main className={classes.globalContainer}>
 
-            {products.map((product) =>
-                <>
-                    <ProductCard key={product.id} product={product}></ProductCard>
-                </>
+            {isLoading ? <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Каталог загружается...</span> : (
+
+                products.map((product) =>
+                    <>
+                        <ProductCard key={product.id} product={product}></ProductCard>
+                    </>
+                )
             )}
+
+
 
         </main>
     )

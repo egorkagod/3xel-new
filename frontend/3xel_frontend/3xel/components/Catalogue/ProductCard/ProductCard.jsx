@@ -46,7 +46,7 @@ export default function ProductCard({ product }) {
                     </div>
                     <div className={classes.sizes} onClick={(e) => e.stopPropagation()}>
                         {uniqueSizesAndCosts.map((item, index) =>
-                            <span key={index} className={classNames(classes.size, { [classes.active]: item.size === selectedSize })} onClick={(e) => { setSelectedSize(item.size); setCost(item.price); e.stopPropagation()}}>{item.size}</span>
+                            <span key={index} className={classNames(classes.size, { [classes.active]: item.size === selectedSize })} onClick={(e) => { setSelectedSize(item.size); setCost(item.price); e.stopPropagation()}}>{item.size} см</span>
                         )}
                     </div>
                     {count === 0 ? (
