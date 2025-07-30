@@ -49,10 +49,10 @@ export default function Catalogue() {
     }, [])
 
     dispatcher(addGoods(products))
-    
+
     return (
         <main className={classes.globalContainer}>
-            <div className={classes.overlay}></div>
+
             {products.map((product) =>
                 <>
                     <ProductCard key={product.id} product={product}></ProductCard>
