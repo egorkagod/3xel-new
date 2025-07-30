@@ -76,9 +76,9 @@ export default function GoodPage() {
                     <span style={{ fontSize: '20px' }}>{cost} ₽</span>
                 </div>
                 <div className={classes.sizes}>
-                    <span>Выберите высоту модельки:</span>
+                    <span>Выберите высоту модельки (см):</span>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                        {uniqueSizesAndCosts.map((variant, index) => <div key={index} onClick={() => { setSelectedSize(variant.size); setCost(variant.price) }} style={{ cursor: 'pointer' }} className={classNames(classes.size, {[classes.active] : selectedSize === variant.size})}>{variant.size} см</div>)}
+                        {uniqueSizesAndCosts.map((variant, index) => <div key={index} onClick={() => { setSelectedSize(variant.size); setCost(variant.price) }} style={{ cursor: 'pointer' }} className={classNames(classes.size, {[classes.active] : selectedSize === variant.size})}>{variant.size}</div>)}
                     </div>
                 </div>
                 <div className={classes.colors}>
