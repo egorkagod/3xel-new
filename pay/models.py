@@ -38,4 +38,4 @@ class Payment(models.Model):
             return 'Неизвестный статус'
 
     def __str__(self):
-        return f'{self.id} - {self.status_description} - {self.amount}руб'
+        return f'{self.status_description} | {self.amount}руб'

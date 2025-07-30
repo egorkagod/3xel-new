@@ -82,9 +82,16 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
+    def status_description(self):
+        try:
+            return OrderStatus(self.status).description
+        except ValueError:
+            return 'Неизвестный статус'
+
+    @property
     def formatted_created_at(self):
         return self.created_at.strftime("%d.%m.%Y %H:%M") 
 
     def __str__(self):
-        return f'{self.id} - {self.formatted_created_at}'
+        return f'{self.status_description} | {self.formatted_created_at}'
     
