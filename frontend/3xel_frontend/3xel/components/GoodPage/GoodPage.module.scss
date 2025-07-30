@@ -14,6 +14,14 @@
     background: #fbeed6;
     font-family: 'Patrick Hand', sans-serif;
 
+    .goodHeader {
+        span {
+            border-radius: 100px;
+            padding: 10px;
+            background-color: white;
+        }
+    }
+
     .infoAboutGood {
         display: flex;
         flex-direction: column;
