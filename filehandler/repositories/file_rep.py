@@ -20,7 +20,7 @@ def upload_chunk(user_id, filename, format, chunk, chunk_number, total_chunks):
     if status == statuses.ALL_UPLOADED:
         filename = filename + '.' + format
         chunks_dir = chunk_path.parent
-        filepath = _get_or_create_filepath(filename, 'uploads')
+        filepath = _get_or_create_mediapath(filename, 'uploads')
         with open(filepath, 'wb') as f:
             for i in range(0, total_chunks):
                 with open(chunks_dir / str(i), 'rb') as chunk_file:
@@ -32,9 +32,14 @@ def upload_chunk(user_id, filename, format, chunk, chunk_number, total_chunks):
 
     return file_id, status
 
+def _get_or_create_mediapath(filename, parent_dir='uploads'):
+    # Логика создания пути к файлу в MEDIA папку
+    filepath = Path(settings.MEDIA_ROOT) / parent_dir / filename
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    return filepath
   
 def _get_or_create_filepath(filename, parent_dir='uploads'):
-    # Логика создания пути к файлу
+    # Логика создания пути к файлу в корень проекта
     filepath = Path(settings.BASE_DIR) / parent_dir / filename
     filepath.parent.mkdir(parents=True, exist_ok=True)
     return filepath
