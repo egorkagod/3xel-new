@@ -45,7 +45,7 @@ export default function Login() {
                 throw new Error("Неверный логин или пароль")
             }
 
-            if (!response.ok) {
+            if (!response.status === 403) {
                 throw new Error("Что-то пошло не так")
             }
 
