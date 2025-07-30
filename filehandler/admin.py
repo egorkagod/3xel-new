@@ -13,6 +13,6 @@ class FileAdmin(admin.ModelAdmin):
         if obj.file:
             return format_html(
                 "<a href='{}' download>Скачать</a>",
-                obj.file.url
+                obj.path.url
             )
         return "-"
