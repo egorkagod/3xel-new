@@ -10,9 +10,9 @@ class FileAdmin(admin.ModelAdmin):
 
     @admin.display(description="Скачать видео")
     def download_link(self, obj):
-        if obj.file:
+        if obj.path:
             return format_html(
                 "<a href='{}' download>Скачать</a>",
-                obj.file.url
+                obj.path.url
             )
         return "-"
