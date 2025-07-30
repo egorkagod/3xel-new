@@ -6,13 +6,13 @@ from .models import File
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'download_link', 'uploaded_at')
+    list_display = ('name', 'uploaded_at')
 
-    @admin.display(description="Скачать видео")
-    def download_link(self, obj):
-        if obj.path:
-            return format_html(
-                "<a href='{}' download>Скачать</a>",
-                obj.path.url
-            )
-        return "-"
+    # @admin.display(description="Скачать видео")
+    # def download_link(self, obj):
+    #     if obj.path:
+    #         return format_html(
+    #             "<a href='{}' download>Скачать</a>",
+    #             obj.path.url
+    #         )
+    #     return "-"
