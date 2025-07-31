@@ -5,6 +5,7 @@ import { getCookie } from '../../../utils/cookie'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { updateActiveOrders, updatePastOrders } from '../../store/ordersSlice'
+import Loader from '../../Loader/Loader'
 
 export default function Orders() {
     const [isLoading, setIsLoading] = useState(false)
@@ -44,7 +45,11 @@ export default function Orders() {
     return (
         <div className={classes.globalContainer}>
             {isLoading ? (
-                <span className={classes.empty}>Список заказов загружается...</span>
+                <div className={classes.empty} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <Loader></Loader>
+                    <span className={classes.empty}>Список заказов загружается...</span>
+                </div>
+                
             ) : (
                 data.length === 0 ? (<>
                     <div className={classes.activeOrders}>

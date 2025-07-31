@@ -54,7 +54,7 @@ export default function Catalogue() {
     return (
         <main className={classes.globalContainer}>
 
-            {isLoading ? <div style={{ display: 'flex', alignItems: 'center', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}> 
+            {isLoading ? <div style={{ display: 'flex', alignItems: 'center', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', gap: '5px' }}> 
                 <Loader color={'black'}></Loader>
                 <span>Каталог загружается...</span>
             </div> : (
