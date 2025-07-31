@@ -153,7 +153,7 @@ export default function SignUp() {
                             <span>Я согласен(-на) с <a className={classes.policyLink} href="/files/privacy_policy_3xel.pdf" target='_blank'>политикой обработки персональных данных</a></span>
                         </label>
 
-                        <button type='submit' className={classes.signUpBtn} disabled={isLoading}><Loader></Loader> {isLoading ? 'Отправляем...' : 'Зарегистрироваться'}</button>
+                        <button type='submit' className={classes.signUpBtn} disabled={isLoading}><Loader color={'white'}></Loader> {isLoading ? 'Отправляем...' : 'Зарегистрироваться'}</button>
 
                     </form>
                 </div>

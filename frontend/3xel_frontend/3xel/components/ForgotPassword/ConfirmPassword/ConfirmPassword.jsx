@@ -82,7 +82,7 @@ export default function ConfirmPassword() {
                         }}>Пароли не совпадают</span> : null}
                     </div>
 
-                    <button type='submit' className={classes.submitBtn}><Loader></Loader> {isLoading ? 'Проверяем...' : 'Отправить'}</button>
+                    <button type='submit' className={classes.submitBtn}><Loader color={'white'}></Loader> {isLoading ? 'Проверяем...' : 'Отправить'}</button>
                 </form>
             </div>
         </div>
