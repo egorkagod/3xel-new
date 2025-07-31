@@ -16,6 +16,7 @@ import variantImage6166 from '/images/good-variant-61-66.jpg'
 import variantImage67 from '/images/good-variant-67.jpg'
 import { useDispatch } from 'react-redux'
 import { addGoods } from '../store/goodsSlice'
+import Loader from '../Loader/Loader'
 
 export default function Catalogue() {
 
@@ -53,7 +54,10 @@ export default function Catalogue() {
     return (
         <main className={classes.globalContainer}>
 
-            {isLoading ? <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Каталог загружается...</span> : (
+            {isLoading ? <div style={{ display: 'flex', alignItems: 'center' }}> 
+                <Loader color={'black'}></Loader>
+                <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Каталог загружается...</span>
+            </div> : (
 
                 products.map((product) =>
                     <>
