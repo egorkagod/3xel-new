@@ -14,6 +14,7 @@ import { toast } from 'react-toastify'
 import { setAuthorized } from '../store/profileSlice.jsx'
 import { useDispatch } from 'react-redux'
 import toMainArrowIcon from '/images/arrow-to-main.png'
+import Loader from '../Loader/Loader'
 
 export default function Login() {
     const [enteredEmail, setEnteredEmail] = useState('')
@@ -82,7 +83,7 @@ export default function Login() {
                         </div>
 
                         <Link className={classes.link} to="/forgot-password"><i>Забыли пароль?</i></Link>
-                        <button type='submit' className={classes.loginBtn} disabled={isLoading}>{isLoading ? 'Загружаем...' : 'Войти'}</button>
+                        <button type='submit' className={classes.loginBtn} disabled={isLoading}><Loader></Loader> {isLoading ? 'Загружаем...' : 'Войти'}</button>
 
                     </form>
 

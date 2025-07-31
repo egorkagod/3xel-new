@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { setRecoveryEmail } from '../../components/store/profileRecovery'
 import { toast } from 'react-toastify'
+import Loader from '../Loader/Loader'
 
 export default function ForgotPassword() {
 
@@ -58,7 +59,7 @@ export default function ForgotPassword() {
                         color: ' rgba(255, 0, 0, 0.6)',
                         fontSize: '14px'
                     }}>Введите корректный Email</span> : null}
-                    <button type='submit' className={classes.submitBtn}>{isLoading ? 'Отправляем...' : 'Продолжить'}</button>
+                    <button type='submit' className={classes.submitBtn}><Loader></Loader> {isLoading ? 'Отправляем...' : 'Продолжить'}</button>
                 </form>
             </div>
         </div>

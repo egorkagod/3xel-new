@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { getCookie } from '../../utils/cookie.js'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import Loader from '../Loader/Loader.jsx'
 
 export default function ConfirmEmail() {
     const [enteredCode, setEnteredCode] = useState('')
@@ -56,7 +57,7 @@ export default function ConfirmEmail() {
                 <div className={classes.confirmBlock}>
                     <h4>На почту <span>{enteredEmail}</span> было отправлено письмо с кодом для подтверждения</h4>
                     <input type="text" placeholder='Введите код из письма' onChange={(e) => setEnteredCode(e.target.value)} />
-                    <button onClick={confirm} disabled={isLoading}>{isLoading ? 'Проверяем...' : 'Подтвердить'}</button>
+                    <button onClick={confirm} disabled={isLoading}><Loader /> {isLoading ? 'Проверяем...' : 'Подтвердить'}</button>
                     {error ? <span style={{ width: '100%', textAlign: 'center', color: 'red', fontSize: '12px' }}>Неверный код</span> : null}
                 </div>
             </div>

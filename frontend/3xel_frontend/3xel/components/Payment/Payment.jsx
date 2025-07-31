@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { getCookie } from '../../utils/cookie'
 import CDEK from './CDEK/CDEK'
+import Loader from '../Login/Login'
 
 export default function Payment() {
     const csrfToken = getCookie('csrftoken')

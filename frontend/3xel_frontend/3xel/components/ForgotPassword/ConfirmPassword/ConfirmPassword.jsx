@@ -5,6 +5,7 @@ import VideoFrame from '../../MainPage/VideoFrame/VideoFrame'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router'
+import Loader from '../../Loader/Loader'
 
 export default function ConfirmPassword() {
 
@@ -81,7 +82,7 @@ export default function ConfirmPassword() {
                         }}>Пароли не совпадают</span> : null}
                     </div>
 
-                    <button type='submit' className={classes.submitBtn}>{isLoading ? 'Проверяем...' : 'Отправить'}</button>
+                    <button type='submit' className={classes.submitBtn}><Loader></Loader> {isLoading ? 'Проверяем...' : 'Отправить'}</button>
                 </form>
             </div>
         </div>
