@@ -47,7 +47,7 @@ export default function Orders() {
             {isLoading ? (
                 <div className={classes.empty} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                     <Loader color={'black'}></Loader>
-                    <span className={classes.empty}>Список заказов загружается...</span>
+                    <span>Список заказов загружается...</span>
                 </div>
                 
             ) : (
