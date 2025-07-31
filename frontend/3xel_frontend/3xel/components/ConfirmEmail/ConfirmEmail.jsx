@@ -57,7 +57,7 @@ export default function ConfirmEmail() {
                 <div className={classes.confirmBlock}>
                     <h4>На почту <span>{enteredEmail}</span> было отправлено письмо с кодом для подтверждения</h4>
                     <input type="text" placeholder='Введите код из письма' onChange={(e) => setEnteredCode(e.target.value)} />
-                    <button onClick={confirm} disabled={isLoading}><Loader color={'white'} /> {isLoading ? 'Проверяем...' : 'Подтвердить'}</button>
+                    <button onClick={confirm} disabled={isLoading}>{isLoading ? `${<Loader color={'white'} />} Проверяем...` : 'Подтвердить'}</button>
                     {error ? <span style={{ width: '100%', textAlign: 'center', color: 'red', fontSize: '12px' }}>Неверный код</span> : null}
                 </div>
             </div>

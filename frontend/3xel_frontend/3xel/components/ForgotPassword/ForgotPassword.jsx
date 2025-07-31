@@ -59,7 +59,7 @@ export default function ForgotPassword() {
                         color: ' rgba(255, 0, 0, 0.6)',
                         fontSize: '14px'
                     }}>Введите корректный Email</span> : null}
-                    <button type='submit' className={classes.submitBtn}><Loader color={'white'}></Loader> {isLoading ? 'Отправляем...' : 'Продолжить'}</button>
+                    <button type='submit' className={classes.submitBtn}>{isLoading ? `${<Loader color={'white'}></Loader>} Отправляем...` : 'Продолжить'}</button>
                 </form>
             </div>
         </div>
