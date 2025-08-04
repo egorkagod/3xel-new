@@ -58,6 +58,7 @@ class OrderStatus(EnumWithDescriptions):
     PROCESSING = 'PROCESSING', 'В обработке'
     SHIPPED = 'SHIPPED', 'Отправлен'
     DELIVERED = 'DELIVERED', 'Доставлен'
+    CONFIRMED = 'CONFIRMED', 'Завершен'
     CANCELED = 'CANCELED', 'Отменён'
     RETURNED = 'RETURNED', 'Возврат'
 
