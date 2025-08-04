@@ -47,28 +47,23 @@ def init(order_id: uuid.UUID, amount: int):
         return data['PaymentURL']
     return False
     
-def update_status(data): # TODO проверка токена не работает 
-    token = data.pop('Token') 
-    notification_logger.info(f"{token} | {_get_token(data)}")
+def update_status(data):
+    token = data.pop('Token')
+    notification_logger.info(f"{token} | {_get_token(_normalize_data_like_json(data))}")
     pay_rep.update_state(data)
 
-# def get_status(payment_id):
-#     url = 'https://securepay.tinkoff.ru/v2/GetState'
-#     headers = {
-#         'Content-Type': 'application/json',
-#     }
-#     payload = {
-#         'TerminalKey': os.getenv('TERMINAL_KEY'),
-#         'PaymentId': str(payment_id),
-#     }
-#     payload = _sign_by_token(payload)
+def _normalize_data_like_json(data):
+    result = dict()
+    for key, value in data.items():
+        match value:
+            case bool():
+                result[key] = str(value).lower()
+            case int():
+                result[key] = str(value)
+            case _:
+                result[key] = value
+    return result
 
-#     response = requests.post(url, headers=headers, json=payload)
-#     data = response.json()
-
-#     if data['Success']:
-
-    
 def _sign_by_token(payload: dict):
     payload['Token'] = _get_token(payload)
     return payload
