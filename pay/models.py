@@ -13,7 +13,7 @@ class PaymentStatus(EnumWithDescriptions):
     PARTIAL_REFUNDED = 'PARTIAL_REFUNDED', 'Частичный возврат'
     REFUNDED = 'REFUNDED', 'Полный возврат'
     REJECTED = 'REJECTED', 'Ошибка списания'
-    DEADLINE_EXPIRED = 'DEADLINE_EXPIRED', 'Истёк срок ожидания 3DS'
+    DEADLINE_EXPIRED = 'DEADLINE_EXPIRED', 'Истек срок ожидания 3DS'
 
 
 class Payment(models.Model):
