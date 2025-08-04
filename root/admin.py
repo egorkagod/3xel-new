@@ -3,8 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 from order.models import Order
-from pay.models import Payment
 
+
+admin.site.site_header = "Панель управления 3xel"
+admin.site.site_title = "3xel Admin"                  
+admin.site.index_title = ""
 
 admin.site.unregister(User)
 
