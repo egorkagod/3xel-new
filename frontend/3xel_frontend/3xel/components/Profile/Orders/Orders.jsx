@@ -54,12 +54,12 @@ export default function Orders() {
                 data.length === 0 ? (<>
                     <div className={classes.activeOrders}>
                         <span className={classes.header}>Активные заказы: {data.length}</span>
-                        <span className={classes.empty}>Активных нет</span>
+                        <span style={{ justifySelf: 'center' }}>Активных нет</span>
                     </div>
 
                     <div className={classes.pastOrders}>
                         <span className={classes.header}>Прошлые заказы</span>
-                        <span className={classes.empty}>Прошлых нет</span>
+                        <span style={{ justifySelf: 'center' }}>Прошлых нет</span>
                     </div>
                 </>) : (
                     <>
@@ -70,7 +70,7 @@ export default function Orders() {
 
                         <div className={classes.pastOrders}>
                             <span className={classes.header}>Прошлые заказы</span>
-                            <span className={classes.empty}>Прошлых нет</span>
+                            <span style={{ justifySelf: 'center' }}>Прошлых нет</span>
                         </div>
                     </>
                 )
