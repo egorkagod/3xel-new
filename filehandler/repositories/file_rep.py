@@ -18,7 +18,7 @@ def upload_chunk(user_id, filename, format, chunk, chunk_number, total_chunks):
     status = _write_that_chunk_upload(filename, chunk_number, total_chunks)
     file_id = -1
     if status == statuses.ALL_UPLOADED:
-        filename = filename + '.' + format
+        filename = filename + format
         chunks_dir = chunk_path.parent
         filepath, urlpath = _get_or_create_mediapath(filename, 'uploads')
         with open(filepath, 'wb') as f:
