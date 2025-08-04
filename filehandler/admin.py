@@ -11,6 +11,6 @@ class FileAdmin(admin.ModelAdmin):
 
     def download_link(self, obj):
         if obj.path:
-            return format_html(f'<a href="{settings.SITE_DOMEN}{obj.path}" target="_blank">Скачать</a>')
+            return format_html(f'<a href="{settings.SITE_DOMEN}{obj.path}" target="_blank">Открыть</a>')
         return '-'
-    download_link.short_description = 'Ссылка'
+    download_link.short_description = 'Просмотр'
