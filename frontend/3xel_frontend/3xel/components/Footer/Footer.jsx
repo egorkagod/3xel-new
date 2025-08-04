@@ -23,7 +23,6 @@ export default function Footer() {
             <div className={classes.infoBlock}>
                 <ul>
                     <h4>Покупателям:</h4>
-                    <li><a href="#">Возврат</a></li>
                     <li><a href="/files/offer_3xel.pdf" target='_blank'>Оферта</a></li>
                     <li><a href="/files/privacy_policy_3xel.pdf" target='_blank'>Политика конфиденциальности</a></li>
                 </ul>
