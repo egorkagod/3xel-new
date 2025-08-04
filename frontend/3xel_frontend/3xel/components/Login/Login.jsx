@@ -83,7 +83,12 @@ export default function Login() {
                         </div>
 
                         <Link className={classes.link} to="/forgot-password"><i>Забыли пароль?</i></Link>
-                        <button type='submit' className={classes.loginBtn} disabled={isLoading}>{isLoading ? `${<Loader color={'white'}></Loader>} Загружаем...` : 'Войти'}</button>
+                        <button type='submit' className={classes.loginBtn} disabled={isLoading}>{isLoading ? (
+                            <>
+                                <Loader color={'white'} />
+                                <span>Загружаем...</span>
+                            </>
+                        ) : 'Войти'}</button>
 
                     </form>
 

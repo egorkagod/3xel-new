@@ -1,18 +1,16 @@
-from django.utils.html import format_html
 from django.contrib import admin
+from django.utils.html import format_html
+from django.conf import settings
 
 from .models import File
 
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'uploaded_at')
+    list_display = ('name', 'uploaded_at', 'download_link')
 
-    # @admin.display(description="Скачать видео")
-    # def download_link(self, obj):
-    #     if obj.path:
-    #         return format_html(
-    #             "<a href='{}' download>Скачать</a>",
-    #             obj.path.url
-    #         )
-    #     return "-"
+    def download_link(self, obj):
+        if obj.path:
+            return format_html(f'<a href="{settings.SITE_DOMEN}{obj.path}" target="_blank">Скачать</a>')
+        return '-'
+    download_link.short_description = 'Ссылка'
