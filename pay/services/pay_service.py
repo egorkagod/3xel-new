@@ -31,6 +31,7 @@ def init(order_id: uuid.UUID, amount: int):
         'PayType': 'O',
         'Language': 'ru',
         'NotificationURL': settings.SITE_DOMEN + reverse('pay:notification'),
+        'FailURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'SuccessURL': settings.SITE_DOMEN + '/profile/my-orders/',
     }
 
