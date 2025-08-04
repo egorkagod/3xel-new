@@ -6,10 +6,10 @@
 }
 
 .globalContainer {
-    color: white;
     justify-self: center;
     font-family: 'Patrick Hand', sans-serif;
     line-height: 1.6;
+    font-size: 26px;
 
     .unstyledLink {
         text-decoration: none;
@@ -25,21 +25,38 @@
         align-items: center;
         font-size: 16px;
         padding: 10px 50px;
-        border: 2px solid white;
+        border: 2px solid;
         transition: all 0.2s ease;
         cursor: pointer;
 
-        &:hover {
-            background-color: white;
-            color: black;
+    }
+}
+
+@media (min-width: 1024px) {
+    .globalContainer {
+        color: white;
+
+        .toCotologueBtn {
+            border-color: white;
+
+            &:hover {
+                background-color: white;
+                color: black;
+            }
         }
     }
 }
 
-@media (min-width: 577px) {
+@media (max-width: 1023px) {
     .globalContainer {
         grid-column: 1 / 2;
-        font-size: 26px;
+        color: black;
+
+        .toCotologueBtn {
+            border-color: black;
+            background-color: black;
+            color: white;
+        }
     }
 }
 
@@ -48,5 +65,12 @@
         grid-row: 2 / 3;
         font-size: 20px;
         margin-top: 40px;
+        color: black;
+
+        .toCotologueBtn {
+            border-color: black;
+            background-color: black;
+            color: white;
+        }
     }
 }
