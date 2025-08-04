@@ -81,7 +81,7 @@ export default function OrderItem({ order }) {
     }
 
     return (
-        <div className={classes.globalContainer} onClick={() => navigate(`/order/${order.id}`)}>
+        <div className={classes.globalContainer}>
             <div className={classes.header}>
                 <span>Время создания заказа: {order.created_at}</span>
             </div>
