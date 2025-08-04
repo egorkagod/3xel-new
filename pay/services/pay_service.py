@@ -49,8 +49,8 @@ def init(order_id: uuid.UUID, amount: int):
     
 def update_status(data):
     token = data.pop('Token')
-    notification_logger.info(f"{token} | {_get_token(_normalize_data_like_json(data))}")
-    pay_rep.update_state(data)
+    if token == _get_token(_normalize_data_like_json(data)):
+        pay_rep.update_state(data)
 
 def _normalize_data_like_json(data):
     result = dict()

@@ -78,8 +78,8 @@ class Order(models.Model):
         default=OrderStatus.NEW.value,
     )    
     video = models.OneToOneField(File, on_delete=models.SET_NULL, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     @property
     def status_description(self):
