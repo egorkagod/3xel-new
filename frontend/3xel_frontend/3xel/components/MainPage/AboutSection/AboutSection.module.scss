@@ -1,0 +1,28 @@
+.aboutSection {
+    
+    .contentContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+
+        .infoBlock {
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,.06);
+            box-shadow: 0 10px 24px rgba(0,0,0,.06);
+            padding: 18px;
+            width: 100%;
+
+            p {
+                color: #6e6a65;
+                margin: 16px 0;
+            }
+        }
+    }
+
+    @media (max-width: 767px) {
+        .contentContainer {
+            grid-template-columns: 1fr;
+        }
+    }
+}

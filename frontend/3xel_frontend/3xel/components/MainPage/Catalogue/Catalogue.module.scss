@@ -1,0 +1,18 @@
+.catalogue {
+    padding-top: 84px;
+    padding-bottom: 84px;
+
+    .goodsContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: stretch;
+    }
+
+    @media (max-width: 1199px) {
+    .goodsContainer {
+        grid-template-columns: 1fr;
+    }
+}
+}
+

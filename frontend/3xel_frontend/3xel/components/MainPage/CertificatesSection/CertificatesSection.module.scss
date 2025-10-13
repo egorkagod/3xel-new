@@ -1,0 +1,16 @@
+.certificatesContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 1023px) {
+    .certificatesSection {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .certificatesContainer {
+        grid-template-columns: 1fr;
+    }
+}

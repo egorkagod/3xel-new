@@ -1,0 +1,27 @@
+.globalSectionHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .sectionHeader {
+        font-size: 28px;
+        color: #2b2b2b;
+        font-weight: 700;
+    }
+
+    .sectionSubtitle {
+        font-size: 16px;
+        color: #6e6a65;
+    }
+}
+
+@media (max-width: 767px) {
+    .globalSectionHeader {
+        flex-direction: column;
+        justify-content: none;
+        align-items: start;
+        gap: 10px;
+    }
+}
