@@ -40,3 +40,13 @@ class Payment(models.Model):
 
     def __str__(self):
         return f'{self.status_description} | {self.amount}руб'
+    
+
+class Promocode(models.Model):
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
+
+    denominaion = models.IntegerField()
+    code = models.CharField(max_length=30)
+    promo = models.CharField(max_length=40)
