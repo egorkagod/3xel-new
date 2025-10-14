@@ -11,9 +11,6 @@ run:
 install-requirements:
 	uv pip install -r requirements.txt
 
-makemigrations:
-	$(PYTHON) manage.py makemigrations
-
 migrate:
 	$(PYTHON) manage.py migrate
 
