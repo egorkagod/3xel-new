@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH to server and restart project
+      - name: SSH to server and rebuild project
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.HOST }}
@@ -22,4 +22,5 @@ jobs:
             make npm-install
             make build
             pkill gunicorn
+            make migrate
             make gun-start
