@@ -1,0 +1,30 @@
+.discountsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    h1 {
+        font-size: 40px;
+    }
+
+    .discountsSystem {
+        background: #ffffff;
+        padding: 18px;
+        border-radius: 18px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .06);
+        border: 1px solid rgba(0, 0, 0, .06);
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        span {
+            display: block;
+            color: #6e6a65;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+    }
+}

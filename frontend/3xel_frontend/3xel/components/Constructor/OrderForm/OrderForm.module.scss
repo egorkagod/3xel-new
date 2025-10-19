@@ -1,0 +1,152 @@
+.orderFormSection {
+    width: 100%;
+    padding: 0;
+    padding-top: 20px;
+    border-top: none;
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .orderFormBlock {
+        background: #FFFFFF;
+        padding: 18px;
+        border: 1px solid rgba(0, 0, 0, .06);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .06);
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .orderForm {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: center;
+
+        .formField {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            label {
+                font-size: 14px;
+                color: #6E6A84;
+            }
+
+            input,
+            textarea {
+                all: unset;
+                padding: 10px 12px;
+                border-radius: 12px;
+                width: 100%;
+                border: 1px solid rgba(0, 0, 0, .06);
+                background: #faf8f5;
+                color: #2b2b2b;
+                box-sizing: border-box;
+                transition: all 0.2s ease;
+
+                &:focus {
+                    border-color: black;
+                }
+            }
+
+            textarea {
+                resize: none;
+            }
+
+            .select {
+                width: 60%;
+            }
+
+            .fileUploader {
+                border: 1px dashed rgba(0, 0, 0, 0.3);
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 12px;
+                cursor: pointer;
+
+                input {
+                    display: none;
+                }
+            }
+        }
+
+        .calcDelivery {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+
+            span {
+                font-size: 13px;
+                color: #6E6A84;
+            }
+        }
+
+        .checkboxFields {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .field {
+                width: 100%;
+                display: flex;
+                gap: 10px;
+                justify-content: flex-start;
+                align-items: center;
+                font-size: 13px;
+                color: #6e6a65;
+            }
+        }
+
+    }
+
+    .resultBlock {
+        display: flex;
+        flex-direction: column;
+        padding-top: 13px;
+        border-top: 1px solid rgba(0, 0, 0, .06);
+        gap: 13px;
+
+        .resultCost {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+
+            .result {
+                color: #2b2b2b;
+            }
+        }
+
+        .goodsCost {
+            font-size: 13px;
+            color: #6e6a65;
+        }
+    }
+
+    @media (max-width: 1199px) {
+        .orderForm {
+            grid-template-columns: 1fr;
+
+            .formField {
+                .select {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 387px) {
+        .resultBlock {
+            .resultCost {
+                flex-direction: column;
+            }
+        }
+    }
+}

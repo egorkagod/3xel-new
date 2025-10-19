@@ -4,7 +4,7 @@ import Step from './Step/Step'
 
 export default function HowItWorks() {
     return (
-        <section className={classes.howItWorksSection}>
+        <section className={classes.howItWorksSection} id='process'>
             <SectionHeader header='Как это работает'>
                 От идеи до подарка — спокойно и понятно.
             </SectionHeader>

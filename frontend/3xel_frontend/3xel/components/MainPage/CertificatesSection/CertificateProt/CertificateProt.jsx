@@ -1,5 +1,6 @@
 import classes from './CertificateProt.module.scss'
 import Button from '../../../Button/Button'
+import { HashLink } from 'react-router-hash-link'
 
 export default function CertificateProt() {
     return (
@@ -15,7 +16,9 @@ export default function CertificateProt() {
                 <span className={classes.certificateType}>Подарочный сертификат</span>
                 <h4 className={classes.certificateName}>Сертификат на бюст</h4>
                 <span className={classes.certificateDescription}>Выберите номинал — всё включено: изготовление и доставка.</span>
-                <Button color='golden'>Выбрать номинал</Button>
+                <HashLink style={{ all: 'unset' }} to='/constructor#goods'>
+                    <Button color='golden'>Выбрать номинал</Button>
+                </HashLink>
             </div>
         </div>
     )

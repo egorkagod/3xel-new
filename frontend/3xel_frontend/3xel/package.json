@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.8.2",
+    "@reduxjs/toolkit": "^2.9.1",
     "@studio-freight/lenis": "^1.0.42",
     "@uppy/core": "^4.4.7",
     "@uppy/dashboard": "^4.3.4",
@@ -26,10 +26,12 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.8",
+    "react-hook-form": "^7.65.0",
     "react-redux": "^9.2.0",
     "react-router": "^7.6.0",
     "react-router-dom": "^7.6.1",
-    "react-select": "^5.10.1",
+    "react-router-hash-link": "^2.4.3",
+    "react-select": "^5.10.2",
     "react-toastify": "^11.0.5",
     "sass": "^1.89.0",
     "swiper": "^11.2.8"

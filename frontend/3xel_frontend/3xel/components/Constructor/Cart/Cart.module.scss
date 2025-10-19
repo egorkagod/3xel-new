@@ -1,0 +1,53 @@
+.cartSection {
+    padding: 0;
+    padding-top: 20px;
+    border-top: 0;
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .cart {
+        width: 100%;
+        background: #FFFFFF;
+        padding: 18px;
+        border: 1px solid rgba(0,0,0,.06);
+        box-shadow: 0 10px 24px rgba(0,0,0,.06);
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+
+        p {
+            color: #2B2B39;
+            font-size: 16px;
+        }
+
+        .addedCertificate, .addedBust {
+            border-bottom: 1px solid rgba(0,0,0,.06);
+            padding: 8px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .itemDescription {
+            color: #2b2b2b;
+            font-size: 16px;
+        }
+
+        .addedBust {
+
+            .itemDescription {
+                display: flex;
+                flex-direction: column;
+
+                .cost {
+                    font-size: 13px;
+                    color: #6e6a65;
+                }
+            }
+        }
+    }
+}

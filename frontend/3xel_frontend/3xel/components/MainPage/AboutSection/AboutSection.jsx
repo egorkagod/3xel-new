@@ -3,7 +3,7 @@ import SectionHeader from '../../SectionHeader/SectionHeader'
 
 export default function AboutSection() {
     return (
-        <section className={classes.aboutSection}>
+        <section className={classes.aboutSection} id='about'>
             <SectionHeader header='О 3xel'>
                 Технологии и ремесло ради памяти.
             </SectionHeader>

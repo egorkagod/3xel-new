@@ -6,6 +6,8 @@ import image4 from '../../../assets/carusel_image4.png'
 import Button from '../../Button/Button'
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
+import { HashLink } from 'react-router-hash-link'
+import { Link } from 'react-router-dom'
 
 export default function MainUpperSection() {
 
@@ -22,14 +24,14 @@ export default function MainUpperSection() {
         const intervalId = setInterval(() => {
             setCurrentSlide(prev => (prev + 1) % slides.length)
         }, 5000)
-        
+
         return () => clearInterval(intervalId)
     }, [])
 
     return (
         <section className={classes.upperSection}>
             <div className={classes.leftSide}>
-                {slides.map(slide => <img src={slide} className={classNames(classes.slide, {[classes.active] : slide === slides[currentSlide]})} alt='Картинка клиента с бюстом' />)}
+                {slides.map(slide => <img src={slide} className={classNames(classes.slide, { [classes.active]: slide === slides[currentSlide] })} alt='Картинка клиента с бюстом' />)}
             </div>
             <div className={classes.rightSide}>
                 <span className={classes.supText}>Подарок, который помнят</span>
@@ -40,8 +42,12 @@ export default function MainUpperSection() {
                     Картонный конструктор, пластиковый премиум и подарочные сертификаты с включённой доставкой.
                 </span>
                 <div className={classes.buttonsContainer}>
-                    <Button color='golden'>Открыть конструктор</Button>
-                    <Button color='white'>Купить сертификат</Button>
+                    <Link style={{ all: 'unset' }} to='/constructor'>
+                        <Button color='golden'>Открыть конструктор</Button>
+                    </Link>
+                    <HashLink style={{ all: 'unset' }} smooth to='/#certificates'>
+                        <Button color='white'>Купить сертификат</Button>
+                    </HashLink>
                 </div>
             </div>
         </section>

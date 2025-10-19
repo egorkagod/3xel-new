@@ -4,7 +4,7 @@ import CertificateProt from './CertificateProt/CertificateProt'
 
 export default function CertificatesSection() {
     return (
-        <section className={classes.certificatesSection}>
+        <section className={classes.certificatesSection} id='certificates'>
             <SectionHeader header='Подарочные сертификаты'>
                 Изготовление, упаковка и доставка включены.
             </SectionHeader>
