@@ -48,4 +48,12 @@
             color: #6e6a65;
         }
     }
+
+    @media (max-width: 767px) {
+        .denominations {
+            span {
+                font-size: 10px;
+            }
+        }
+    }
 }

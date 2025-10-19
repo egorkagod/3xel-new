@@ -62,4 +62,19 @@
             }
         }
     }
+
+    @media (max-width: 767px) {
+        .denominationsList {
+            span {
+                font-size: 10px;
+            }
+        }
+
+        .selectDenomination {
+            .denomination {
+                font-size: 10px;
+                white-space: nowrap;
+            }
+        }
+    }
 }
