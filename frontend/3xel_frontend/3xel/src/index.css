@@ -18,6 +18,6 @@ section {
 
 @media (max-width: 1199px) {
     section {
-        padding: 40px 60px;
+        padding: 60px 40px;
     }
 }
