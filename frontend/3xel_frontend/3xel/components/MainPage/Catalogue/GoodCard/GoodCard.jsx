@@ -1,4 +1,3 @@
-import classes from './GoodCard.module.scss'
 import { useState, useRef, useMemo, useEffect } from 'react'
 import classNames from 'classnames'
 import Button from '../../../Button/Button'
@@ -6,6 +5,8 @@ import PopUp from '../../../PopUp/PopUp'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../../../store/cartSlice'
 import { HashLink } from 'react-router-hash-link'
+
+import classes from './GoodCard.module.scss'
 
 export default function GoodCard({ good, forConstructor }) {
 
@@ -18,7 +19,7 @@ export default function GoodCard({ good, forConstructor }) {
     const [selectedColor, setSelectedColor] = useState(good.variants[0].color)
     const [selectedSize, setSelectedSize] = useState(good.variants[0].size)
     const [userSelected, setUserSelected] = useState(false)
-    const selectedVariant = useMemo(() => good.variants.find(v => v.size === selectedSize && v.color === selectedColor), [selectedColor, selectedSize]) || good.variants[0]
+    const selectedVariant = useMemo(() => good.variants.find(v => v.size === selectedSize && v.color === selectedColor), [selectedColor, selectedSize, good]) || good.variants[0]
 
     const [selectedImage, setSelectedImage] = useState(selectedVariant ? selectedVariant.images[0] : null)
 
@@ -60,14 +61,22 @@ export default function GoodCard({ good, forConstructor }) {
         <div className={classes.goodCard}>
             <PopUp isActive={popupIsActive}>Товар добавлен в конструктор</PopUp>
             <div className={classes.imageContainer}>
-                {uniqueImages.map(image => <img src={image} className={classNames(classes.image, { [classes.active]: image === selectedImage })} />)}
+                {uniqueImages.map(image => (
+                    <img
+                        key={image}
+                        src={image}
+                        className={classNames(classes.image, { [classes.active]: image === selectedImage })}
+                    />
+                ))}
             </div>
             <div className={classes.properties}>
                 <div className={classes.technologies}>
                     {good.technology ? (
-                        good.technology.map(tech => <span className={classes.technology}>
-                            {tech}
-                        </span>)
+                        good.technology.map(tech => (
+                            <span key={tech} className={classes.technology}>
+                                {tech}
+                            </span>
+                        ))
                     ) : null}
                 </div>
                 <h4 className={classes.goodName}>
@@ -85,7 +94,15 @@ export default function GoodCard({ good, forConstructor }) {
                         <span>Размеры</span>
                         <div style={{ display: 'flex', gap: '6px' }}>
                             {uniqueSizes ? (
-                                uniqueSizes.map((size, index) => <div key={index} className={classNames(classes.size, { [classes.active]: selectedSize === size })} onClick={() => setSelectedSize(size)}>{size}</div>)
+                                uniqueSizes.map((size) => (
+                                    <div
+                                        key={size}
+                                        className={classNames(classes.size, { [classes.active]: selectedSize === size })}
+                                        onClick={() => setSelectedSize(size)}
+                                    >
+                                        {size}
+                                    </div>
+                                ))
                             ) : (null)}
                         </div>
                     </div>
@@ -97,7 +114,7 @@ export default function GoodCard({ good, forConstructor }) {
                     <div className={classes.colors}>
                         {uniqueColors ? (
                             uniqueColors.map(color =>
-                                <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '50%', outline: selectedColor === color ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
+                                <span key={color} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '50%', outline: selectedColor === color ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
                                     <span
                                         style={{
                                             background: color, borderRadius: '50%',
@@ -117,6 +134,7 @@ export default function GoodCard({ good, forConstructor }) {
                     {selectedVariant.images ? (
                         selectedVariant.images.map(image =>
                             <img
+                                key={image}
                                 src={image} alt={`${good.name} в цвете ${selectedVariant.colorName}`}
                                 onClick={() => { setSelectedImage(image); setUserSelected(true) }} style={{ outline: image === selectedImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
                             </img>)

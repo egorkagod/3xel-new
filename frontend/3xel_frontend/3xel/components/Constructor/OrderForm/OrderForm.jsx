@@ -1,19 +1,140 @@
-import classes from './OrderForm.module.scss'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Button from '../../Button/Button'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
 
-export default function OrderForm() {
+import classes from './OrderForm.module.scss'
+import Button from '../../Button/Button'
+import { apiFetch } from '../../../utils/apiClient'
+import { uploadFileChunks } from '../../../utils/fileUpload'
 
-    const { register, handleSubmit, formState: { errors } } = useForm()
+const MAX_FILE_SIZE = 500 * 1024 * 1024
+
+export default function OrderForm() {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setError,
+        clearErrors,
+    } = useForm()
+
     const cart = useSelector(state => state.cart)
-    const resultCost = cart.reduce((acc, item) => acc + item.cost, 0)
+    const resultCost = useMemo(
+        () => cart.reduce((acc, item) => acc + item.cost, 0),
+        [cart],
+    )
+
+    const [selectedFile, setSelectedFile] = useState(null)
+    const [uploadedFileId, setUploadedFileId] = useState(null)
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const [uploadError, setUploadError] = useState(null)
+    const [generalError, setGeneralError] = useState(null)
+    const [isUploading, setIsUploading] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const handleFileChange = (event) => {
+        const file = event.target.files?.[0] ?? null
+
+        setUploadProgress(0)
+        setUploadError(null)
+        setUploadedFileId(null)
+        setGeneralError(null)
+
+        if (!file) {
+            setSelectedFile(null)
+            return
+        }
+
+        if (!file.type.startsWith('video/')) {
+            setSelectedFile(null)
+            setError('file', { type: 'manual', message: 'Поддерживаются только видеофайлы' })
+            event.target.value = ''
+            return
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            setSelectedFile(null)
+            setError('file', { type: 'manual', message: 'Размер файла не должен превышать 500 МБ' })
+            event.target.value = ''
+            return
+        }
+
+        clearErrors('file')
+        setSelectedFile(file)
+    }
+
+    const onSubmit = async () => {
+        setGeneralError(null)
+
+        if (!cart.length) {
+            setGeneralError('Добавьте хотя бы один товар, чтобы оформить заказ.')
+            return
+        }
+
+        let fileId = uploadedFileId
+
+        if (!fileId) {
+            if (!selectedFile) {
+                setError('file', { type: 'manual', message: 'Загрузите видеофайл' })
+                setGeneralError('Прикрепите видеофайл, чтобы продолжить.')
+                return
+            }
+
+            setIsUploading(true)
+            try {
+                const newFileId = await uploadFileChunks(selectedFile, {
+                    onProgress: setUploadProgress,
+                })
+                setUploadedFileId(newFileId)
+                fileId = newFileId
+                setUploadProgress(100)
+                clearErrors('file')
+                setUploadError(null)
+            } catch (error) {
+                const message = error.message || 'Не удалось загрузить видеофайл'
+                setUploadError(message)
+                setGeneralError(message)
+                return
+            } finally {
+                setIsUploading(false)
+            }
+        }
+
+        setIsSubmitting(true)
+        try {
+            const payload = {
+                goods: cart.map(item => item.id),
+                video_id: fileId,
+            }
+            const response = await apiFetch('/api-order/order/', {
+                method: 'POST',
+                body: payload,
+            })
+
+            if (response?.payment_url) {
+                window.location.href = response.payment_url
+            } else {
+                setGeneralError('Сервер не вернул ссылку на оплату')
+            }
+        } catch (error) {
+            const message = error?.payload?.error || error?.message || 'Не удалось создать заказ'
+            setGeneralError(message)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    const fileRegister = register('file', {
+        onChange: handleFileChange,
+    })
+
+    const payButtonLabel = isUploading ? 'Загрузка видео…' : (isSubmitting ? 'Создание заказа…' : 'Оплатить')
 
     return (
         <section className={classes.orderFormSection}>
             <h2>3. Данные получателя и доставка</h2>
-            <form className={classes.orderFormBlock} onSubmit={handleSubmit}>
+            <form className={classes.orderFormBlock} onSubmit={handleSubmit(onSubmit)}>
                 <div className={classes.orderForm}>
                     <div className={classes.formField}>
                         <label htmlFor="surname">Фамилия</label>
@@ -40,16 +161,39 @@ export default function OrderForm() {
                         <input type="text" id='address' placeholder='Город, улица, номер ПВЗ' />
                     </div>
                     <div className={classes.calcDelivery}>
-                        <Button>Рассчитать доставку</Button>
+                        <Button type='button'>Рассчитать доставку</Button>
                         <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="file">Загрузка видео (ссылка или файл)</label>
-                        <input type="text" id='file' placeholder='Ссылка на Google Drive / Yandex Disk' {...register('fileLink')} />
+                        <input type="text" id='fileLink' placeholder='Ссылка на Google Drive / Yandex Disk' {...register('fileLink')} />
                         <label className={classes.fileUploader}>
                             <span>Перетащите или выберите видеофайл</span>
-                            <input type="file" id='file' {...register('file')} />
+                            <input
+                                type="file"
+                                id='video-file'
+                                accept='video/*'
+                                {...fileRegister}
+                            />
                         </label>
+                        {selectedFile ? (
+                            <div className={classes.uploadStatus}>
+                                <span>{selectedFile.name}</span>
+                                {uploadedFileId ? (
+                                    <span className={classes.successText}>Файл загружен</span>
+                                ) : isUploading ? (
+                                    <span>Загрузка: {uploadProgress}%</span>
+                                ) : uploadProgress > 0 ? (
+                                    <span>Подготовлено: {uploadProgress}%</span>
+                                ) : null}
+                            </div>
+                        ) : null}
+                        {errors.file ? (
+                            <span className={classes.errorText}>{errors.file.message}</span>
+                        ) : null}
+                        {uploadError ? (
+                            <span className={classes.errorText}>{uploadError}</span>
+                        ) : null}
                     </div>
                     <div className={classes.formField}>
                         <label>Повторный заказ</label>
@@ -82,7 +226,16 @@ export default function OrderForm() {
                         <span className={classes.result}>{resultCost} ₽ (Включая доставку: 0 ₽)</span>
                     </div>
                     <span className={classes.goodsCost}>Товары: {resultCost} ₽ (скидка 0 ₽)</span>
-                    <Button color='golden' type='button'>Оплатить</Button>
+                    {generalError ? (
+                        <span className={classes.errorText}>{generalError}</span>
+                    ) : null}
+                    <Button
+                        color='golden'
+                        type='submit'
+                        disabled={isUploading || isSubmitting}
+                    >
+                        {payButtonLabel}
+                    </Button>
                 </div>
             </form>
         </section>

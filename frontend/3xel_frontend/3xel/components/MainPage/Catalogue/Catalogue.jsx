@@ -12,7 +12,9 @@ export default function Catalogue() {
         <section className={classes.catalogue} id='catalogue'>
             <SectionHeader header='Каталог'>Два изделия — два характера. Оба — про память в форме.</SectionHeader>
             <div className={classes.goodsContainer}>
-                {goods.map(good => <GoodCard good={good}></GoodCard>)}
+                {goods.map(good => (
+                    <GoodCard key={good.id} good={good}></GoodCard>
+                ))}
             </div>
         </section>
     )

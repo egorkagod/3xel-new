@@ -20,6 +20,16 @@
         gap: 12px;
     }
 
+    .errorText {
+        color: #c44747;
+        font-size: 13px;
+    }
+
+    .successText {
+        color: #2e7d32;
+        font-size: 13px;
+    }
+
     .orderForm {
         width: 100%;
         display: grid;
@@ -74,6 +84,14 @@
                 input {
                     display: none;
                 }
+            }
+
+            .uploadStatus {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                font-size: 13px;
+                color: #6E6A84;
             }
         }
 
