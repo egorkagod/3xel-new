@@ -5,7 +5,7 @@ from rest_framework import status
 
 class OrderError(Exception):
     status_code = status.HTTP_400_BAD_REQUEST
-    default_detail = 'Order error'
+    default_detail = 'Ошибка при обработке заказа'
 
     def __init__(self, detail: Optional[str] = None, status_code: Optional[int] = None):
         message = detail or self.default_detail
@@ -15,15 +15,15 @@ class OrderError(Exception):
 
 
 class InvalidGoodsError(OrderError):
-    default_detail = 'Invalid goods list.'
+    default_detail = 'Некорректный список товаров.'
     status_code = status.HTTP_400_BAD_REQUEST
 
 
 class OrderCreationError(OrderError):
-    default_detail = 'Failed to create order.'
+    default_detail = 'Не удалось создать заказ.'
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
 class PaymentInitializationError(OrderError):
-    default_detail = 'Failed to initialize payment.'
+    default_detail = 'Не удалось инициировать платёж.'
     status_code = status.HTTP_502_BAD_GATEWAY

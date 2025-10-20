@@ -44,18 +44,18 @@ class EmailCodeView(APIView): # TODO все еще ошибка
     def get(self, request):
         email = request.query_params.get('email')
         if not email:
-            return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Нужно указать email'}, status=status.HTTP_400_BAD_REQUEST)
         
         is_registered = request.query_params.get('is_registered', False)
         
         try:
             email_service.send_random_code(email, request.session, is_registered=is_registered)
         except CodeResendTooSoonError:
-            return Response({'error': 'Too fast, take it easy'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Слишком часто запрашиваете код, попробуйте позже'}, status=status.HTTP_400_BAD_REQUEST)
         except FailedToSendCode:
-            return Response({'error': 'Failed with sending code'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Не удалось отправить код'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({'message': 'Code sent successfully, if email registered'}, status=status.HTTP_200_OK)   
+        return Response({'message': 'Если почта зарегистрирована, код отправлен'}, status=status.HTTP_200_OK)   
     
 
 class RegisterView(APIView):
@@ -83,11 +83,11 @@ class RegisterView(APIView):
                 code=code
             )
         except InvalidCode:
-            return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Неверный код'}, status=status.HTTP_400_BAD_REQUEST)
         except EmailMismatchError:
-            return Response({'error': 'Invalid email'}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Неверный email'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({'error': 'Произошла внутренняя ошибка'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         password = serializer.validated_data['password']
         name = serializer.validated_data['name']
@@ -100,13 +100,13 @@ class RegisterView(APIView):
                 first_name=name
             )
         except UserExists:
-            return Response({'error': 'User with this email already exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Пользователь с таким email уже существует'}, status=status.HTTP_400_BAD_REQUEST)
         except UserCreationFailed:
-            return Response({'error': 'Failed to create new user'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except Exception as e:
-            return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Не удалось создать пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception:
+            return Response({'error': 'Произошла внутренняя ошибка'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({'message': 'Registration successful'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Регистрация прошла успешно'}, status=status.HTTP_200_OK)
 
 
 class LoginView(APIView):
@@ -129,9 +129,9 @@ class LoginView(APIView):
         user = authenticate(request=request, username=email, password=password)
         if user:
             login(request, user)
-            return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Вход выполнен'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Invalid email or password'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Неверный email или пароль'}, status=status.HTTP_401_UNAUTHORIZED)
         
 
 class LogoutView(APIView):
@@ -147,7 +147,7 @@ class LogoutView(APIView):
     )
     def post(self, request):
         logout(request)
-        return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Вы вышли из аккаунта'}, status=status.HTTP_200_OK)
     
 
 class UserView(APIView):
@@ -194,17 +194,17 @@ class UserView(APIView):
                 is_registered=True
             )
         except InvalidCode:
-            return Response({'error': 'Invalid code'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Неверный код'}, status=status.HTTP_400_BAD_REQUEST)
         except EmailMismatchError:
-            return Response({'error': 'Invalid email'}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({'error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Неверный email'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response({'error': 'Произошла внутренняя ошибка'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
         user_rep.change_password(email=email, password=password)
 
-        return Response({'message': 'Password is changed successfully, if user exists'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Пароль обновлён, если пользователь найден'}, status=status.HTTP_200_OK)
 
     @extend_schema(
         operation_id='change_user_name',
@@ -224,9 +224,9 @@ class UserView(APIView):
 
         user = authenticate(request=request, username=request.user.username, password=password)
         if not user:
-            return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Неверный пароль'}, status=status.HTTP_400_BAD_REQUEST)
         
         user.first_name = name
         user.save()
-        return Response({'message': 'Name is successfully changed'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Имя обновлено'}, status=status.HTTP_200_OK)
     

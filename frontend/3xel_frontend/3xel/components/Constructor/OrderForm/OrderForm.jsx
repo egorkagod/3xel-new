@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
@@ -17,13 +17,29 @@ export default function OrderForm() {
         formState: { errors },
         setError,
         clearErrors,
-    } = useForm()
+        setValue,
+    } = useForm({
+        defaultValues: {
+            surname: '',
+            name: '',
+            patronymic: '',
+            phone: '',
+            email: '',
+            fileLink: '',
+            wishes: '',
+            instruction: false,
+            offer: false,
+        },
+    })
 
     const cart = useSelector(state => state.cart)
+    const user = useSelector(state => state.user.data)
     const resultCost = useMemo(
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
+
+    const isAuthenticated = Boolean(user)
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [uploadedFileId, setUploadedFileId] = useState(null)
@@ -32,6 +48,17 @@ export default function OrderForm() {
     const [generalError, setGeneralError] = useState(null)
     const [isUploading, setIsUploading] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    useEffect(() => {
+        setValue('name', user?.first_name || '', { shouldDirty: false })
+        setValue('email', user?.email || '', { shouldDirty: false })
+    }, [user, setValue])
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            setGeneralError(null)
+        }
+    }, [isAuthenticated])
 
     const handleFileChange = (event) => {
         const file = event.target.files?.[0] ?? null
@@ -66,6 +93,11 @@ export default function OrderForm() {
 
     const onSubmit = async () => {
         setGeneralError(null)
+
+        if (!isAuthenticated) {
+            setGeneralError('Войдите в аккаунт, чтобы оформить заказ.')
+            return
+        }
 
         if (!cart.length) {
             setGeneralError('Добавьте хотя бы один товар, чтобы оформить заказ.')
@@ -129,7 +161,11 @@ export default function OrderForm() {
         onChange: handleFileChange,
     })
 
-    const payButtonLabel = isUploading ? 'Загрузка видео…' : (isSubmitting ? 'Создание заказа…' : 'Оплатить')
+    const payButtonLabel = !isAuthenticated
+        ? 'Войдите, чтобы оплатить'
+        : isUploading
+            ? 'Загрузка видео…'
+            : (isSubmitting ? 'Создание заказа…' : 'Оплатить')
 
     return (
         <section className={classes.orderFormSection}>
@@ -142,7 +178,7 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="name">Имя</label>
-                        <input type="text" id='name' placeholder='Введите имя' {...register('name')} />
+                        <input type="text" id='name' placeholder='Введите имя' {...register('name')} readOnly={isAuthenticated} />
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="patronymic">Отчество</label>
@@ -150,11 +186,11 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="phone">Телефон</label>
-                        <input type="phone" id='phone' placeholder='+7 (___) ___-__-__' {...register('phone')} />
+                        <input type="tel" id='phone' placeholder='+7 (___) ___-__-__' {...register('phone')} />
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="email">E-mail</label>
-                        <input type="email" id='email' placeholder='Введите email' {...register('email')} />
+                        <input type="email" id='email' placeholder='Введите email' {...register('email')} readOnly={isAuthenticated} />
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="address">Адрес ПВЗ СДЭК</label>
@@ -232,7 +268,7 @@ export default function OrderForm() {
                     <Button
                         color='golden'
                         type='submit'
-                        disabled={isUploading || isSubmitting}
+                        disabled={isUploading || isSubmitting || !isAuthenticated}
                     >
                         {payButtonLabel}
                     </Button>

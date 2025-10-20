@@ -26,7 +26,7 @@ def create(user_id, goods, video_id):
 
 def get_amount(goods):
     if not goods:
-        raise InvalidGoodsError('Goods list is empty.')
+        raise InvalidGoodsError('Список товаров пуст.')
 
     grouped_goods = {}
     for good_id in goods:
@@ -36,10 +36,10 @@ def get_amount(goods):
         GoodVariant.objects.filter(id__in=grouped_goods.keys()).values_list('id', 'price')
     )
     if len(variant_prices) != len(grouped_goods):
-        raise InvalidGoodsError('One or more goods are invalid.')
+        raise InvalidGoodsError('Некоторые товары недоступны.')
 
     total_amount = sum(variant_prices[variant_id] * quantity for variant_id, quantity in grouped_goods.items())
     if total_amount <= 0:
-        raise InvalidGoodsError('Calculated order amount is not positive.')
+        raise InvalidGoodsError('Сумма заказа должна быть положительной.')
 
     return total_amount

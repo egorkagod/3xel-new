@@ -58,8 +58,8 @@ class GoodView(APIView):
             if good:
                 payload = GoodModelSerializer(good).data
                 return Response(payload, status=status.HTTP_200_OK)
-            return Response({'error': 'Not defined good'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({'error': 'GoodId is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Товар не найден'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Нужно указать идентификатор товара'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrdersListView(APIView):
@@ -78,7 +78,7 @@ class OrdersListView(APIView):
         if orders is not None:
             payload = OrderPreviewSerializer(orders, many=True).data
             return Response(payload, status=status.HTTP_200_OK)
-        return Response({'error': 'Failed to get orders'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Не удалось получить заказы'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderView(APIView):
@@ -109,8 +109,8 @@ class OrderView(APIView):
             if order:
                 payload = OrderModelSerializer(order).data
                 return Response(payload, status=status.HTTP_200_OK)
-            return Response({'error': 'Not defined order'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({'error': 'OrderId is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Заказ не найден'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Нужно указать идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
     
     @extend_schema(
         operation_id='create_order',

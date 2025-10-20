@@ -11,6 +11,7 @@ import Constructor from '../components/Constructor/Constructor'
 import Discounts from '../components/Discounts/Discounts'
 import { fetchCurrentUser } from '../store/userSlice'
 import { fetchOrders, clearOrders } from '../store/ordersSlice'
+import { fetchGoods } from '../store/goodsSlice'
 
 function App() {
   const dispatch = useDispatch()
@@ -18,6 +19,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchCurrentUser())
+    dispatch(fetchGoods())
   }, [dispatch])
 
   useEffect(() => {

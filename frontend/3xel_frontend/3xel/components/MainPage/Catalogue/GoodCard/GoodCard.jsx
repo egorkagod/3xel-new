@@ -8,25 +8,57 @@ import { HashLink } from 'react-router-hash-link'
 
 import classes from './GoodCard.module.scss'
 
+const DEFAULT_COLOR = '#d8b98a'
+
 export default function GoodCard({ good, forConstructor }) {
 
     const dispatcher = useDispatch()
 
-    const uniqueColors = useMemo(() => [...new Set(good.variants.map(v => v.color))], [good])
-    const uniqueSizes = useMemo(() => [...new Set(good.variants.map(v => v.size))], [good])
-    const uniqueImages = useMemo(() => [...new Set(good.variants.map(v => v.images).flat())], [good])
+    const variants = useMemo(() => good?.variants || [], [good])
+    const initialVariant = variants[0] || {
+        id: null,
+        color: DEFAULT_COLOR,
+        colorName: 'Цвет',
+        size: '—',
+        cost: 0,
+        images: [],
+    }
 
-    const [selectedColor, setSelectedColor] = useState(good.variants[0].color)
-    const [selectedSize, setSelectedSize] = useState(good.variants[0].size)
+    const uniqueColors = useMemo(() => {
+        const colors = variants.map((v) => v.color || DEFAULT_COLOR)
+        return colors.length ? [...new Set(colors)] : [DEFAULT_COLOR]
+    }, [variants])
+
+    const uniqueSizes = useMemo(() => {
+        const sizes = variants.map((v) => v.size || '—')
+        return sizes.length ? [...new Set(sizes)] : [initialVariant.size]
+    }, [variants, initialVariant.size])
+
+    const uniqueImages = useMemo(() => {
+        const allImages = variants.flatMap((v) => (v.images || [])).filter(Boolean)
+        const images = allImages.length ? allImages : (initialVariant.images || []).filter(Boolean)
+        return [...new Set(images)]
+    }, [variants, initialVariant.images])
+
+    const [selectedColor, setSelectedColor] = useState(initialVariant.color || DEFAULT_COLOR)
+    const [selectedSize, setSelectedSize] = useState(initialVariant.size || '—')
     const [userSelected, setUserSelected] = useState(false)
-    const selectedVariant = useMemo(() => good.variants.find(v => v.size === selectedSize && v.color === selectedColor), [selectedColor, selectedSize, good]) || good.variants[0]
+    const selectedVariant = useMemo(
+        () =>
+            variants.find(
+                (v) => v.size === selectedSize && v.color === selectedColor,
+            ) || initialVariant,
+        [selectedColor, selectedSize, variants, initialVariant],
+    )
 
-    const [selectedImage, setSelectedImage] = useState(selectedVariant ? selectedVariant.images[0] : null)
+    const [selectedImage, setSelectedImage] = useState(
+        selectedVariant?.images?.[0] || uniqueImages[0] || null,
+    )
 
     const [popupIsActive, setPopupIsActive] = useState(false)
 
     useEffect(() => {
-        const newVariant = good.variants.find(v =>
+        const newVariant = variants.find(v =>
             v.color === selectedColor && v.size === selectedSize
         )
 
@@ -34,7 +66,22 @@ export default function GoodCard({ good, forConstructor }) {
             setSelectedImage(newVariant.images[0])
         }
 
-    }, [selectedVariant])
+    }, [selectedVariant, variants, selectedColor, selectedSize])
+
+    useEffect(() => {
+        if (!uniqueImages.length) {
+            return
+        }
+
+        if (!selectedVariant?.images?.length && !selectedImage) {
+            setSelectedImage(uniqueImages[0])
+            return
+        }
+
+        if (selectedImage && !uniqueImages.includes(selectedImage)) {
+            setSelectedImage(uniqueImages[0])
+        }
+    }, [uniqueImages, selectedVariant, selectedImage])
 
     let index = useRef(0)
 
@@ -52,7 +99,18 @@ export default function GoodCard({ good, forConstructor }) {
     }, [userSelected, uniqueColors])
 
     const handleAddToCart = () => {
-        dispatcher(addToCart({ id: selectedVariant.id, name: good.name, color: selectedColor, size: selectedSize, colorName: selectedVariant.colorName, cost: selectedVariant.cost }))
+        if (!selectedVariant?.id) {
+            return
+        }
+
+        dispatcher(addToCart({
+            id: selectedVariant.id,
+            name: good.name,
+            color: selectedColor,
+            size: selectedSize,
+            colorName: selectedVariant.colorName || 'Цвет',
+            cost: selectedVariant.cost ?? 0,
+        }))
         setPopupIsActive(true)
         setTimeout(() => setPopupIsActive(false), 3000)
     }
@@ -131,14 +189,14 @@ export default function GoodCard({ good, forConstructor }) {
                     </div>
                 </div>
                 <div className={classes.images}>
-                    {selectedVariant.images ? (
-                        selectedVariant.images.map(image =>
-                            <img
-                                key={image}
-                                src={image} alt={`${good.name} в цвете ${selectedVariant.colorName}`}
-                                onClick={() => { setSelectedImage(image); setUserSelected(true) }} style={{ outline: image === selectedImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
-                            </img>)
-                    ) : null}
+                    {(selectedVariant.images?.length ? selectedVariant.images : uniqueImages).map(image =>
+                        <img
+                            key={image}
+                            src={image}
+                            alt={`${good.name} в цвете ${selectedVariant.colorName || ''}`}
+                            onClick={() => { setSelectedImage(image); setUserSelected(true) }} style={{ outline: image === selectedImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
+                        </img>)
+                    }
                 </div>
 
                 <div className={classes.buttonContainer}>

@@ -46,7 +46,7 @@ class UploadFileView(APIView):
         user_id = request.user.id
         file_id, result = file_rep.upload_chunk(user_id, filename, format, chunk, chunk_number, total_chunks)
         if result == statuses.ALL_UPLOADED:
-            return Response({'message': 'File uploaded successfully', 'file_id': file_id}, status=status.HTTP_200_OK)
+            return Response({'message': 'Файл успешно загружен', 'file_id': file_id}, status=status.HTTP_200_OK)
         elif result == statuses.UPLOADED:
-            return Response({'message': 'Chunk uploaded successfully'}, status=200)
-        return Response({'message': 'Error uploading file'}, status=500)
+            return Response({'message': 'Фрагмент загружен'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Не удалось загрузить файл'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
