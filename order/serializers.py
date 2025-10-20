@@ -30,9 +30,11 @@ class OrderItemSerializer(serializers.ModelSerializer):
 # Order
 
 class OrderViewSerializer(serializers.Serializer):
-    goods = serializers.ListField()
+    goods = serializers.ListField(
+        child=serializers.IntegerField(min_value=1),
+        allow_empty=False,
+    )
     video_id = serializers.IntegerField()
-    amount = serializers.IntegerField()
 
 
 class OrderModelSerializer(serializers.ModelSerializer):

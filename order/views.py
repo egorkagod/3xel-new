@@ -7,6 +7,7 @@ from .models import Good
 from .serializers import GoodModelSerializer, OrderViewSerializer, OrderPreviewSerializer, OrderModelSerializer
 from .repositories import good_rep
 from .services import order_service
+from .exceptions import OrderError
 
 
 class CatalogView(generics.ListAPIView):
@@ -56,10 +57,11 @@ class OrderView(APIView):
 
         goods = serializer.validated_data['goods']
         video_id = serializer.validated_data['video_id']
-        amount = serializer.validated_data['amount']
         user_id = request.user.id
 
-        payment_url = order_service.create(user_id, goods, video_id, amount)
-        if payment_url:
-            return Response({'payment_url': payment_url}, status=status.HTTP_200_OK)
-        return Response({'error': 'Failed to create order or init payment'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            payment_url = order_service.create(user_id, goods, video_id)
+        except OrderError as exc:
+            return Response({'error': exc.detail}, status=exc.status_code)
+
+        return Response({'payment_url': payment_url}, status=status.HTTP_200_OK)

@@ -50,6 +50,7 @@ CSRF_TRUSTED_ORIGINS = [
 INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
+    'drf_spectacular',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,6 +75,17 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'online_shop.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': '3Xel API',
+    'DESCRIPTION': 'API documentation for 3Xel services.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 TEMPLATES = [
     {
