@@ -3,24 +3,36 @@ import { apiFetch } from '../utils/apiClient'
 
 const DEFAULT_COLOR = '#d8b98a'
 
-const normalizeColor = (value) => {
+const componentToHex = (component) => {
+  const hex = Number(component).toString(16).toUpperCase()
+  return hex.length === 1 ? `0${hex}` : hex
+}
+
+const parseColor = (value) => {
   if (typeof value !== 'string') {
-    return DEFAULT_COLOR
+    return { hex: DEFAULT_COLOR, label: 'Цвет' }
   }
 
   const trimmed = value.trim()
   const hexPattern = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
   if (hexPattern.test(trimmed)) {
-    return trimmed
+    return { hex: trimmed.toUpperCase(), label: trimmed.toUpperCase() }
   }
 
-  return DEFAULT_COLOR
+  const rgbMatch = trimmed.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i)
+  if (rgbMatch) {
+    const [, r, g, b] = rgbMatch
+    const hex = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`
+    return { hex, label: `RGB ${r}, ${g}, ${b}` }
+  }
+
+  return { hex: DEFAULT_COLOR, label: trimmed || 'Цвет' }
 }
 
 const transformGoods = (goods) =>
   (goods || []).map((good) => {
     const variants = (good.variants || []).map((variant) => {
-      const colorName = variant.color || 'Цвет'
+      const { hex, label } = parseColor(variant.color)
       const images = []
       if (variant.image) {
         images.push(variant.image)
@@ -28,9 +40,10 @@ const transformGoods = (goods) =>
       return {
         id: variant.id,
         size: variant.size ? `${variant.size} см` : '—',
-        color: normalizeColor(variant.color),
-        colorName,
-        cost: variant.price,
+        numericSize: variant.size ?? null,
+        color: hex,
+        colorName: label,
+        cost: variant.price ?? 0,
         images,
       }
     })
