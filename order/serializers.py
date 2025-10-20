@@ -56,3 +56,7 @@ class OrderPreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'status', 'amount', 'created_at', 'payment_status']
+
+
+class PaymentInitResponseSerializer(serializers.Serializer):
+    payment_url = serializers.CharField()

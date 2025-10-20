@@ -4,6 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+
+from online_shop.schema import MessageResponseSerializer, ErrorResponseSerializer
 
 from .exceptions import InvalidCode, EmailMismatchError, UserCreationFailed, UserExists, FailedToSendCode, CodeResendTooSoonError
 from .services import email_service, user_service
@@ -12,6 +16,31 @@ from .serializers import LoginViewSerializer, RegisterViewSerializer, UserModelS
 
 
 class EmailCodeView(APIView): # TODO все еще ошибка
+    @extend_schema(
+        operation_id='request_email_code',
+        summary='Отправить код на email',
+        parameters=[
+            OpenApiParameter(
+                name='email',
+                location=OpenApiParameter.QUERY,
+                description='Email пользователя',
+                required=True,
+                type=OpenApiTypes.STR,
+            ),
+            OpenApiParameter(
+                name='is_registered',
+                location=OpenApiParameter.QUERY,
+                description='Признак, что email принадлежит существующему пользователю',
+                required=False,
+                type=OpenApiTypes.BOOL,
+            ),
+        ],
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(MessageResponseSerializer, description='Код успешно отправлен'),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(ErrorResponseSerializer, description='Неверные параметры или слишком частые запросы'),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(ErrorResponseSerializer, description='Ошибка отправки письма'),
+        },
+    )
     def get(self, request):
         email = request.query_params.get('email')
         if not email:
@@ -30,6 +59,16 @@ class EmailCodeView(APIView): # TODO все еще ошибка
     
 
 class RegisterView(APIView):
+    @extend_schema(
+        operation_id='register_user',
+        summary='Регистрация нового пользователя',
+        request=RegisterViewSerializer,
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(MessageResponseSerializer, description='Регистрация выполнена'),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(ErrorResponseSerializer, description='Неверные данные или email уже используется'),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(ErrorResponseSerializer, description='Ошибка создания пользователя'),
+        },
+    )
     def post(self, request):
         serializer = RegisterViewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -71,6 +110,15 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    @extend_schema(
+        operation_id='login_user',
+        summary='Вход пользователя',
+        request=LoginViewSerializer,
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(MessageResponseSerializer, description='Успешный вход'),
+            status.HTTP_401_UNAUTHORIZED: OpenApiResponse(ErrorResponseSerializer, description='Неверный email или пароль'),
+        },
+    )
     def post(self, request):
         serializer = LoginViewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -89,6 +137,14 @@ class LoginView(APIView):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        operation_id='logout_user',
+        summary='Выход пользователя',
+        request=None,
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(MessageResponseSerializer, description='Сессия завершена'),
+        },
+    )
     def post(self, request):
         logout(request)
         return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
@@ -100,6 +156,14 @@ class UserView(APIView):
             return [IsAuthenticated()]
         return [AllowAny()]
 
+    @extend_schema(
+        operation_id='get_current_user',
+        summary='Получить информацию о пользователе',
+        responses={
+            status.HTTP_200_OK: UserModelSerializer,
+            status.HTTP_404_NOT_FOUND: OpenApiResponse(ErrorResponseSerializer, description='Пользователь не найден'),
+        },
+    )
     def get(self, request):                
         user = user_rep.get(request.user.id)
         if user:
@@ -107,6 +171,16 @@ class UserView(APIView):
             return Response(payload, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    @extend_schema(
+        operation_id='reset_password_with_code',
+        summary='Смена пароля по email-коду',
+        request=ChangePasswordSerializer,
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(MessageResponseSerializer, description='Пароль изменён'),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(ErrorResponseSerializer, description='Неверный код или email'),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(ErrorResponseSerializer, description='Ошибка обработки запроса'),
+        },
+    )
     def post(self, request): # Флоу смены пароля по коду email
         serializer = ChangePasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -132,6 +206,15 @@ class UserView(APIView):
 
         return Response({'message': 'Password is changed successfully, if user exists'}, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        operation_id='change_user_name',
+        summary='Смена имени пользователя',
+        request=ChangeNameSerializer,
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(MessageResponseSerializer, description='Имя успешно изменено'),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(ErrorResponseSerializer, description='Неверный пароль'),
+        },
+    )
     def patch(self, request): # Флоу смены имени по паролю
         serializer = ChangeNameSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -141,7 +224,7 @@ class UserView(APIView):
 
         user = authenticate(request=request, username=request.user.username, password=password)
         if not user:
-            return Response({'error': 'Invalid password'}, status=status.HTTP_200_OK)
+            return Response({'error': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
         
         user.first_name = name
         user.save()

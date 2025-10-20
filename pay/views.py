@@ -2,14 +2,15 @@ import logging
 
 from django.http import HttpResponse
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 from pay.services import pay_service
 
 
 pay_logger = logging.getLogger('pay')
+
 
 class NotificationView(APIView):
     allowed_ips = {
@@ -26,6 +27,15 @@ class NotificationView(APIView):
         '91.194.226.181/32',   # Тестовая среда
     }
 
+    @extend_schema(
+        operation_id='tinkoff_notification',
+        summary='Webhook от Tinkoff',
+        description='Получает уведомления об изменении статуса платежа.',
+        request=OpenApiTypes.OBJECT,
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(OpenApiTypes.STR, description='Ответ сервера `OK`'),
+        },
+    )
     def post(self, request):
         data = request.data
         pay_logger.info(f"{data}")
