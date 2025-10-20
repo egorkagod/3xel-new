@@ -5,11 +5,13 @@ import Button from '../Button/Button'
 import { Link } from 'react-router-dom'
 import Profile from '../Profile/Profile'
 import { HashLink } from 'react-router-hash-link'
+import { useSelector } from 'react-redux'
 
 export default function Header() {
 
     const [isActive, setIsActive] = useState(false)
     const [modalIsActive, setModalIsActive] = useState(false)
+    const user = useSelector((state) => state.user.data)
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -25,7 +27,7 @@ export default function Header() {
 
     return (
         <header className={classes.header}>
-            <Profile isActive={modalIsActive} onClick={() => setModalIsActive(false)}></Profile>
+            <Profile isActive={modalIsActive} onClose={() => setModalIsActive(false)} />
             <div className={classNames(classes.burgerMenu, { [classes.active]: isActive })} onClick={() => setIsActive(prev => !prev)}>
                 <span></span>
             </div>
@@ -69,7 +71,9 @@ export default function Header() {
                         <Link style={{ all: 'unset' }} to='/constructor'><Button color='white'>Открыть конструктор</Button></Link>
                     </li>
                     <li onClick={() => setIsActive(false)}>
-                        <Button color='white' onClick={() => setModalIsActive(true)}>Войти</Button>
+                        <Button color='white' onClick={() => setModalIsActive(true)}>
+                            {user ? 'Профиль' : 'Войти'}
+                        </Button>
                     </li>
                 </ul>
             </nav>

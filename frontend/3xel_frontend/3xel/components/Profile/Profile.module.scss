@@ -2,14 +2,20 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background: rgba(0, 0, 0, 0.3);
-    position: absolute;
+    position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     z-index: 1001;
     visibility: hidden;
     opacity: 0;
     transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    padding: 24px;
 
     &.active {
         visibility: visible;
@@ -17,16 +23,13 @@
     }
 
     .profileModal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        position: relative;
         background: #fff;
         border: 1px solid rgba(0,0,0,.06);
         border-radius: 22px;
         box-shadow: 0 20px 40px rgba(0,0,0,.18);
         height: auto;
-        width: min(860px, 100vw);
+        width: min(860px, 100%);
         overflow: hidden;
     }
 }

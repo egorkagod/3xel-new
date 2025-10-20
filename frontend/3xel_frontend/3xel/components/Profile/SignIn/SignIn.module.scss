@@ -57,8 +57,24 @@
 
             .buttons {
                 display: flex;
-                gap: 4px;
+                flex-wrap: wrap;
+                gap: 8px;
                 align-items: center;
+            }
+
+            .inlineRow {
+                display: flex;
+                align-items: flex-end;
+                gap: 12px;
+
+                button {
+                    white-space: nowrap;
+                }
+            }
+
+            .errorText {
+                color: #c44747;
+                font-size: 13px;
             }
 
         }
@@ -77,6 +93,10 @@
     @media (max-width: 767px) {
         .grid {
             grid-template-columns: 1fr;
+        }
+
+        .signInForm {
+            border-right: none;
         }
     }
 
