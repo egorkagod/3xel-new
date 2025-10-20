@@ -13,7 +13,7 @@ export default function SelectGood() {
             <h2>1. Выбор изделий</h2>
             <div className={classes.goodsBlock}>
                 {goods.map(good => <GoodCard key={good.id} forConstructor={true} good={good}></GoodCard>)}
-                {certificates.map(certificate => <Certificate key={certificate.id} certificate={certificate}></Certificate>)}
+                {certificates.map(certificate => <Certificate key={certificate.id} certificate={certificate} id='certificate'></Certificate>)}
             </div>
         </section>
     )

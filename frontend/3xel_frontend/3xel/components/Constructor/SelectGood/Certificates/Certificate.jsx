@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { addToCart } from '../../../../store/cartSlice'
 import { useDispatch } from 'react-redux'
 
-export default function Certificate({ certificate }) {
+export default function Certificate({ certificate, id }) {
 
     const dispatcher = useDispatch()
     const [selectedDenomination, setSelectedDenomination] = useState(certificate.denominations ? certificate.denominations[0] : null)
@@ -19,7 +19,7 @@ export default function Certificate({ certificate }) {
     }
 
     return (
-        <div className={classes.certificate}>
+        <div className={classes.certificate} id={id}>
             <PopUp isActive={popupIsActive}>Товар добавлен в конструктор</PopUp>
             <div className={classes.denominationsList}>
                 {certificate.denominations.map((denomination, index) => <span key={index}>{denomination} ₽</span>)}
