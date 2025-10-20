@@ -1,5 +1,5 @@
 import classes from './Header.module.scss'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Button from '../Button/Button'
 import { Link } from 'react-router-dom'
@@ -10,6 +10,18 @@ export default function Header() {
 
     const [isActive, setIsActive] = useState(false)
     const [modalIsActive, setModalIsActive] = useState(false)
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setModalIsActive(false)
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [])
 
     return (
         <header className={classes.header}>

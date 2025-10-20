@@ -1,7 +1,7 @@
 import classes from './SignIn.module.scss'
 import Button from '../../Button/Button'
 
-export default function SignIn({ onClick }) {
+export default function SignIn({ onClick, toSignUp }) {
     return (
         <div className={classes.signInBlock}>
             <header className={classes.modalHeader}>
@@ -20,7 +20,7 @@ export default function SignIn({ onClick }) {
                     <div className={classes.buttons}>
                         <Button color='white' type='button' onClick={onClick}>Отмена</Button>
                         <Button color='golden' type='button'>Войти</Button>
-                        <Button color='white' type='button'>Зарегистрироваться</Button>
+                        <Button color='white' type='button' onClick={toSignUp}>Зарегистрироваться</Button>
                     </div>
                 </form>
                 <div className={classes.ordersHistory}>
