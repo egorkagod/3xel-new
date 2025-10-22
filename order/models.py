@@ -16,6 +16,7 @@ class Good(models.Model):
 
     name = models.CharField(max_length=250)
     description = models.TextField(null=True, blank=True)
+    technology = models.JSONField(default=list)
 
     def __str__(self):
         return self.name
@@ -34,7 +35,7 @@ class GoodVariant(models.Model):
     size = models.IntegerField()
     color = models.CharField(max_length=20)
     image = models.ImageField(upload_to=timestamp_filename)
-    price = models.IntegerField()
+    cost = models.IntegerField()
 
     def __str__(self):
         return f'{self.good} - {self.size}см - {self.color}'
