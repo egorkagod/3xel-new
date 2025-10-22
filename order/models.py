@@ -33,7 +33,8 @@ class GoodVariant(models.Model):
 
     good = models.ForeignKey(Good, on_delete=models.PROTECT, related_name='variants')
     size = models.IntegerField()
-    color = models.CharField(max_length=20)
+    color = models.CharField(max_length=30)
+    colorName = models.CharField(max_length=30)
     image = models.ImageField(upload_to=timestamp_filename)
     cost = models.IntegerField()
 
