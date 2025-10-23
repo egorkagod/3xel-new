@@ -245,7 +245,6 @@ const userSlice = createSlice({
       .addCase(updateUserName.fulfilled, (state, action) => {
         state.updateNameStatus = 'succeeded'
         state.updateNameError = null
-        state.data = action.payload
         state.data = {...state.data, first_name: action.payload.name}
       })
       .addCase(updateUserName.rejected, (state, action) => {
