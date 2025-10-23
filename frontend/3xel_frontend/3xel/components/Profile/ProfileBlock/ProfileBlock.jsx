@@ -152,7 +152,7 @@ export default function ProfileBlock({
           <h5>Ваши данные</h5>
           <div className={classes.infoRow}>
             <span>Имя</span>
-            <strong>{user?.first_name || 'Не указано'}</strong>
+            <strong>{user?.first_name || 'Пусто'}</strong>
           </div>
           <div className={classes.infoRow}>
             <span>E-mail</span>
