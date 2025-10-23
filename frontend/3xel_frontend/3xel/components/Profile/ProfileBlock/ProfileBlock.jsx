@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import store from '../../../store/store'
 
 import classes from './ProfileBlock.module.scss'
 import Button from '../../Button/Button'
@@ -71,6 +72,7 @@ export default function ProfileBlock({
         }),
       ).unwrap()
       toast.success('Имя обновлено')
+      console.log('name after update:', store.getState().user.data)
       reset({ name: data.name, password: '' })
     } catch (error) {
       toast.error(error)
@@ -150,7 +152,7 @@ export default function ProfileBlock({
           <h5>Ваши данные</h5>
           <div className={classes.infoRow}>
             <span>Имя</span>
-            <strong>{user?.first_name}</strong>
+            <strong>{user?.first_name || 'Не указано'}</strong>
           </div>
           <div className={classes.infoRow}>
             <span>E-mail</span>
