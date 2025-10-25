@@ -5,20 +5,20 @@ const initialState = []
 const updateCartDiscounts = (items) => {
     if (items.length === 0) return []
 
-    const plasticBusts = items.filter(item => item.type === 'plastic bust')
-    const cardboardBusts = items.filter(item => item.type === 'cardboard bust')
+    const plasticBusts = items.filter(item => item.type === 'Пластиковый бюст')
+    const cardboardBusts = items.filter(item => item.type === 'Картонный бюст')
 
     const countPairs = Math.min(plasticBusts.length, cardboardBusts.length)
 
     const updatedCart = items.map((item) => {
         let discount = 0
 
-        if (item.type === 'plastic bust') {
+        if (item.type === 'Пластиковый бюст') {
             const plasticIndex = plasticBusts.findIndex(p => p === item)
             if (plasticIndex > 0) discount = 500
         }
 
-        if (item.type === 'cardboard bust') {
+        if (item.type === 'Картонный бюст') {
             const cardboardIndex = cardboardBusts.findIndex(c => c === item)
             if (cardboardIndex < countPairs) discount = 1000
         }

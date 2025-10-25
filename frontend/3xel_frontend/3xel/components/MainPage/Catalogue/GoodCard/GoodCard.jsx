@@ -107,7 +107,7 @@ export default function GoodCard({ good, forConstructor }) {
 
         dispatcher(addToCart({
             id: selectedVariant.id,
-            type: selectedVariant.type,
+            type: selectedVariant,
             name: good.name,
             color: selectedColor,
             size: selectedSize,
