@@ -33,7 +33,7 @@ def get_amount(goods):
         grouped_goods[good_id] = grouped_goods.setdefault(good_id, 0) + 1
 
     variant_prices = dict(
-        GoodVariant.objects.filter(id__in=grouped_goods.keys()).values_list('id', 'price')
+        GoodVariant.objects.filter(id__in=grouped_goods.keys()).values_list('id', 'cost')
     )
     if len(variant_prices) != len(grouped_goods):
         raise InvalidGoodsError('Некоторые товары недоступны.')
