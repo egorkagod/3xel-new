@@ -5,9 +5,18 @@ from .models import Good, GoodVariant, Order, OrderItem
 # GoodVariant
 
 class GoodVariantModelSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
     class Meta:
         model = GoodVariant
-        fields = ['id', 'size', 'color', 'colorName', 'image', 'cost']
+        fields = ['id', 'size', 'color', 'colorName', 'cost', 'images']
+
+    def get_images(self, obj):
+        request = self.context.get('request')
+        urls = [image.image.url for image in obj.images.all()]
+        if request:
+            return [request.build_absolute_uri(url) for url in urls]
+        return urls
 
 # Good
 

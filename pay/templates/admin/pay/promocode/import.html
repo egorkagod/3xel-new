@@ -1,0 +1,32 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <fieldset class="module aligned">
+      <div class="form-row">
+        {{ form.file.errors }}
+        <label>{{ form.file.label }}:</label>
+        {{ form.file }}
+      </div>
+      <div class="form-row">
+        <label>{{ form.has_header.label }}:</label>
+        {{ form.has_header }}
+      </div>
+    </fieldset>
+    <div class="submit-row">
+      <input type="submit" class="default" value="Импортировать" />
+      <a href="{% url 'admin:pay_promocode_changelist' %}">Отмена</a>
+    </div>
+  </form>
+
+  <div class="help" style="margin-top: 1rem;">
+    <p>Формат файла:</p>
+    <ul>
+      <li>CSV (UTF-8) или Excel (.xlsx)</li>
+      <li>2 колонки: 1 — промокод, 2 — номинал (целое число)</li>
+      <li>Первая строка может быть заголовком (отметьте галочку)</li>
+    </ul>
+  </div>
+{% endblock %}
+

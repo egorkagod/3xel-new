@@ -47,6 +47,9 @@ class Promocode(models.Model):
         verbose_name = 'Промокод'
         verbose_name_plural = 'Промокоды'
 
+    def __str__(self):
+        return self.promo
+
     denomination = models.IntegerField()
-    code = models.CharField(max_length=30)
-    promo = models.CharField(max_length=40)
+    promo = models.CharField(max_length=40, unique=True)
+    is_used = models.BooleanField(default=False)

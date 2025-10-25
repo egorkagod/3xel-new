@@ -1,94 +1,115 @@
-from django.core.management.base import BaseCommand
-from django.core.files import File
+import re
+from collections import defaultdict
+from pathlib import Path
+
 from django.conf import settings
-from order.models import Good, GoodVariant
+from django.core.management.base import BaseCommand
+from django.db import transaction
+from PIL import Image
+
+from order.models import Good, GoodVariant, GoodVariantImage
+
+
+IMAGE_DIR = Path(settings.MEDIA_ROOT) / 'catalog' / 'images'
+PLASTIC_SIZES = (
+    (12, 3450),
+    (16, 4500),
+    (20, 5200),
+)
+CARDBOARD_SIZE = 18
+CARDBOARD_COST = 3500
+CARDBOARD_SLUG = 'natural_cardboard'
+
 
 class Command(BaseCommand):
-    help = 'Создание товаров их видов'
+    help = 'Создание товаров и вариантов с изображениями из каталога'
 
     def handle(self, *args, **options):
-        goods = [
-            {
-                'name': "3D модель из PLA-пластика",
+        image_groups = self._group_images()
+        if not image_groups:
+            self.stdout.write(self.style.ERROR('Нет изображений в media/catalog/images'))
+            return
+
+        plastic_good, _ = Good.objects.update_or_create(
+            name='3D модель из PLA-пластика',
+            defaults={
                 'description': '3D-печать из PLA-пластика.',
             },
-            {
-                'name': 'Конструктор из картона',
+        )
+        cardboard_good, _ = Good.objects.update_or_create(
+            name='Конструктор из картона',
+            defaults={
                 'description': '',
-            }
-        ]
-        plastic_good = Good.objects.create(**goods[0])
-        carton_good = Good.objects.create(**goods[1])
-        good_variants = [
-            {'size': 10, 'color': 'rgb(0, 0, 0)', 'price': 3200, 'image': 'catalog/images/black.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(0, 0, 0)', 'price': 3450, 'image': 'catalog/images/black.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(0, 0, 0)', 'price': 3800, 'image': 'catalog/images/black.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(0, 0, 0)', 'price': 4200, 'image': 'catalog/images/black.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(0, 0, 0)', 'price': 4700, 'image': 'catalog/images/black.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(0, 0, 0)', 'price': 5200, 'image': 'catalog/images/black.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(1, 99, 206)', 'price': 3200, 'image': 'catalog/images/blue.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(1, 99, 206)', 'price': 3450, 'image': 'catalog/images/blue.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(1, 99, 206)', 'price': 3800, 'image': 'catalog/images/blue.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(1, 99, 206)', 'price': 4200, 'image': 'catalog/images/blue.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(1, 99, 206)', 'price': 4700, 'image': 'catalog/images/blue.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(1, 99, 206)', 'price': 5200, 'image': 'catalog/images/blue.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(117, 122, 126)', 'price': 3200, 'image': 'catalog/images/gray.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(117, 122, 126)', 'price': 3450, 'image': 'catalog/images/gray.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(117, 122, 126)', 'price': 3800, 'image': 'catalog/images/gray.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(117, 122, 126)', 'price': 4200, 'image': 'catalog/images/gray.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(117, 122, 126)', 'price': 4700, 'image': 'catalog/images/gray.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(117, 122, 126)', 'price': 5200, 'image': 'catalog/images/gray.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(146, 57, 27)', 'price': 3200, 'image': 'catalog/images/brown.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(146, 57, 27)', 'price': 3450, 'image': 'catalog/images/brown.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(146, 57, 27)', 'price': 3800, 'image': 'catalog/images/brown.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(146, 57, 27)', 'price': 4200, 'image': 'catalog/images/brown.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(146, 57, 27)', 'price': 4700, 'image': 'catalog/images/brown.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(146, 57, 27)', 'price': 5200, 'image': 'catalog/images/brown.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(228, 208, 0)', 'price': 3200, 'image': 'catalog/images/yellow.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(228, 208, 0)', 'price': 3450, 'image': 'catalog/images/yellow.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(228, 208, 0)', 'price': 3800, 'image': 'catalog/images/yellow.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(228, 208, 0)', 'price': 4200, 'image': 'catalog/images/yellow.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(228, 208, 0)', 'price': 4700, 'image': 'catalog/images/yellow.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(228, 208, 0)', 'price': 5200, 'image': 'catalog/images/yellow.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(236, 105, 17)', 'price': 3200, 'image': 'catalog/images/orange.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(236, 105, 17)', 'price': 3450, 'image': 'catalog/images/orange.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(236, 105, 17)', 'price': 3800, 'image': 'catalog/images/orange.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(236, 105, 17)', 'price': 4200, 'image': 'catalog/images/orange.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(236, 105, 17)', 'price': 4700, 'image': 'catalog/images/orange.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(236, 105, 17)', 'price': 5200, 'image': 'catalog/images/orange.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(240, 67, 60)', 'price': 3200, 'image': 'catalog/images/red.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(240, 67, 60)', 'price': 3450, 'image': 'catalog/images/red.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(240, 67, 60)', 'price': 3800, 'image': 'catalog/images/red.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(240, 67, 60)', 'price': 4200, 'image': 'catalog/images/red.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(240, 67, 60)', 'price': 4700, 'image': 'catalog/images/red.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(240, 67, 60)', 'price': 5200, 'image': 'catalog/images/red.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(237, 229, 216)', 'price': 3200, 'image': 'catalog/images/beige.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(237, 229, 216)', 'price': 3450, 'image': 'catalog/images/beige.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(237, 229, 216)', 'price': 3800, 'image': 'catalog/images/beige.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(237, 229, 216)', 'price': 4200, 'image': 'catalog/images/beige.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(237, 229, 216)', 'price': 4700, 'image': 'catalog/images/beige.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(237, 229, 216)', 'price': 5200, 'image': 'catalog/images/beige.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(178, 118, 170)', 'price': 3200, 'image': 'catalog/images/pink.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(178, 118, 170)', 'price': 3450, 'image': 'catalog/images/pink.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(178, 118, 170)', 'price': 3800, 'image': 'catalog/images/pink.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(178, 118, 170)', 'price': 4200, 'image': 'catalog/images/pink.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(178, 118, 170)', 'price': 4700, 'image': 'catalog/images/pink.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(178, 118, 170)', 'price': 5200, 'image': 'catalog/images/pink.jpeg', 'good': plastic_good},
-            {'size': 10, 'color': 'rgb(47, 180, 71)', 'price': 3200, 'image': 'catalog/images/green.jpeg', 'good': plastic_good},
-            {'size': 12, 'color': 'rgb(47, 180, 71)', 'price': 3450, 'image': 'catalog/images/green.jpeg', 'good': plastic_good},
-            {'size': 14, 'color': 'rgb(47, 180, 71)', 'price': 3800, 'image': 'catalog/images/green.jpeg', 'good': plastic_good},
-            {'size': 16, 'color': 'rgb(47, 180, 71)', 'price': 4200, 'image': 'catalog/images/green.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(47, 180, 71)', 'price': 4700, 'image': 'catalog/images/green.jpeg', 'good': plastic_good},
-            {'size': 20, 'color': 'rgb(47, 180, 71)', 'price': 5200, 'image': 'catalog/images/green.jpeg', 'good': plastic_good},
-            {'size': 18, 'color': 'rgb(167, 106, 56)', 'price': 3500, 'image': 'catalog/images/carton.jpeg', 'good': carton_good},
-        ]
-        for item in good_variants:
-            full_path = settings.MEDIA_ROOT / item['image']
-            with open(full_path, 'rb') as img_file:
-                GoodVariant.objects.create(
-                    good=item['good'],
-                    size=item['size'],
-                    color=item['color'],
-                    price=item['price'],
-                    image=File(img_file),
+            },
+        )
+
+        with transaction.atomic():
+            plastic_good.variants.all().delete()
+            cardboard_good.variants.all().delete()
+
+            self._create_plastic_variants(plastic_good, image_groups)
+            self._create_cardboard_variant(cardboard_good, image_groups)
+
+        self.stdout.write(self.style.SUCCESS('Каталог товаров обновлён'))
+
+    def _group_images(self):
+        groups = defaultdict(list)
+        if not IMAGE_DIR.exists():
+            return {}
+
+        for path in IMAGE_DIR.iterdir():
+            if not path.is_file():
+                continue
+            slug = re.sub(r'\d+$', '', path.stem)
+            groups[slug].append(path)
+
+        for slug in groups:
+            groups[slug].sort()
+        return groups
+
+    def _create_plastic_variants(self, good, image_groups):
+        plastic_slugs = [slug for slug in image_groups.keys() if slug != CARDBOARD_SLUG]
+        for slug in sorted(plastic_slugs):
+            paths = image_groups[slug]
+            color_hex = self._detect_color(paths[0])
+            color_name = self._humanize(slug)
+            for size, cost in PLASTIC_SIZES:
+                variant = GoodVariant.objects.create(
+                    good=good,
+                    size=size,
+                    color=color_hex,
+                    colorName=color_name,
+                    cost=cost,
                 )
+                self._attach_images(variant, paths)
+
+    def _create_cardboard_variant(self, good, image_groups):
+        paths = image_groups.get(CARDBOARD_SLUG)
+        if not paths:
+            self.stdout.write(self.style.WARNING('Нет изображений для картона, пропускаю'))
+            return
+
+        variant = GoodVariant.objects.create(
+            good=good,
+            size=CARDBOARD_SIZE,
+            color=self._detect_color(paths[0]),
+            colorName=self._humanize(CARDBOARD_SLUG),
+            cost=CARDBOARD_COST,
+        )
+        self._attach_images(variant, paths)
+
+    def _attach_images(self, variant, paths):
+        for path in paths:
+            relative = path.relative_to(settings.MEDIA_ROOT)
+            GoodVariantImage.objects.create(
+                variant=variant,
+                image=str(relative).replace('\\', '/'),
+            )
+
+    def _humanize(self, slug):
+        return slug.replace('_', ' ').title()
+
+    def _detect_color(self, path):
+        with Image.open(path) as img:
+            pixel = img.convert('RGB').resize((1, 1)).getpixel((0, 0))
+        return '#{0:02X}{1:02X}{2:02X}'.format(*pixel)

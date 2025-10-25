@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 from filehandler.models import File
-from pay.models import Payment
+from pay.models import Payment, Promocode
 from online_shop.utils import EnumWithDescriptions
 
 
@@ -35,11 +35,22 @@ class GoodVariant(models.Model):
     size = models.IntegerField()
     color = models.CharField(max_length=30)
     colorName = models.CharField(max_length=30)
-    image = models.ImageField(upload_to=timestamp_filename)
     cost = models.IntegerField()
 
     def __str__(self):
         return f'{self.good} - {self.size}см - {self.color}'
+
+
+class GoodVariantImage(models.Model):
+    class Meta:
+        verbose_name = 'Изображение товара'
+        verbose_name_plural = 'Изображения товаров'
+
+    variant = models.ForeignKey(GoodVariant, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to=timestamp_filename)
+
+    def __str__(self):
+        return f'Фото {self.variant} - {self.image.name}'
 
 
 class OrderItem(models.Model):
@@ -80,6 +91,7 @@ class Order(models.Model):
         choices=OrderStatus.choices(),
         default=OrderStatus.NEW.value,
     )    
+    promocode = models.OneToOneField(Promocode, on_delete=models.SET_NULL, null=True, default=None)
     video = models.OneToOneField(File, on_delete=models.SET_NULL, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
