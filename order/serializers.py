@@ -6,10 +6,11 @@ from .models import Good, GoodVariant, Order, OrderItem
 
 class GoodVariantModelSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
+    type = serializers.CharField(source='good.name', read_only=True)
 
     class Meta:
         model = GoodVariant
-        fields = ['id', 'size', 'color', 'colorName', 'cost', 'images']
+        fields = ['id', 'size', 'color', 'colorName', 'cost', 'images', 'type']
 
     def get_images(self, obj):
         request = self.context.get('request')
