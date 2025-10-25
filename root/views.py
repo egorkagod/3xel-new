@@ -46,7 +46,12 @@ class EmailCodeView(APIView): # TODO все еще ошибка
         if not email:
             return Response({'error': 'Нужно указать email'}, status=status.HTTP_400_BAD_REQUEST)
         
-        is_registered = request.query_params.get('is_registered', False)
+        # корректно парсим булево из query params
+        raw_flag = request.query_params.get('is_registered', 'false')
+        if isinstance(raw_flag, bool):
+            is_registered = raw_flag
+        else:
+            is_registered = str(raw_flag).strip().lower() in {'1', 'true', 'yes', 'y', 'on'}
         
         try:
             email_service.send_random_code(email, request.session, is_registered=is_registered)
