@@ -1,7 +1,8 @@
 import { buildApiUrl, parseResponseBody } from './apiClient'
 import { getCookie } from './cookie'
 
-const CHUNK_SIZE = 2 * 1024 * 1024 // 2MB
+// Keep well below nginx client_max_body_size=2M to avoid 413 due to multipart overhead
+const CHUNK_SIZE = 1 * 1024 * 1024 // 1MB
 const MAX_FILE_SIZE = 500 * 1024 * 1024 // 500MB
 
 const generateUploadToken = () => {
