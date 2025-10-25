@@ -38,6 +38,7 @@ export default function OrderForm() {
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
+    const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0), [cart])
 
     const isAuthenticated = Boolean(user)
 
@@ -259,9 +260,19 @@ export default function OrderForm() {
                 <div className={classes.resultBlock}>
                     <div className={classes.resultCost}>
                         <strong>Итого:</strong>
-                        <span className={classes.result}>{resultCost} ₽ (Включая доставку: 0 ₽)</span>
+                        <span className={classes.result}>{resultCost - resultDiscount} ₽ (Включая доставку: 0 ₽)</span>
                     </div>
-                    <span className={classes.goodsCost}>Товары: {resultCost} ₽ (скидка 0 ₽)</span>
+                    <span className={classes.goodsCost}>
+                        {resultDiscount === 0 ? (
+                            <>
+                            Товары: {resultCost} ₽ (скидка 0 ₽)
+                            </>
+                        ) : (
+                            <>
+                            Товары: <s>{resultCost} ₽</s> → <b>{resultCost - resultDiscount} ₽</b> (скидка {resultDiscount} ₽)
+                            </>
+                        )}
+                    </span>
                     {generalError ? (
                         <span className={classes.errorText}>{generalError}</span>
                     ) : null}

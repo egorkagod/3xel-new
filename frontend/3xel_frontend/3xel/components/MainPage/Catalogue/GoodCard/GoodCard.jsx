@@ -5,6 +5,7 @@ import PopUp from '../../../PopUp/PopUp'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../../../store/cartSlice'
 import { HashLink } from 'react-router-hash-link'
+import { useSelector } from 'react-redux'
 
 import classes from './GoodCard.module.scss'
 
@@ -12,6 +13,7 @@ const DEFAULT_COLOR = '#d8b98a'
 
 export default function GoodCard({ good, forConstructor }) {
 
+    const cart = useSelector(state => state.cart)
     const dispatcher = useDispatch()
 
     const variants = useMemo(() => good?.variants || [], [good])
@@ -105,6 +107,7 @@ export default function GoodCard({ good, forConstructor }) {
 
         dispatcher(addToCart({
             id: selectedVariant.id,
+            type: selectedVariant.type,
             name: good.name,
             color: selectedColor,
             size: selectedSize,

@@ -24,9 +24,16 @@ export default function Cart() {
                                 <div className={classes.addedBust}>
                                     <div className={classes.itemDescription} key={index}>
                                         <span>{item.name} — {item.size}, цвет: {item.colorName} <span>({item.color})</span></span>
+                                    {item.discount === 0 ? (
                                         <span className={classes.cost}>Цена: {item.cost} ₽ (скидка 0 ₽)</span>
+                                    ) : (
+                                       <span className={classes.cost}>Цена: <s>{item.cost} ₽</s> → <b>{item.cost - item.discount} ₽</b> (скидка {item.discount} ₽)</span>
+                                    )}   
                                     </div>
-                                    <Button color='white' onClick={() => dispatcher(removeFromCart(index))}>Удалить</Button>
+                                    <div className={classes.buttonsBlock}>
+                                        <Button color='white' onClick={() => dispatcher(removeFromCart(index))}>Удалить</Button>
+                                        {item.discount === 0 ? <Button color='golden'>Добавить товары со скидкой</Button> : null}
+                                    </div>
                                 </div>
                             )}
                         </div>

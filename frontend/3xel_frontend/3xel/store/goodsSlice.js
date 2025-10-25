@@ -79,9 +79,7 @@ const initialState = {
       name: 'Подарочный сертификат',
       denominations: [5500, 6500, 7500, 8500, 9500],
     },
-  ],
-  status: 'idle',
-  error: null,
+  ]
 }
 
 const goodsSlice = createSlice({
