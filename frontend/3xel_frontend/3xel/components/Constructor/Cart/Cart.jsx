@@ -24,7 +24,7 @@ export default function Cart() {
                             ) : (
                                 <div className={classes.addedBust}>
                                     <div className={classes.itemDescription} key={index}>
-                                        <span>{item.name} — {item.size}, цвет: {item.colorName} <span style={{ borderRadius: '50%', width: '24px', height: '24px', background: item.color, border: '1px solid black' }}></span></span>
+                                        <span>{item.name} — {item.size}, цвет: {item.colorName} <span style={{ display: 'block', borderRadius: '50%', width: '24px', height: '24px', background: item.color, border: '1px solid black' }}></span></span>
                                         {item.discount === 0 ? (
                                             <span className={classes.cost}>Цена: {item.cost} ₽ (скидка 0 ₽)</span>
                                         ) : (
