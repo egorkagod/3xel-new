@@ -72,66 +72,7 @@ export const fetchGoods = createAsyncThunk(
 )
 
 const initialState = {
-  busts: [
-    {
-      id: 1,
-      name: 'Картонный бюст',
-      description: 'Один размер — 18 см. Цвет — натуральный картон.',
-      technology: [
-        'HDF/картон',
-        'Конструктор'
-      ],
-      discount: false,
-      variants: [
-        {
-          id: 76,
-          color: '#A57C47',
-          colorName: 'Natural Cardboard',
-          type: 'Картонный бюст',
-          size: '18 см',
-          cost: 3500,
-          images: [
-            
-          ],
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Пластиковый бюст',
-      description: 'Размеры: 12 / 16 / 20 см. Большая карта цветов.',
-      technology: [
-        'PLA Matte/PETG-CF',
-        'Премиум-поверхность'
-      ],
-      discount: false,
-      variants: [
-        {
-          id: 1,
-          color: '#FFFFFF',
-          colorName: 'Ivory White',
-          type: 'Пластиковый бюст',
-          size: '12 см',
-          image: '',
-          cost: 3450,
-          images: [
-            
-          ],
-        },
-        {
-          id: 2,
-          color: '#FFFFFF',
-          colorName: 'Ivory White',
-          type: 'Пластиковый бюст',
-          size: '16 см',
-          image: '',
-          cost: 4500,
-          images: [
-            
-          ],
-        }
-      ],
-    }],
+  busts: [],
   certificates: [
     {
       id: 1,
@@ -144,33 +85,23 @@ const initialState = {
 const goodsSlice = createSlice({
   name: 'goods',
   initialState,
-  reducers: {
-    console: (state, action) => {
-      console.log(state, action)
-    }
-  }
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchGoods.pending, (state) => {
+        state.status = 'loading'
+        state.error = null
+      })
+      .addCase(fetchGoods.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        state.error = null
+        state.busts = transformGoods(action.payload)
+      })
+      .addCase(fetchGoods.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.payload || action.error.message
+      })
+  },
 })
-
-// const goodsSlice = createSlice({
-//   name: 'goods',
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchGoods.pending, (state) => {
-//         state.status = 'loading'
-//         state.error = null
-//       })
-//       .addCase(fetchGoods.fulfilled, (state, action) => {
-//         state.status = 'succeeded'
-//         state.error = null
-//         state.busts = transformGoods(action.payload)
-//       })
-//       .addCase(fetchGoods.rejected, (state, action) => {
-//         state.status = 'failed'
-//         state.error = action.payload || action.error.message
-//       })
-//   },
-// })
 
 export default goodsSlice.reducer
