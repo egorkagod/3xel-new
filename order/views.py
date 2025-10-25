@@ -28,7 +28,7 @@ from .exceptions import OrderError
     },
 )
 class CatalogView(generics.ListAPIView):
-    queryset = Good.objects.prefetch_related('variants').all()
+    queryset = Good.objects.prefetch_related('variants__images').all()
     serializer_class = GoodModelSerializer
 
 
@@ -56,7 +56,7 @@ class GoodView(APIView):
         if good_id:
             good = good_rep.get(good_id)
             if good:
-                payload = GoodModelSerializer(good).data
+                payload = GoodModelSerializer(good, context={'request': request}).data
                 return Response(payload, status=status.HTTP_200_OK)
             return Response({'error': 'Товар не найден'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'error': 'Нужно указать идентификатор товара'}, status=status.HTTP_400_BAD_REQUEST)

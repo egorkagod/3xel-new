@@ -157,7 +157,7 @@ class LogoutView(APIView):
 
 class UserView(APIView):
     def get_permissions(self):
-        if self.request.method in ['GET', 'PATCH']:
+        if self.request.method in ['GET']:
             return [IsAuthenticated()]
         return [AllowAny()]
 
@@ -213,25 +213,12 @@ class UserView(APIView):
 
     @extend_schema(
         operation_id='change_user_name',
-        summary='Смена имени пользователя',
+        summary='Смена имени отключена',
         request=ChangeNameSerializer,
         responses={
-            status.HTTP_200_OK: OpenApiResponse(MessageResponseSerializer, description='Имя успешно изменено'),
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(ErrorResponseSerializer, description='Неверный пароль'),
+            status.HTTP_403_FORBIDDEN: OpenApiResponse(ErrorResponseSerializer, description='Изменение имени отключено'),
         },
     )
-    def patch(self, request): # Флоу смены имени по паролю
-        serializer = ChangeNameSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        name = serializer.validated_data['name']
-        password = serializer.validated_data['password']
-
-        user = authenticate(request=request, username=request.user.username, password=password)
-        if not user:
-            return Response({'error': 'Неверный пароль'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user.first_name = name
-        user.save()
-        return Response({'message': 'Имя обновлено'}, status=status.HTTP_200_OK)
+    def patch(self, request):
+        return Response({'error': 'Изменение имени отключено'}, status=status.HTTP_403_FORBIDDEN)
     
