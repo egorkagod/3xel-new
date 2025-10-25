@@ -1,14 +1,10 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import classes from './ProfileBlock.module.scss'
 import Button from '../../Button/Button'
-import {
-  logoutUser,
-  updateUserName,
-} from '../../../store/userSlice'
+import { logoutUser } from '../../../store/userSlice'
 import { fetchOrders } from '../../../store/ordersSlice'
 
 const currencyFormatter = new Intl.NumberFormat('ru-RU', {
@@ -25,57 +21,13 @@ export default function ProfileBlock({
   const user = useSelector((state) => state.user.data)
   const orders = useSelector((state) => state.orders.items)
   const ordersStatus = useSelector((state) => state.orders.status)
-  const updateNameStatus = useSelector(
-    (state) => state.user.updateNameStatus,
-  )
-  const updateNameError = useSelector(
-    (state) => state.user.updateNameError,
-  )
   const logoutStatus = useSelector((state) => state.user.logoutStatus)
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: user?.first_name || '',
-      password: '',
-    },
-  })
 
   useEffect(() => {
     dispatch(fetchOrders())
   }, [dispatch])
 
-  useEffect(() => {
-    reset({
-      name: user?.first_name || '',
-      password: '',
-    })
-  }, [reset, user])
-
-  useEffect(() => {
-    if (updateNameStatus === 'failed' && updateNameError) {
-      toast.error(updateNameError)
-    }
-  }, [updateNameStatus, updateNameError])
-
-  const onSubmitName = async (data) => {
-    try {
-      await dispatch(
-        updateUserName({
-          name: data.name,
-          password: data.password,
-        }),
-      ).unwrap()
-      toast.success('Имя обновлено')
-      reset({ name: data.name, password: '' })
-    } catch (error) {
-      toast.error(error)
-    }
-  }
+  
 
   const handleLogout = async () => {
     try {
@@ -157,50 +109,7 @@ export default function ProfileBlock({
             <strong>{user?.email}</strong>
           </div>
 
-          <form
-            className={classes.inlineForm}
-            onSubmit={handleSubmit(onSubmitName)}
-          >
-            <div className={classes.formField}>
-              <label htmlFor="new-name">Изменить имя</label>
-              <input
-                id="new-name"
-                type="text"
-                placeholder="Новое имя"
-                {...register('name', { required: 'Имя обязательно' })}
-              />
-              {errors.name ? (
-                <span className={classes.errorText}>
-                  {errors.name.message}
-                </span>
-              ) : null}
-            </div>
-            <div className={classes.formField}>
-              <label htmlFor="confirm-password">Пароль</label>
-              <input
-                id="confirm-password"
-                type="password"
-                placeholder="Подтвердите пароль"
-                {...register('password', {
-                  required: 'Укажите пароль для подтверждения',
-                })}
-              />
-              {errors.password ? (
-                <span className={classes.errorText}>
-                  {errors.password.message}
-                </span>
-              ) : null}
-            </div>
-            <Button
-              type="submit"
-              color="golden"
-              disabled={updateNameStatus === 'loading'}
-            >
-              {updateNameStatus === 'loading'
-                ? 'Сохраняем...'
-                : 'Сохранить'}
-            </Button>
-          </form>
+          {/* Форма смены имени скрыта согласно требованиям */}
 
           <div className={classes.actions}>
             <Button color="white" onClick={onSwitchToReset}>

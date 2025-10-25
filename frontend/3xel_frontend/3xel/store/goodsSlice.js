@@ -33,17 +33,17 @@ const transformGoods = (goods) =>
   (goods || []).map((good) => {
     const variants = (good.variants || []).map((variant) => {
       const { hex, label } = parseColor(variant.color)
-      const images = []
-      if (variant.image) {
-        images.push(variant.image)
-      }
+      // backend now returns an array `images`; keep backward compatibility with `image`
+      const images = Array.isArray(variant.images) && variant.images.length > 0
+        ? variant.images
+        : (variant.image ? [variant.image] : [])
       return {
         id: variant.id,
         size: variant.size ? `${variant.size} см` : '—',
         numericSize: variant.size ?? null,
         color: hex,
         colorName: label,
-        cost: variant.price ?? 0,
+        cost: variant.cost ?? variant.price ?? 0,
         images,
       }
     })
