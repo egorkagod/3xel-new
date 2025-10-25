@@ -33,10 +33,7 @@ const transformGoods = (goods) =>
   (goods || []).map((good) => {
     const variants = (good.variants || []).map((variant) => {
       const { hex, label } = parseColor(variant.color)
-      const images = []
-      if (variant.image) {
-        images.push(variant.image)
-      }
+      const images = variant.images
       return {
         id: variant.id,
         size: variant.size ? `${variant.size} см` : '—',
