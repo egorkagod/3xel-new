@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
-
+import { Link } from 'react-router-dom'
 import classes from './OrderForm.module.scss'
 import Button from '../../Button/Button'
 import { apiFetch } from '../../../utils/apiClient'
@@ -247,7 +247,7 @@ export default function OrderForm() {
                     <div className={classes.checkboxFields}>
                         <div className={classes.field}>
                             <input type="checkbox" id='instruction' {...register('instruction')} />
-                            <label htmlFor="instruction">С инструкцией по съемке видео ознакомился(-ась) — как снять видео</label>
+                            <label htmlFor="instruction">С инструкцией по съемке видео ознакомился(-ась) — <Link to='/instruction' style={{ cursor: 'pointer' }}>как снять видео</Link></label>
                         </div>
                         <div className={classes.field}>
                             <input type="checkbox" id='offer' {...register('offer')} />
