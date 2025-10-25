@@ -4,7 +4,6 @@ from ..services import user_service
 
 class TestEmailCode:
     # Успешный кейс
-    @pytest.mark.skip 
     @pytest.mark.django_db
     def test_get(self, client):
         response = client.get('/api-root/code/', {'email': 'test@mail.ru'})
