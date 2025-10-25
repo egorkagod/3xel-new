@@ -39,6 +39,7 @@ const transformGoods = (goods) =>
         size: variant.size ? `${variant.size} см` : '—',
         numericSize: variant.size ?? null,
         color: hex,
+        type: variant.type,
         colorName: label,
         cost: variant.cost ?? 0,
         images,
