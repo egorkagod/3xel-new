@@ -21,7 +21,7 @@ class Payment(models.Model):
             verbose_name = 'Платеж'
             verbose_name_plural = 'Платежи'
 
-    id = models.IntegerField(primary_key=True, auto_created=False)
+    id = models.BigIntegerField(primary_key=True, auto_created=False)
     status = models.CharField(
         max_length=32,
         choices=PaymentStatus.choices(),

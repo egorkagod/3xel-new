@@ -40,8 +40,9 @@ def init(order_id: uuid.UUID, amount: int):
     data = response.json()
 
     if data["Success"]:
-        payment_id = data['PaymentId']
-        payment = pay_rep.create(id=payment_id, amount=amount, status=data['Status'][0])
+        payment_id = int(data['PaymentId'])
+        # Tinkoff returns full status string, store it as is (matches choices)
+        payment = pay_rep.create(id=payment_id, amount=amount, status=data['Status'])
         order = Order.objects.filter(pk=order_id).first()
         order.payment = payment
         order.save()
