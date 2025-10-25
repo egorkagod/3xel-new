@@ -43,7 +43,7 @@ const transformGoods = (goods) =>
         numericSize: variant.size ?? null,
         color: hex,
         colorName: label,
-        cost: variant.price ?? 0,
+        cost: variant.cost ?? 0,
         images,
       }
     })
