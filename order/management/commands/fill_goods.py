@@ -31,15 +31,17 @@ class Command(BaseCommand):
             return
 
         plastic_good, _ = Good.objects.update_or_create(
-            name='3D модель из PLA-пластика',
+            name='Пластиковый бюст',
             defaults={
-                'description': '3D-печать из PLA-пластика.',
+                'description': 'Размеры: 12 / 16 / 20 см. Большая карта цветов.',
+                'technology': ['PLA Matte/PETG-CF', 'Премиум-поверхность'],
             },
         )
         cardboard_good, _ = Good.objects.update_or_create(
-            name='Конструктор из картона',
+            name='Картонный бюст',
             defaults={
-                'description': '',
+                'description': 'Один размер — 18 см. Цвет — натуральный картон.',
+                'technology': ['HDF/картон', 'Конструктор'],
             },
         )
 
