@@ -33,17 +33,17 @@ const transformGoods = (goods) =>
   (goods || []).map((good) => {
     const variants = (good.variants || []).map((variant) => {
       const { hex, label } = parseColor(variant.color)
-      // backend now returns an array `images`; keep backward compatibility with `image`
-      const images = Array.isArray(variant.images) && variant.images.length > 0
-        ? variant.images
-        : (variant.image ? [variant.image] : [])
+      const images = []
+      if (variant.image) {
+        images.push(variant.image)
+      }
       return {
         id: variant.id,
         size: variant.size ? `${variant.size} см` : '—',
         numericSize: variant.size ?? null,
         color: hex,
         colorName: label,
-        cost: variant.cost ?? variant.price ?? 0,
+        cost: variant.price ?? 0,
         images,
       }
     })
@@ -72,7 +72,66 @@ export const fetchGoods = createAsyncThunk(
 )
 
 const initialState = {
-  busts: [],
+  busts: [
+    {
+      id: 1,
+      name: 'Картонный бюст',
+      description: 'Один размер — 18 см. Цвет — натуральный картон.',
+      technology: [
+        'HDF/картон',
+        'Конструктор'
+      ],
+      discount: false,
+      variants: [
+        {
+          id: 76,
+          color: '#A57C47',
+          colorName: 'Natural Cardboard',
+          type: 'Картонный бюст',
+          size: '18 см',
+          cost: 3500,
+          images: [
+            
+          ],
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Пластиковый бюст',
+      description: 'Размеры: 12 / 16 / 20 см. Большая карта цветов.',
+      technology: [
+        'PLA Matte/PETG-CF',
+        'Премиум-поверхность'
+      ],
+      discount: false,
+      variants: [
+        {
+          id: 1,
+          color: '#FFFFFF',
+          colorName: 'Ivory White',
+          type: 'Пластиковый бюст',
+          size: '12 см',
+          image: '',
+          cost: 3450,
+          images: [
+            
+          ],
+        },
+        {
+          id: 2,
+          color: '#FFFFFF',
+          colorName: 'Ivory White',
+          type: 'Пластиковый бюст',
+          size: '16 см',
+          image: '',
+          cost: 4500,
+          images: [
+            
+          ],
+        }
+      ],
+    }],
   certificates: [
     {
       id: 1,
@@ -85,23 +144,33 @@ const initialState = {
 const goodsSlice = createSlice({
   name: 'goods',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchGoods.pending, (state) => {
-        state.status = 'loading'
-        state.error = null
-      })
-      .addCase(fetchGoods.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        state.error = null
-        state.busts = transformGoods(action.payload)
-      })
-      .addCase(fetchGoods.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.payload || action.error.message
-      })
-  },
+  reducers: {
+    console: (state, action) => {
+      console.log(state, action)
+    }
+  }
 })
+
+// const goodsSlice = createSlice({
+//   name: 'goods',
+//   initialState,
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchGoods.pending, (state) => {
+//         state.status = 'loading'
+//         state.error = null
+//       })
+//       .addCase(fetchGoods.fulfilled, (state, action) => {
+//         state.status = 'succeeded'
+//         state.error = null
+//         state.busts = transformGoods(action.payload)
+//       })
+//       .addCase(fetchGoods.rejected, (state, action) => {
+//         state.status = 'failed'
+//         state.error = action.payload || action.error.message
+//       })
+//   },
+// })
 
 export default goodsSlice.reducer
