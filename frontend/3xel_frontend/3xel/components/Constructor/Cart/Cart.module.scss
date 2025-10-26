@@ -55,4 +55,13 @@
             gap: 10px;
         }
     }
+
+    @media (max-width: 1199px) {
+        .addedBust {
+            flex-direction: column;
+            .buttonsBlock {
+                flex-direction: column;
+            }
+        }
+    }
 }
