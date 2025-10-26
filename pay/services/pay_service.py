@@ -32,7 +32,14 @@ def init(order_id: uuid.UUID, amount: int):
         'Language': 'ru',
         'NotificationURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'FailURL': settings.SITE_DOMEN + reverse('pay:notification'),
-        'SuccessURL': settings.SITE_DOMEN + '/profile/my-orders/',
+        'SuccessURL': settings.SITE_DOMEN + '/profile/',
+        'Receipt': {
+            'Email': email,
+            'Taxation': 'usn_income',
+            'Items': {
+                
+            }
+        }
     }
 
     payload = _sign_by_token(payload)

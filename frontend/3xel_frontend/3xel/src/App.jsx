@@ -68,9 +68,13 @@ function App() {
     }
   }
 
+  const routesLocation = backgroundLocation || location
+  const routeKey = routesLocation.pathname
+
   return (
     <div className="app">
       <Header />
+<<<<<<< Updated upstream
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<MainPage />} />
         <Route path="/constructor" element={<Constructor />} />
@@ -79,6 +83,17 @@ function App() {
         <Route path='/profile/*' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
         <Route path='/order/:id' element={<Order />} />
       </Routes>
+=======
+      <div className="page-transition" key={routeKey}>
+        <Routes location={routesLocation}>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/constructor" element={<Constructor />} />
+          <Route path="/discounts" element={<Discounts />} />
+          <Route path='/instruction' element={<Instruction />} />
+          <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
+        </Routes>
+      </div>
+>>>>>>> Stashed changes
 
       {backgroundLocation && (
         <Routes>
