@@ -59,6 +59,14 @@ function App() {
     }
   }, [dispatch, user])
 
+  const handleClose = () => {
+    if (backgroundLocation) {
+      navigate(-1)
+    } else {
+      navigate('/')
+    }
+  }
+
   return (
     <div className="app">
       <Header />
@@ -67,12 +75,12 @@ function App() {
         <Route path="/constructor" element={<Constructor />} />
         <Route path="/discounts" element={<Discounts />} />
         <Route path='/instruction' element={<Instruction />} />
-        <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={() => navigate(-1)} />} />
+        <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
       </Routes>
 
       {backgroundLocation && (
         <Routes>
-          <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={() => navigate(-1)} />} />
+          <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
         </Routes>
       )}
       <ToastContainer position="top-right" autoClose={4000} theme="light" />
