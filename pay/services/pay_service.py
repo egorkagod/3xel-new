@@ -23,6 +23,44 @@ def init(order_id: uuid.UUID, amount: int):
     headers = {
         'Content-Type': 'application/json',
     }
+    # Load order with user and items to build receipt lines
+    # Fetch order instance
+    order = (
+        Order.objects.select_related('user')
+        .prefetch_related('items__good_variant', 'items__good_variant__good')
+        .filter(pk=order_id)
+        .first()
+    )
+    if not order:
+        return False
+
+    # Use user's email for receipt and DATA
+    user_email = (order.user.email or '').strip()
+
+    # Build receipt items list with VAT 5% per item
+    receipt_items = []
+    for it in order.items.all():
+        gv = it.good_variant
+        if not gv:
+            # Skip if variant is missing
+            continue
+        name_parts = [getattr(gv.good, 'name', None) or 'Товар']
+        if getattr(gv, 'size', None):
+            name_parts.append(f"{gv.size}см")
+        if getattr(gv, 'colorName', None):
+            name_parts.append(str(gv.colorName))
+        item_name = ' '.join(map(str, name_parts))[:128]
+
+        price_kopecks = int(gv.cost) * 100
+        quantity = int(it.quantity)
+        amount_kopecks = price_kopecks * quantity
+        receipt_items.append({
+            'Name': item_name,
+            'Price': price_kopecks,
+            'Quantity': quantity,
+            'Amount': amount_kopecks,
+            'Tax': 'vat5',
+        })
     payload = {
         'TerminalKey': os.getenv('TERMINAL_KEY'),
         'Amount': amount * 100,
@@ -33,13 +71,15 @@ def init(order_id: uuid.UUID, amount: int):
         'NotificationURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'FailURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'SuccessURL': settings.SITE_DOMEN + '/profile/',
+        # Optional extra customer data section
+        'DATA': {
+            'Email': user_email,
+        },
         'Receipt': {
-            'Email': email,
+            'Email': user_email,
             'Taxation': 'usn_income',
-            'Items': {
-                
-            }
-        }
+            'Items': receipt_items,
+        },
     }
 
     payload = _sign_by_token(payload)
