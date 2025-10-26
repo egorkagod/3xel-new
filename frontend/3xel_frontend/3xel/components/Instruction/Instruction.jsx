@@ -61,7 +61,7 @@ export default function Instruction() {
                         </li>
                     </ul>
                 </div>
-                <img src="" alt="" />
+                <img src={instruction} alt="instruction gif" />
             </section>
             <section className={classes.instructionSection}>
                 <div className={classes.leftSide}>
