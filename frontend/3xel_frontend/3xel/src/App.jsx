@@ -15,6 +15,7 @@ import Order from '../components/Order/Order'
 import { fetchCurrentUser } from '../store/userSlice'
 import { fetchOrders, clearOrders } from '../store/ordersSlice'
 import { fetchGoods } from '../store/goodsSlice'
+import ScrollToUp from './ScrollToUp'
 
 function App() {
   const location = useLocation()
@@ -74,26 +75,18 @@ function App() {
   return (
     <div className="app">
       <Header />
-<<<<<<< Updated upstream
-      <Routes location={backgroundLocation || location}>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/constructor" element={<Constructor />} />
-        <Route path="/discounts" element={<Discounts />} />
-        <Route path='/instruction' element={<Instruction />} />
-        <Route path='/profile/*' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
-        <Route path='/order/:id' element={<Order />} />
-      </Routes>
-=======
+      {/* Reset scroll only when effective page changes (not modal/hash) */}
+      <ScrollToUp watchPathname={routeKey} />
       <div className="page-transition" key={routeKey}>
         <Routes location={routesLocation}>
           <Route path="/" element={<MainPage />} />
           <Route path="/constructor" element={<Constructor />} />
           <Route path="/discounts" element={<Discounts />} />
           <Route path='/instruction' element={<Instruction />} />
-          <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
+          <Route path='/order/:id' element={<Order />} />
+          <Route path='/profile/*' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
         </Routes>
       </div>
->>>>>>> Stashed changes
 
       {backgroundLocation && (
         <Routes>
