@@ -5,7 +5,6 @@ from pathlib import Path
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from PIL import Image
 
 from order.models import Good, GoodVariant, GoodVariantImage
 
@@ -20,9 +19,37 @@ CARDBOARD_SIZE = 18
 CARDBOARD_COST = 3500
 CARDBOARD_SLUG = 'natural_cardboard'
 
+# Цвета, прописанные вручную по ColorName
+COLOR_MAP = {
+    'Apple Green': '#8DB255',
+    'Ash Gray': '#B2BEB5',
+    'Bone White': '#E3DAC9',
+    'Caramel': '#AF6E4D',
+    'Charcoal': '#36454F',
+    'Dark Blue': '#1B365D',
+    'Dark Brown': '#5C4033',
+    'Dark Chocolate': '#490206',
+    'Dark Green': '#015D52',
+    'Dark Red': '#8B0000',
+    'Desert Tan': '#D2B48C',
+    'Grass Green': '#7CFC00',
+    'Ice Blue': '#AFDBF5',
+    'Ivory White': '#FFFFF0',
+    'Latte Brown': '#A1866F',
+    'Lemon Yellow': '#FFF44F',
+    'Lilac Purple': '#C8A2C8',
+    'Mandarin Orange': '#F37A48',
+    'Marine Blue': '#3B9C9C',
+    'Nardo Gray': '#686A6C',
+    'Natural Cardboard': '#A1866F',
+    'Plum': '#8E4585',
+    'Sakura Pink': '#FCC8D1',
+    'Scarlet Red': '#FF2400',
+    'Sky Blue': '#87CEEB',
+}
 
 class Command(BaseCommand):
-    help = 'Создание товаров и вариантов с изображениями из каталога'
+    help = 'Создание товаров и вариантов с изображениями из каталога (цвета заданы вручную)'
 
     def handle(self, *args, **options):
         image_groups = self._group_images()
@@ -73,8 +100,11 @@ class Command(BaseCommand):
         plastic_slugs = [slug for slug in image_groups.keys() if slug != CARDBOARD_SLUG]
         for slug in sorted(plastic_slugs):
             paths = image_groups[slug]
-            color_hex = self._detect_color(paths[0])
             color_name = self._humanize(slug)
+            color_hex = COLOR_MAP.get(color_name)
+            if not color_hex:
+                self.stdout.write(self.style.WARNING(f'Неизвестный цвет: {color_name}, slug: {slug}'))
+                continue
             for size, cost in PLASTIC_SIZES:
                 variant = GoodVariant.objects.create(
                     good=good,
@@ -94,8 +124,8 @@ class Command(BaseCommand):
         variant = GoodVariant.objects.create(
             good=good,
             size=CARDBOARD_SIZE,
-            color=self._detect_color(paths[0]),
-            colorName=self._humanize(CARDBOARD_SLUG),
+            color=COLOR_MAP['Natural Cardboard'],
+            colorName='Natural Cardboard',
             cost=CARDBOARD_COST,
         )
         self._attach_images(variant, paths)
@@ -110,8 +140,3 @@ class Command(BaseCommand):
 
     def _humanize(self, slug):
         return slug.replace('_', ' ').title()
-
-    def _detect_color(self, path):
-        with Image.open(path) as img:
-            pixel = img.convert('RGB').resize((1, 1)).getpixel((0, 0))
-        return '#{0:02X}{1:02X}{2:02X}'.format(*pixel)

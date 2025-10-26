@@ -110,3 +110,31 @@ class Order(models.Model):
     def __str__(self):
         return f'{self.status_description} | {self.formatted_created_at}'
     
+
+# Proxy models for admin sections by status
+class NewOrder(Order):
+    class Meta:
+        proxy = True
+        verbose_name = 'Новый заказ'
+        verbose_name_plural = 'Новые заказы'
+
+
+class ProcessingOrder(Order):
+    class Meta:
+        proxy = True
+        verbose_name = 'Заказ в обработке'
+        verbose_name_plural = 'Заказы в обработке'
+
+
+class ShippedOrder(Order):
+    class Meta:
+        proxy = True
+        verbose_name = 'Заказ в доставке'
+        verbose_name_plural = 'Заказы в доставке'
+
+
+class DeliveredOrder(Order):
+    class Meta:
+        proxy = True
+        verbose_name = 'Заказ доставлен'
+        verbose_name_plural = 'Доставленные заказы'
