@@ -40,7 +40,7 @@ function App() {
     }, [])
 
     useEffect(() => {
-      if (location.pathname === '/profile') {
+      if (location.pathname === '/profile' || location.pathname === '/profile/') {
         setModalIsActive(true)
       } else {
         setModalIsActive(false)
