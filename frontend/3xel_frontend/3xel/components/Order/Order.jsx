@@ -62,7 +62,7 @@ export default function Order() {
                         <strong>Итоговая стоимость:</strong>
                         <span className={classes.result}>{order.amount} ₽</span>
                     </div>
-                    <span className={classes.itemsAmount}>Количество товаров: <b>{order.items.length}</b></span>
+                    <span className={classes.itemsAmount}>Количество товаров: <b>{order?.items?.length}</b></span>
                     <div className={classes.buttons}>
                         <Link style={{ all: 'unset' }} to='/profile'>
                             <Button color='white'>Назад</Button>
