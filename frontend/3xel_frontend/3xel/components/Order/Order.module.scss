@@ -1,6 +1,7 @@
 .order {
     padding: 20px 150px;
     display: flex;
+    flex-direction: column;
     gap: 40px;
 
     .pageHeader {

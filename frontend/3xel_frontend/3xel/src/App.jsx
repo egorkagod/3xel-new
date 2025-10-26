@@ -76,13 +76,15 @@ function App() {
         <Route path="/constructor" element={<Constructor />} />
         <Route path="/discounts" element={<Discounts />} />
         <Route path='/instruction' element={<Instruction />} />
-        <Route path='/profile/*' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
+        <Route path='/profile/' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
+        <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
         <Route path='/order/:id' element={<Order />} />
       </Routes>
 
       {backgroundLocation && (
         <Routes>
-          <Route path='/profile/*' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
+          <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
+          <Route path='/profile/' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
         </Routes>
       )}
       <ToastContainer position="top-right" autoClose={4000} theme="light" />
