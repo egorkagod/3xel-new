@@ -2,7 +2,7 @@ import classes from './Header.module.scss'
 import { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Button from '../Button/Button'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Profile from '../Profile/Profile'
 import { HashLink } from 'react-router-hash-link'
 import { useSelector } from 'react-redux'
@@ -10,24 +10,11 @@ import { useSelector } from 'react-redux'
 export default function Header() {
 
     const [isActive, setIsActive] = useState(false)
-    const [modalIsActive, setModalIsActive] = useState(false)
     const user = useSelector((state) => state.user.data)
-
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') {
-                setModalIsActive(false)
-            }
-        }
-
-        window.addEventListener('keydown', handleKeyDown)
-
-        return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [])
+    const location = useLocation()
 
     return (
         <header className={classes.header}>
-            <Profile isActive={modalIsActive} onClose={() => setModalIsActive(false)} />
             <div className={classNames(classes.burgerMenu, { [classes.active]: isActive })} onClick={() => setIsActive(prev => !prev)}>
                 <span></span>
             </div>
@@ -73,9 +60,11 @@ export default function Header() {
                         <Link style={{ all: 'unset' }} to='/constructor'><Button color='white'>Открыть конструктор</Button></Link>
                     </li>
                     <li onClick={() => setIsActive(false)}>
-                        <Button color='white' onClick={() => setModalIsActive(true)}>
-                            {user ? 'Профиль' : 'Войти'}
-                        </Button>
+                        <Link style={{ all: 'unset' }} to='/profile' state={{backgroundLocation : location}}>
+                            <Button color='white'>
+                                {user ? 'Профиль' : 'Войти'}
+                            </Button>
+                        </Link>
                     </li>
                 </ul>
             </nav>

@@ -33,7 +33,7 @@ export default function SelectGood() {
             <div className={classes.goodsBlock}>
                 {renderGoods()}
                 {certificates.map((certificate) => (
-                    <Certificate key={certificate.id} certificate={certificate}></Certificate>
+                    <Certificate key={certificate.id} certificate={certificate} id='certificate'></Certificate>
                 ))}
             </div>
         </section>

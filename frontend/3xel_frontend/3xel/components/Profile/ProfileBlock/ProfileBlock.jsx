@@ -109,8 +109,6 @@ export default function ProfileBlock({
             <strong>{user?.email}</strong>
           </div>
 
-          {/* Форма смены имени скрыта согласно требованиям */}
-
           <div className={classes.actions}>
             <Button color="white" onClick={onSwitchToReset}>
               Сменить пароль
