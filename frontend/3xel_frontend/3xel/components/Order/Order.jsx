@@ -36,7 +36,7 @@ export default function Order() {
                     <span className={classes.orderStatus}>Статус заказа: <b>{order.status}</b></span>
                 </div>
                 <div className={classes.items}>
-                    {order.items.map((item, index) =>
+                    {order?.items?.map((item, index) =>
                         <div className={classes.item} key={index}>
                             <img src={item.good_variant.images[0]} alt={item.good_variant.type} />
                             <div className={classes.itemInfo}>
