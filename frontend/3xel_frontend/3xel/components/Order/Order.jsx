@@ -43,7 +43,7 @@ export default function Order() {
                                 <h4>{item.good_variant.type}</h4>
                                 <div className={classes.sizeBlock}>
                                     <span className={classes.size}>Размер:</span>
-                                    <div className={classes.sizeValue}>{item.good_variant.size}</div>
+                                    <div className={classes.sizeValue}>{item.good_variant.size} см</div>
                                 </div>
                                 <div className={classes.colorBlock}>
                                     <span className={classes.color}>Цвет:</span>
