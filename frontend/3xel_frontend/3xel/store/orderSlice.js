@@ -11,7 +11,7 @@ export const fetchOrder = createAsyncThunk(
     'order/fetchOne',
     async ({ id }, { rejectWithValue }) => {
         try {
-            const order = await apiFetch(`/api-order/order/${id}`)
+            const order = await apiFetch(`/api-order/order/${id}/`)
             return order
         } catch (error) {
             if (error.status === 401 || error.status === 403) {
