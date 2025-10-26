@@ -38,12 +38,26 @@ class FileAdmin(admin.ModelAdmin):
         total = qs.count()
         if total == 0:
             return '-'
-        orders = list(qs.only('pk')[:5])
-        links = format_html_join(
-            ', ',
-            '<a href="{}">{}</a>',
-            ((reverse('admin:order_order_change', args=[o.pk]), str(o.pk)) for o in orders),
-        )
+
+        # Map Order.status to registered proxy model names in admin
+        status_to_proxy = {
+            'NEW': 'neworder',
+            'PROCESSING': 'processingorder',
+            'SHIPPED': 'shippedorder',
+            'DELIVERED': 'deliveredorder',
+        }
+
+        orders = list(qs.only('pk', 'status')[:5])
+
+        def as_link(o):
+            proxy = status_to_proxy.get(getattr(o, 'status', None))
+            if proxy:
+                url = reverse(f'admin:order_{proxy}_change', args=[o.pk])
+                return format_html('<a href="{}">{}</a>', url, o.pk)
+            # If status has no dedicated admin section, return plain id
+            return format_html('<span>{}</span>', o.pk)
+
+        links = format_html_join(', ', '{}', ((as_link(o),) for o in orders))
         if total > 5:
             return format_html('{} и ещё {}', links, total - 5)
         return links

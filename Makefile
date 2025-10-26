@@ -25,3 +25,6 @@ build:
 
 npm-install:
 	cd $(CURDIR)/frontend/3xel_frontend/3xel && npm install
+
+push:
+	git add . && git commit -m "update" && git push
