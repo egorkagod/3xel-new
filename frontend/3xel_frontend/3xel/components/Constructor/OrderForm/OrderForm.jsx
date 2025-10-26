@@ -251,7 +251,7 @@ export default function OrderForm() {
                         </div>
                         <div className={classes.field}>
                             <input type="checkbox" id='offer' {...register('offer')} />
-                            <label htmlFor="offer">С офертой ознакомился(-ась)</label>
+                            <label htmlFor="offer">С <a href="/files/offer_3xel.pdf" target='_blank'>офертой</a> ознакомился(-ась)</label>
                         </div>
                     </div>
 
