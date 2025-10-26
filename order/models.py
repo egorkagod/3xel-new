@@ -92,7 +92,7 @@ class Order(models.Model):
         default=OrderStatus.NEW.value,
     )    
     promocode = models.OneToOneField(Promocode, on_delete=models.SET_NULL, null=True, default=None)
-    video = models.OneToOneField(File, on_delete=models.SET_NULL, null=True)
+    video = models.ForeignKey(File, on_delete=models.SET_NULL, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
