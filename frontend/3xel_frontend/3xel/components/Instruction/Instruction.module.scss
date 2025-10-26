@@ -34,9 +34,9 @@
             width: 100%;
         }
 
-        .leftSide {
+        &:last-child {
 
-            &:last-child {
+            .leftSide {
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
@@ -60,13 +60,13 @@
         .instructionSection {
             grid-template-columns: 1fr;
 
-            .leftSide {
+            &:last-child {
 
-                &:last-child {
+                .leftSide {
                     font-size: 20px;
                 }
             }
-            
+
         }
     }
 }
