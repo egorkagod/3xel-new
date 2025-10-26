@@ -121,3 +121,15 @@
         }
     }
 }
+
+@media (max-width: 1199px) {
+    .order {
+        padding: 20px;
+
+        .items {
+            .item {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+}
