@@ -49,9 +49,11 @@ export default function Header() {
                             Подарочные сертификаты
                         </li>
                     </HashLink>
-                    <li className={classes.navBtn} onClick={() => setIsActive(false)}>
-                        Как снять видео?
-                    </li>
+                    <Link style={{ all: 'unset' }} to='/instruction'>
+                        <li className={classes.navBtn} onClick={() => setIsActive(false)}>
+                            Как снять видео?
+                        </li>
+                    </Link>
                     <Link style={{ all: 'unset' }} to='/discounts'>
                         <li className={classes.navBtn} onClick={() => setIsActive(false)}>
                             Система скидок

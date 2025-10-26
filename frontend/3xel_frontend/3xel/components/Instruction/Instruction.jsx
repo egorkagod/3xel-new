@@ -16,25 +16,25 @@ export default function Instruction() {
             </div>
 
             <section className={classes.instructionSection}>
-                <p>1. <b>Протрите объективы</b> — меньше бликов и размытия.</p>
+                <p className={classes.leftSide}>1. <b>Протрите объективы</b> — меньше бликов и размытия.</p>
                 <img src={clearCam} alt="clear camera photo" />
             </section>
             <section className={classes.instructionSection}>
-                <p>
+                <p className={classes.leftSide}>
                     2. <b>Разрешение и FPS</b> — идеально <b>4K при 60 к/c.</b><br />
                     Если нет 4K 60 к/с: <b>30/25/24</b> или <b>1080p при 60 к/с</b> или <b>1080p при 30/25/24.</b>
                 </p>
                 <img src={options} alt="camera options photo" />
             </section>
             <section className={classes.instructionSection}>
-                <p>
+                <p className={classes.leftSide}>
                     3. <b>Без отражений</b><br />
                     Избегайте глянцевых полов/стен (мрамор/металл), стеклянных витрин и зеркал.
                 </p>
                 <img src={reflections} alt="reflections photo" />
             </section>
             <section className={classes.instructionSection}>
-                <p>
+                <p className={classes.leftSide}>
                     4. <b>Равномерный свет</b><br />
                     Подсветка с нескольких сторон —<br />
                     не светите только с одной стороны, избегайте жёстких теней.
@@ -43,14 +43,14 @@ export default function Instruction() {
                 <img src={light} alt="light photo" />
             </section>
             <section className={classes.instructionSection}>
-                <p>
+                <p className={classes.leftSide}>
                     5. <b>Достаточно места</b><br />
                     Оставьте запас, чтобы объект целиком помещался в кадре и не выпадал из него.
                 </p>
                 <img src={place} alt="placement photo" />
             </section>
             <section className={classes.instructionSection}>
-                <div>
+                <div className={classes.leftSide}>
                     <h2>Как снимать (без остановок, без пауз, всего 1-2 минуты)</h2>
                     <ul>
                         <li>
@@ -64,7 +64,7 @@ export default function Instruction() {
                 <img src="" alt="" />
             </section>
             <section className={classes.instructionSection}>
-                <div>
+                <div className={classes.leftSide}>
                     <p>
                         <span>Круг 1 — Низкий ракурс</span>
                         <span>
