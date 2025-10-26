@@ -26,7 +26,7 @@ const updateCartDiscounts = (items) => {
         return {...item, discount}
     })
 
-    console.log(updatedCart)
+    localStorage.setItem('cart', JSON.stringify(updatedCart))
     return updatedCart
 }
 
@@ -36,12 +36,10 @@ const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
             const newState = [...state, action.payload]
-            localStorage.setItem('cart', JSON.stringify(newState))
             return updateCartDiscounts(newState)
         },
         removeFromCart: (state, action) => {
             const newState = state.filter((_, i) => i !== action.payload)
-            localStorage.setItem('cart', JSON.stringify(newState))
             return updateCartDiscounts(newState)
         },
     }
