@@ -114,6 +114,7 @@
     .ordersList {
         display: grid;
         gap: 12px;
+        overflow-y: auto;
     }
 
     .orderCard {
