@@ -50,7 +50,7 @@ class GoodVariantImage(models.Model):
     image = models.ImageField(upload_to=timestamp_filename)
 
     def __str__(self):
-        return f'Фото {self.variant} - {self.image.name}'
+        return f'{self.image.name}'
 
 
 class OrderItem(models.Model):
