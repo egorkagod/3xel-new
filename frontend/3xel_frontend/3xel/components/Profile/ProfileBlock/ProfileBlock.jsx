@@ -6,6 +6,7 @@ import classes from './ProfileBlock.module.scss'
 import Button from '../../Button/Button'
 import { logoutUser } from '../../../store/userSlice'
 import { fetchOrders } from '../../../store/ordersSlice'
+import { Link } from 'react-router-dom'
 
 const currencyFormatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',
@@ -27,7 +28,7 @@ export default function ProfileBlock({
     dispatch(fetchOrders())
   }, [dispatch])
 
-  
+
 
   const handleLogout = async () => {
     try {
@@ -56,28 +57,30 @@ export default function ProfileBlock({
     return (
       <div className={classes.ordersList}>
         {orders.map((order) => (
-          <div key={order.id} className={classes.orderCard}>
-            <div className={classes.orderHeader}>
-              <span className={classes.orderId}>
-                Заказ #{order.id.slice(0, 8)}
-              </span>
-              <span className={classes.orderStatus}>
-                {order.status}
-              </span>
+          <Link style={{ all: 'unset' }} to={`/order/${order.id}`}>
+            <div key={order.id} className={classes.orderCard}>
+              <div className={classes.orderHeader}>
+                <span className={classes.orderId}>
+                  Заказ #{order.id.slice(0, 8)}
+                </span>
+                <span className={classes.orderStatus}>
+                  {order.status}
+                </span>
+              </div>
+              <div className={classes.orderRow}>
+                <span>Сумма</span>
+                <strong>{currencyFormatter.format(order.amount)}</strong>
+              </div>
+              <div className={classes.orderRow}>
+                <span>Создан</span>
+                <span>{order.created_at}</span>
+              </div>
+              <div className={classes.orderRow}>
+                <span>Оплата</span>
+                <span>{order.payment_status}</span>
+              </div>
             </div>
-            <div className={classes.orderRow}>
-              <span>Сумма</span>
-              <strong>{currencyFormatter.format(order.amount)}</strong>
-            </div>
-            <div className={classes.orderRow}>
-              <span>Создан</span>
-              <span>{order.created_at}</span>
-            </div>
-            <div className={classes.orderRow}>
-              <span>Оплата</span>
-              <span>{order.payment_status}</span>
-            </div>
-          </div>
+          </Link>
         ))}
       </div>
     )

@@ -11,6 +11,7 @@ import Constructor from '../components/Constructor/Constructor'
 import Profile from '../components/Profile/Profile'
 import Discounts from '../components/Discounts/Discounts'
 import Instruction from '../components/Instruction/Instruction'
+import Order from '../components/Order/Order'
 import { fetchCurrentUser } from '../store/userSlice'
 import { fetchOrders, clearOrders } from '../store/ordersSlice'
 import { fetchGoods } from '../store/goodsSlice'
@@ -76,6 +77,7 @@ function App() {
         <Route path="/discounts" element={<Discounts />} />
         <Route path='/instruction' element={<Instruction />} />
         <Route path='/profile' element={<Profile isActive={modalIsActive} onClose={handleClose} />} />
+        <Route path='/order/:id' element={<Order />} />
       </Routes>
 
       {backgroundLocation && (
