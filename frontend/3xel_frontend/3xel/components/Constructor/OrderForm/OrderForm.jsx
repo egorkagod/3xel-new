@@ -49,7 +49,7 @@ export default function OrderForm() {
 
     const options = useMemo(
         () => completedOrders.map(order => {
-            return { value: order.id, label: order.id }
+            return { value: order.id, label: `Заказ #${order.id.split('-')[0]}` }
         }),
         [completedOrders]
     )
