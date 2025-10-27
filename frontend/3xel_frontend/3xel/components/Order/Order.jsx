@@ -67,7 +67,7 @@ export default function Order() {
                         <Link style={{ all: 'unset' }} to='/profile'>
                             <Button color='white'>Назад</Button>
                         </Link>
-                        {order.status === 'complete' ? (
+                        {order.status === 'Завершен' ? (
                             <Button color='golden'>Повторить заказ</Button>
                         ) : null}
                     </div>
