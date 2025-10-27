@@ -34,6 +34,11 @@ export default function OrderForm() {
 
     const cart = useSelector(state => state.cart)
     const user = useSelector(state => state.user.data)
+    const orders = useSelector(state => state.orders.items)
+    const completedOrders = useMemo(
+        () => orders.filter(order => order.status === 'Завершен'),
+        [orders],
+    )
     const resultCost = useMemo(
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
@@ -41,6 +46,13 @@ export default function OrderForm() {
     const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0), [cart])
 
     const isAuthenticated = Boolean(user)
+
+    const options = useMemo(
+        () => completedOrders.map(order => {
+            return { value: order.id, label: order.id }
+        }),
+        [completedOrders]
+    )
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [uploadedFileId, setUploadedFileId] = useState(null)
@@ -179,7 +191,7 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="name">Имя</label>
-                        <input type="text" id='name' placeholder='Введите имя' {...register('name')} readOnly={isAuthenticated} />
+                        <input type="text" id='name' placeholder='Введите имя' {...register('name')} />
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="patronymic">Отчество</label>
@@ -191,7 +203,7 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="email">E-mail</label>
-                        <input type="email" id='email' placeholder='Введите email' {...register('email')} readOnly={isAuthenticated} />
+                        <input type="email" id='email' placeholder='Введите email' {...register('email')} />
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="address">Адрес ПВЗ СДЭК</label>
@@ -237,6 +249,7 @@ export default function OrderForm() {
                         <div className={classes.select}>
                             <Select
                                 placeholder='Выберите номер прошлого заказа'
+                                options={options}
                             ></Select>
                         </div>
                     </div>
@@ -265,11 +278,11 @@ export default function OrderForm() {
                     <span className={classes.goodsCost}>
                         {resultDiscount === 0 ? (
                             <>
-                            Товары: {resultCost} ₽ (скидка 0 ₽)
+                                Товары: {resultCost} ₽ (скидка 0 ₽)
                             </>
                         ) : (
                             <>
-                            Товары: <s>{resultCost} ₽</s> → <b>{resultCost - resultDiscount} ₽</b> (скидка {resultDiscount} ₽)
+                                Товары: <s>{resultCost} ₽</s> → <b>{resultCost - resultDiscount} ₽</b> (скидка {resultDiscount} ₽)
                             </>
                         )}
                     </span>
