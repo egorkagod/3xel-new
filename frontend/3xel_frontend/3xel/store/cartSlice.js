@@ -46,11 +46,11 @@ const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
             const newState = [...state.items, action.payload]
-            return updateCartDiscounts(newState, newState.isRepeat)
+            return updateCartDiscounts(newState, state.isRepeat)
         },
         removeFromCart: (state, action) => {
             const filtered = state.items.filter((_, i) => i !== action.payload)
-            return updateCartDiscounts(filtered, newState.isRepeat)
+            return updateCartDiscounts(filtered, state.isRepeat)
         },
         setIsRepeat: (state, action) => {
             state.isRepeat = action.payload
