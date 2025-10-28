@@ -11,9 +11,9 @@ import { uploadFileChunks } from '../../../utils/fileUpload'
 const MAX_FILE_SIZE = 500 * 1024 * 1024
 
 export default function OrderForm() {
-
     const location = useLocation()
     const locationState = location.state?.value || null
+    console.log(location.state)
 
     const {
         register,
