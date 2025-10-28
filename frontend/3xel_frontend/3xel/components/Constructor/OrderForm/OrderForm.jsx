@@ -1,18 +1,20 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import classes from './OrderForm.module.scss'
 import Button from '../../Button/Button'
 import { apiFetch } from '../../../utils/apiClient'
 import { uploadFileChunks } from '../../../utils/fileUpload'
+import { setIsRepeat } from '../../../store/cartSlice'
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024
 
 export default function OrderForm() {
     const location = useLocation()
     const locationState = location.state?.value || null
+    const dispatcher = useDispatch()
 
     const {
         register,
@@ -86,6 +88,16 @@ export default function OrderForm() {
             }
         }
     }, [locationState, options, setValue])
+
+    const selectedOrderId = watch('orderId')
+
+    useEffect(() => {
+        if (watch('orderId')) {
+            dispatcher(setIsRepeat(true))
+        } else {
+            dispatcher(setIsRepeat(false))
+        }
+    }, [dispatcher, selectedOrderId])
 
     const handleFileChange = (event) => {
         const file = event.target.files?.[0] ?? null
