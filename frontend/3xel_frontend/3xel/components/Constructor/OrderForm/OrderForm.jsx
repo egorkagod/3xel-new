@@ -224,7 +224,7 @@ export default function OrderForm() {
                         <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
                     </div>
                     <div className={classes.formField}>
-                        {isRepeat ? (
+                        {selectedOrder ? (
                             <span className={classes.attention}>Обратите внимание! При повторном заказе будет использоваться видео, которое вы прикрепляли в первый раз!</span>
                         ) : (
                             <>
