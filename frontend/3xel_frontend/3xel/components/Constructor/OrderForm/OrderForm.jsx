@@ -23,6 +23,7 @@ export default function OrderForm() {
         clearErrors,
         setValue,
         control,
+        watch,
     } = useForm({
         defaultValues: {
             surname: '',
@@ -58,8 +59,6 @@ export default function OrderForm() {
         }),
         [completedOrders]
     )
-
-    const [selectedOrder, setSelectedOrder] = useState(locationState)
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [uploadedFileId, setUploadedFileId] = useState(null)
@@ -111,9 +110,9 @@ export default function OrderForm() {
         setSelectedFile(file)
     }
 
-    const onSubmit = async () => {
+    const onSubmit = async (data) => {
         setGeneralError(null)
-
+        const orderId = data.orderId?.value
 
         if (!isAuthenticated) {
             setGeneralError('Войдите в аккаунт, чтобы оформить заказ.')
@@ -125,11 +124,9 @@ export default function OrderForm() {
             return
         }
 
-        let orderId = null
         let fileId = uploadedFileId
 
-        if (selectedOrder) {
-            orderId = selectedOrder
+        if (orderId) {
             setGeneralError(null)
             setError('file', null)
         } else {
@@ -249,7 +246,7 @@ export default function OrderForm() {
                                 </label>
                             </>
                         )}
-                        {selectedFile ? (
+                        {watch('orderId') ? (
                             <div className={classes.uploadStatus}>
                                 <span>{selectedFile.name}</span>
                                 {uploadedFileId ? (
@@ -273,17 +270,16 @@ export default function OrderForm() {
                         <div className={classes.select} id='select'>
                             <Controller
                                 name='orderId'
+                                defaultValue={options.find(o => o.value === locationState)}
                                 control={control}
                                 render={({ field }) => (
                                     <Select
                                         placeholder='Выберите номер прошлого заказа'
                                         options={options}
                                         {...field}
-                                        value={options.find(o => o.value === field.value)}
+                                        value={field.value}
                                         onChange={(selected) => {
-                                            field.onChange(selected?.value || null)
-                                            setSelectedOrder(selected?.value || null)
-                                            console.log(selected?.value || null)
+                                            field.onChange(selected)
                                         }}
                                         isClearable
                                     ></Select>
