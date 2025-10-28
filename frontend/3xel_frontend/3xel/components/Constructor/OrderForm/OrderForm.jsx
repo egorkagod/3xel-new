@@ -275,7 +275,7 @@ export default function OrderForm() {
                                         onChange={(selected) => {
                                             field.onChange(selected?.value || null)
                                             setSelectedOrder(selected?.value || null)
-                                            console.log(selected.value)
+                                            console.log(selected?.value)
                                         }}
                                     ></Select>
                                 }}
