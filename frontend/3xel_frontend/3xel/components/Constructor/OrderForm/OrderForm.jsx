@@ -279,6 +279,7 @@ export default function OrderForm() {
                                             setSelectedOrder(selected?.value || null)
                                             console.log(selected?.value || null)
                                         }}
+                                        isClearable
                                     ></Select>
                                 )}
                             />

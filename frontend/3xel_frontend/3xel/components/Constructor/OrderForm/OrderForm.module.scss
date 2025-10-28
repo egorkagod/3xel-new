@@ -42,6 +42,10 @@
             flex-direction: column;
             gap: 6px;
 
+            .attention {
+                color: rgb(181, 3, 3);
+            }
+
             label {
                 font-size: 14px;
                 color: #6E6A84;
