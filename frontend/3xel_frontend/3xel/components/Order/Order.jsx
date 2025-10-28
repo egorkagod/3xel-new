@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import Button from '../Button/Button'
 import { HashLink } from 'react-router-hash-link'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Order() {
-    
+
     const status = useSelector(state => state.order.status)
     const error = useSelector(state => state.order.error)
     const order = useSelector(state => state.order.order)
+    const navigate = useNavigate()
 
     const dispatcher = useDispatch()
     const { id } = useParams()
@@ -68,16 +69,9 @@ export default function Order() {
                             <Button color='white'>Назад</Button>
                         </Link>
                         {order.status === 'Завершен' ? (
-                            <Link
-                                to={{
-                                    pathname: '/constructor',
-                                    hash: '#select',
-                                    state: { value: order.id, label: order.id.split('-')[0] }
-                                }}
-                                style={{ all: 'unset' }}
-                            >
-                                <Button color='golden'>Повторить заказ</Button>
-                            </Link>
+                                <Button color='golden' onClick={() => navigate('/constructor#select', {
+                                    state: { value: order.id, label: `Заказ #${order.id.split('-')[0]}` }
+                                })}>Повторить заказ</Button>
                         ) : null}
                     </div>
                 </div>
