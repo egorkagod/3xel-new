@@ -121,10 +121,12 @@ export default function OrderForm() {
             return
         }
 
+        let orderId = null
+        let fileId = uploadedFileId
+
         if (selectedOrder) {
-            let orderId = selectedOrder
+            orderId = selectedOrder
         } else {
-            let fileId = uploadedFileId
 
             if (!fileId) {
                 if (!selectedFile) {
@@ -266,19 +268,19 @@ export default function OrderForm() {
                             <Controller
                                 name='orderId'
                                 control={control}
-                                render={({ field }) => {
+                                render={({ field }) => (
                                     <Select
                                         placeholder='Выберите номер прошлого заказа'
                                         options={options}
                                         {...field}
-                                        value={selectedOrder?.value || null}
+                                        value={options.find(o => o.value === field.value)}
                                         onChange={(selected) => {
                                             field.onChange(selected?.value || null)
                                             setSelectedOrder(selected?.value || null)
                                             console.log(selected?.value || null)
                                         }}
                                     ></Select>
-                                }}
+                                )}
                             />
 
                         </div>
