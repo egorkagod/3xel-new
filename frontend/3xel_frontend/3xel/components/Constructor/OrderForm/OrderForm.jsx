@@ -79,6 +79,15 @@ export default function OrderForm() {
         }
     }, [isAuthenticated])
 
+    useEffect(() => {
+        if (locationState && options.length > 0) {
+            const selectedOption = options.find(o => o.value === locationState)
+            if (selectedOption) {
+                setValue('orderId', selectedOption)
+            }
+        }
+    }, [locationState, options, setValue])
+
     const handleFileChange = (event) => {
         const file = event.target.files?.[0] ?? null
 
@@ -229,7 +238,7 @@ export default function OrderForm() {
                         <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
                     </div>
                     <div className={classes.formField}>
-                        {watch('fileId') ? (
+                        {watch('orderId') ? (
                             <span className={classes.attention}>Обратите внимание! При повторном заказе будет использоваться видео, которое вы прикрепляли в первый раз!</span>
                         ) : (
                             <>
@@ -270,7 +279,6 @@ export default function OrderForm() {
                         <div className={classes.select} id='select'>
                             <Controller
                                 name='orderId'
-                                defaultValue={options.find(o => o.value === locationState)}
                                 control={control}
                                 render={({ field }) => (
                                     <Select
