@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = JSON.parse(localStorage.getItem('cart')) || []
+const initialState = JSON.parse(localStorage.getItem('cart')) || {items: [], isRepeat: false}
 
-const updateCartDiscounts = (items) => {
-    if (items.length === 0) return []
+const updateCartDiscounts = (items, repeat) => {
+    if (items.length === 0) {
+        const emptyState = {items: [], isRepeat: false}
+        localStorage.setItem('cart', JSON.stringify(emptyState))
+        return emptyState
+    }
 
     const plasticBusts = items.filter(item => item.type === 'Пластиковый бюст')
     const cardboardBusts = items.filter(item => item.type === 'Картонный бюст')
@@ -12,6 +16,11 @@ const updateCartDiscounts = (items) => {
 
     const updatedCart = items.map((item) => {
         let discount = 0
+
+        if (item.type !== 'Подарочный сертификат' && repeat) {
+            discount = 1000
+            return {...item, discount}
+        }
 
         if (item.type === 'Пластиковый бюст') {
             const plasticIndex = plasticBusts.findIndex(p => p === item)
@@ -26,8 +35,9 @@ const updateCartDiscounts = (items) => {
         return {...item, discount}
     })
 
-    localStorage.setItem('cart', JSON.stringify(updatedCart))
-    return updatedCart
+    const newCartState = {items: updatedCart, isRepeat: repeat}
+    localStorage.setItem('cart', JSON.stringify(newCartState))
+    return newCartState
 }
 
 const cartSlice = createSlice({
@@ -35,15 +45,19 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart: (state, action) => {
-            const newState = [...state, action.payload]
-            return updateCartDiscounts(newState)
+            const newState = [...state.items, action.payload]
+            return updateCartDiscounts(newState, newState.isRepeat)
         },
         removeFromCart: (state, action) => {
-            const newState = state.filter((_, i) => i !== action.payload)
-            return updateCartDiscounts(newState)
+            const filtered = state.items.filter((_, i) => i !== action.payload)
+            return updateCartDiscounts(filtered, newState.isRepeat)
         },
+        setIsRepeat: (state, action) => {
+            state.isRepeat = action.payload
+            return updateCartDiscounts(state.items, action.payload)
+        }
     }
 })
 
-export const {addToCart, removeFromCart} = cartSlice.actions
+export const {addToCart, removeFromCart, setIsRepeat} = cartSlice.actions
 export default cartSlice.reducer

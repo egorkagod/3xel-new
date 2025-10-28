@@ -6,7 +6,7 @@ import { HashLink } from 'react-router-hash-link'
 
 export default function Cart() {
 
-    const cart = useSelector(state => state.cart)
+    const cart = useSelector(state => state.cart.items)
     const dispatcher = useDispatch()
 
     return (

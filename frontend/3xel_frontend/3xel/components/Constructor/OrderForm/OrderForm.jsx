@@ -13,7 +13,6 @@ const MAX_FILE_SIZE = 500 * 1024 * 1024
 export default function OrderForm() {
     const location = useLocation()
     const locationState = location.state?.value || null
-    console.log(location.state)
 
     const {
         register,
@@ -38,7 +37,7 @@ export default function OrderForm() {
         },
     })
 
-    const cart = useSelector(state => state.cart)
+    const cart = useSelector(state => state.cart.items)
     const user = useSelector(state => state.user.data)
     const orders = useSelector(state => state.orders.items)
     const completedOrders = useMemo(
