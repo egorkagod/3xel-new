@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -18,6 +18,7 @@ export default function OrderForm() {
         setError,
         clearErrors,
         setValue,
+        control,
     } = useForm({
         defaultValues: {
             surname: '',
@@ -53,6 +54,8 @@ export default function OrderForm() {
         }),
         [completedOrders]
     )
+
+    const [selectedOrder, setSelectedOrder] = useState(null)
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [uploadedFileId, setUploadedFileId] = useState(null)
@@ -107,6 +110,7 @@ export default function OrderForm() {
     const onSubmit = async () => {
         setGeneralError(null)
 
+
         if (!isAuthenticated) {
             setGeneralError('Войдите в аккаунт, чтобы оформить заказ.')
             return
@@ -117,40 +121,46 @@ export default function OrderForm() {
             return
         }
 
-        let fileId = uploadedFileId
+        if (selectedOrder) {
+            let orderId = selectedOrder
+        } else {
+            let fileId = uploadedFileId
 
-        if (!fileId) {
-            if (!selectedFile) {
-                setError('file', { type: 'manual', message: 'Загрузите видеофайл' })
-                setGeneralError('Прикрепите видеофайл, чтобы продолжить.')
-                return
-            }
+            if (!fileId) {
+                if (!selectedFile) {
+                    setError('file', { type: 'manual', message: 'Загрузите видеофайл' })
+                    setGeneralError('Прикрепите видеофайл, чтобы продолжить.')
+                    return
+                }
 
-            setIsUploading(true)
-            try {
-                const newFileId = await uploadFileChunks(selectedFile, {
-                    onProgress: setUploadProgress,
-                })
-                setUploadedFileId(newFileId)
-                fileId = newFileId
-                setUploadProgress(100)
-                clearErrors('file')
-                setUploadError(null)
-            } catch (error) {
-                const message = error.message || 'Не удалось загрузить видеофайл'
-                setUploadError(message)
-                setGeneralError(message)
-                return
-            } finally {
-                setIsUploading(false)
+                setIsUploading(true)
+                try {
+                    const newFileId = await uploadFileChunks(selectedFile, {
+                        onProgress: setUploadProgress,
+                    })
+                    setUploadedFileId(newFileId)
+                    fileId = newFileId
+                    setUploadProgress(100)
+                    clearErrors('file')
+                    setUploadError(null)
+                } catch (error) {
+                    const message = error.message || 'Не удалось загрузить видеофайл'
+                    setUploadError(message)
+                    setGeneralError(message)
+                    return
+                } finally {
+                    setIsUploading(false)
+                }
             }
         }
+
 
         setIsSubmitting(true)
         try {
             const payload = {
                 goods: cart.map(item => item.id),
                 video_id: fileId,
+                order_id: orderId,
             }
             const response = await apiFetch('/api-order/order/', {
                 method: 'POST',
@@ -214,17 +224,23 @@ export default function OrderForm() {
                         <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
                     </div>
                     <div className={classes.formField}>
-                        <label htmlFor="file">Загрузка видео (ссылка или файл)</label>
-                        <input type="text" id='fileLink' placeholder='Ссылка на Google Drive / Yandex Disk' {...register('fileLink')} />
-                        <label className={classes.fileUploader}>
-                            <span>Перетащите или выберите видеофайл</span>
-                            <input
-                                type="file"
-                                id='video-file'
-                                accept='video/*'
-                                {...fileRegister}
-                            />
-                        </label>
+                        {isRepeat ? (
+                            <span className={classes.attention}>Обратите внимание! При повторном заказе будет использоваться видео, которое вы прикрепляли в первый раз!</span>
+                        ) : (
+                            <>
+                                <label htmlFor="file">Загрузка видео (ссылка или файл)</label>
+                                <input type="text" id='fileLink' placeholder='Ссылка на Google Drive / Yandex Disk' {...register('fileLink')} />
+                                <label className={classes.fileUploader}>
+                                    <span>Перетащите или выберите видеофайл</span>
+                                    <input
+                                        type="file"
+                                        id='video-file'
+                                        accept='video/*'
+                                        {...fileRegister}
+                                    />
+                                </label>
+                            </>
+                        )}
                         {selectedFile ? (
                             <div className={classes.uploadStatus}>
                                 <span>{selectedFile.name}</span>
@@ -247,10 +263,24 @@ export default function OrderForm() {
                     <div className={classes.formField}>
                         <label>Повторный заказ</label>
                         <div className={classes.select}>
-                            <Select
-                                placeholder='Выберите номер прошлого заказа'
-                                options={options}
-                            ></Select>
+                            <Controller
+                                name='orderId'
+                                control={control}
+                                render={({ field }) => {
+                                    <Select
+                                        placeholder='Выберите номер прошлого заказа'
+                                        options={options}
+                                        {...field}
+                                        value={selectedOrder.value}
+                                        onChange={(selected) => {
+                                            field.onChange(selected?.value || null)
+                                            setSelectedOrder(selected?.value || null)
+                                            console.log(selected.value)
+                                        }}
+                                    ></Select>
+                                }}
+                            />
+
                         </div>
                     </div>
                     <div className={classes.formField}>
