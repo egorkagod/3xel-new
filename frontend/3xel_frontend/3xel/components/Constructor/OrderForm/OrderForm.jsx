@@ -271,11 +271,11 @@ export default function OrderForm() {
                                         placeholder='Выберите номер прошлого заказа'
                                         options={options}
                                         {...field}
-                                        value={selectedOrder.value}
+                                        value={selectedOrder?.value || null}
                                         onChange={(selected) => {
                                             field.onChange(selected?.value || null)
                                             setSelectedOrder(selected?.value || null)
-                                            console.log(selected?.value)
+                                            console.log(selected?.value || null)
                                         }}
                                     ></Select>
                                 }}
