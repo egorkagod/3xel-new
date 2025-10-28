@@ -68,7 +68,16 @@ export default function Order() {
                             <Button color='white'>Назад</Button>
                         </Link>
                         {order.status === 'Завершен' ? (
-                            <Button color='golden'>Повторить заказ</Button>
+                            <Link
+                                to={{
+                                    pathname: '/constructor',
+                                    hash: '#select',
+                                    state: { value: order.id, label: order.id.split('-')[0] }
+                                }}
+                                style={{ all: 'unset' }}
+                            >
+                                <Button color='golden'>Повторить заказ</Button>
+                            </Link>
                         ) : null}
                     </div>
                 </div>

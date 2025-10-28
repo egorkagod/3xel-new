@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import classes from './OrderForm.module.scss'
 import Button from '../../Button/Button'
 import { apiFetch } from '../../../utils/apiClient'
@@ -11,6 +11,10 @@ import { uploadFileChunks } from '../../../utils/fileUpload'
 const MAX_FILE_SIZE = 500 * 1024 * 1024
 
 export default function OrderForm() {
+
+    const location = useLocation()
+    const locationState = location.state?.value || null
+
     const {
         register,
         handleSubmit,
@@ -55,7 +59,7 @@ export default function OrderForm() {
         [completedOrders]
     )
 
-    const [selectedOrder, setSelectedOrder] = useState(null)
+    const [selectedOrder, setSelectedOrder] = useState(locationState)
 
     const [selectedFile, setSelectedFile] = useState(null)
     const [uploadedFileId, setUploadedFileId] = useState(null)
@@ -126,6 +130,8 @@ export default function OrderForm() {
 
         if (selectedOrder) {
             orderId = selectedOrder
+            setGeneralError(null)
+            setError('file', null)
         } else {
 
             if (!fileId) {
@@ -264,7 +270,7 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label>Повторный заказ</label>
-                        <div className={classes.select}>
+                        <div className={classes.select} id='select'>
                             <Controller
                                 name='orderId'
                                 control={control}
