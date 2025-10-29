@@ -1,0 +1,94 @@
+.footer {
+    width: 100vw;
+    height: 100%;
+    background: #fff;
+    padding: 80px 160px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: space-between;
+    position: relative;
+    box-shadow: 0 6px 16px rgba(222, 222, 222, 0.5);
+    border-top: 1px solid rgba(231, 230, 230, 0.6);
+    background: #FFFFFFBF;
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+
+        .logo {
+            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #fdf7ef, #eadfce 60%, #d2bca1);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, .04);
+        }
+
+        span {
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 10px;
+
+        li {
+            list-style-type: none;
+            cursor: pointer;
+            font-size: 16px;
+
+            a {
+                text-decoration: none;
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .contactsHeader,
+        .docsHeader,
+        .telegram,
+        .whatsapp {
+
+            cursor: auto;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+
+    .copyright {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .footer {
+        padding: 80px 40px;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer {
+        padding: 80px 40px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+
+        ul {
+            
+        }
+    }
+}

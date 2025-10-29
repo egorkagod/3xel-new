@@ -12,6 +12,7 @@ import Profile from '../components/Profile/Profile'
 import Discounts from '../components/Discounts/Discounts'
 import Instruction from '../components/Instruction/Instruction'
 import Order from '../components/Order/Order'
+import Footer from '../components/Footer/Footer'
 import { fetchCurrentUser } from '../store/userSlice'
 import { fetchOrders, clearOrders } from '../store/ordersSlice'
 import { fetchGoods } from '../store/goodsSlice'
@@ -94,6 +95,7 @@ function App() {
         </Routes>
       )}
       <ToastContainer position="top-right" autoClose={4000} theme="light" />
+      <Footer />
     </div>
   )
 }

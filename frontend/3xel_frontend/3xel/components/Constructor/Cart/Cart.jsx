@@ -3,11 +3,13 @@ import classes from './Cart.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCart } from '../../../store/cartSlice'
 import { HashLink } from 'react-router-hash-link'
+import { useState } from 'react'
 
 export default function Cart() {
 
     const cart = useSelector(state => state.cart.items)
     const dispatcher = useDispatch()
+    const [showDiscountInfo, setShowDiscountInfo] = useState(false)
 
     return (
         <section className={classes.cartSection}>
@@ -24,7 +26,7 @@ export default function Cart() {
                             ) : (
                                 <div className={classes.addedBust}>
                                     <div className={classes.itemDescription} key={index}>
-                                        <span>{item.name} — {item.size}, цвет: {item.colorName} <span style={{ display: 'block', borderRadius: '50%', width: '24px', height: '24px', background: item.color, border: '1px solid black' }}></span></span>
+                                        <span>{item.name} — {item.size}, цвет: <span style={{ borderRadius: '50%', width: '24px', height: '24px', background: item.color, border: '1px solid black' }}></span> </span>
                                         {item.discount === 0 ? (
                                             <span className={classes.cost}>Цена: {item.cost} ₽ (скидка 0 ₽)</span>
                                         ) : (
@@ -33,7 +35,8 @@ export default function Cart() {
                                     </div>
                                     <div className={classes.buttonsBlock}>
                                         <Button color='white' onClick={() => dispatcher(removeFromCart(index))}>Удалить</Button>
-                                        {item.discount === 0 ? <HashLink style={{ all: 'unset' }} to='/constructor#goods'><Button color='golden'>Добавить товары со скидкой</Button></HashLink> : null}
+                                        {item.discount === 0 ? 
+                                        <HashLink style={{ all: 'unset' }} to='/constructor#goods'><Button color='golden'>Добавить товары со скидкой</Button></HashLink> : null}
                                     </div>
                                 </div>
                             )}

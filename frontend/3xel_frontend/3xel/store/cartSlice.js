@@ -15,10 +15,10 @@ const applyDiscounts = (items, repeat) => {
         if (item.type !== 'Подарочный сертификат' && repeat) {
             discount = 1000
         } else if (item.type === 'Пластиковый бюст') {
-            const plasticIndex = plasticBusts.findIndex(p => p === item);
+            const plasticIndex = plasticBusts.findIndex(p => p === item)
             if (plasticIndex > 0) discount = 500
         } else if (item.type === 'Картонный бюст') {
-            const cardboardIndex = cardboardBusts.findIndex(c => c === item);
+            const cardboardIndex = cardboardBusts.findIndex(c => c === item)
             if (cardboardIndex < countPairs) discount = 1000
         }
 
