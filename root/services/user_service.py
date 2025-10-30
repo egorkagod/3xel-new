@@ -9,3 +9,10 @@ def create(**kwargs):
     if not user:
         raise UserCreationFailed
     return user
+
+
+def get_email(user_id):
+    user = user_rep.get(user_id=user_id)
+    if user:
+        return user.email
+    return None

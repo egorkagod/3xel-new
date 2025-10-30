@@ -18,6 +18,7 @@ from .serializers import (
 from .repositories import good_rep
 from .services import order_service
 from .exceptions import OrderError
+from .dto import CreateOrderServiceDTO
 
 
 @extend_schema(
@@ -129,10 +130,20 @@ class OrderView(APIView):
 
         goods = serializer.validated_data['goods']
         video_id = serializer.validated_data['video_id']
+        order_id = serializer.validated_data['order_id']
         user_id = request.user.id
 
+        if (video_id and order_id) or not(video_id or order_id):
+            return Response({'error': 'Нужно либо прикрепить видео, либо сделать повторный заказ'}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            payment_url = order_service.create(user_id, goods, video_id)
+            dto = CreateOrderServiceDTO(
+                user_id=user_id,
+                goods=goods,
+                video_id=video_id,
+                previous_order_id=order_id,
+            )
+            payment_url = order_service.create(dto)
         except OrderError as exc:
             return Response({'error': exc.detail}, status=exc.status_code)
 

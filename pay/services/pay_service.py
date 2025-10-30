@@ -4,11 +4,11 @@ import requests
 import hashlib
 from dotenv import load_dotenv
 import logging
+from pydantic import BaseModel
 
 from django.urls import reverse
 from django.conf import settings
 
-from pay.serializers import InitPaySerializer
 from order.models import Order
 from pay.repositories import pay_rep
 
@@ -17,66 +17,30 @@ load_dotenv()
 
 notification_logger = logging.getLogger('notification')
 
+class InitPayServiceDTO(BaseModel):
+    order_id: uuid.UUID
+    goods: list
+    amount: int
+    email: str
 
-def init(order_id: uuid.UUID, amount: int):
+def init(data: InitPayServiceDTO):
     url = 'https://securepay.tinkoff.ru/v2/Init'
     headers = {
         'Content-Type': 'application/json',
     }
-    # Load order with user and items to build receipt lines
-    # Fetch order instance
-    order = (
-        Order.objects.select_related('user')
-        .prefetch_related('items__good_variant', 'items__good_variant__good')
-        .filter(pk=order_id)
-        .first()
-    )
-    if not order:
-        return False
-
-    # Use user's email for receipt and DATA
-    user_email = (order.user.email or '').strip()
-
-    # Build receipt items list with VAT 5% per item
-    receipt_items = []
-    for it in order.items.all():
-        gv = it.good_variant
-        if not gv:
-            # Skip if variant is missing
-            continue
-        name_parts = [getattr(gv.good, 'name', None) or 'Товар']
-        if getattr(gv, 'size', None):
-            name_parts.append(f"{gv.size}см")
-        if getattr(gv, 'colorName', None):
-            name_parts.append(str(gv.colorName))
-        item_name = ' '.join(map(str, name_parts))[:128]
-
-        price_kopecks = int(gv.cost) * 100
-        quantity = int(it.quantity)
-        amount_kopecks = price_kopecks * quantity
-        receipt_items.append({
-            'Name': item_name,
-            'Price': price_kopecks,
-            'Quantity': quantity,
-            'Amount': amount_kopecks,
-            'Tax': 'vat5',
-        })
+    # Build Receipt.Items from provided goods with applied discounts
+    receipt_items = create_receipt_items(data.goods)
     payload = {
         'TerminalKey': os.getenv('TERMINAL_KEY'),
-        'Amount': amount * 100,
-        'OrderId': str(order_id),
-        'Description': 'Оплата заказа',
+        'Amount': data.amount * 100,
+        'OrderId': str(data.order_id),
         'PayType': 'O',
         'Language': 'ru',
         'NotificationURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'FailURL': settings.SITE_DOMEN + reverse('pay:notification'),
         'SuccessURL': settings.SITE_DOMEN + '/profile/',
-        # Optional extra customer data section
-        'DATA': {
-            'Email': user_email,
-        },
         'Receipt': {
-            'Email': user_email,
+            'Email': data.email,
             'Taxation': 'usn_income',
             'Items': receipt_items,
         },
@@ -89,8 +53,8 @@ def init(order_id: uuid.UUID, amount: int):
     if data["Success"]:
         payment_id = int(data['PaymentId'])
         # Tinkoff returns full status string, store it as is (matches choices)
-        payment = pay_rep.create(id=payment_id, amount=amount, status=data['Status'])
-        order = Order.objects.filter(pk=order_id).first()
+        payment = pay_rep.create(id=payment_id, amount=payload['Amount'] // 100, status=data['Status'])
+        order = Order.objects.filter(pk=payload['OrderId']).first()
         order.payment = payment
         order.save()
         return data['PaymentURL']
@@ -101,6 +65,25 @@ def update_status(data):
     if token == _get_token(_normalize_data_like_json(data)):
         pay_rep.update_state(data)
 
+def create_receipt_items(goods: list) -> list:
+    # goods: list of dicts like {'good__name': str, 'cost': int} per item occurrence
+    grouped: dict[tuple[str, int], int] = {}
+    for g in goods:
+        name = g['good__name']
+        price = int(g['cost'])
+        key = (name, price)
+        grouped[key] = grouped.get(key, 0) + 1
+
+    items = []
+    for (name, price), qty in grouped.items():
+        items.append({
+            'Name': name,
+            'Price': price * 100,
+            'Quantity': qty,
+            'Amount': price * 100 * qty,
+            'Tax': 'vat5',
+        })
+    return items
 def _normalize_data_like_json(data):
     result = dict()
     for key, value in data.items():

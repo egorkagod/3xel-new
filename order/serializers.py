@@ -44,7 +44,8 @@ class OrderViewSerializer(serializers.Serializer):
         child=serializers.IntegerField(min_value=1),
         allow_empty=False,
     )
-    video_id = serializers.IntegerField()
+    video_id = serializers.IntegerField(required=False, default=None)
+    order_id = serializers.UUIDField(required=False, default=None)
 
 
 class OrderModelSerializer(serializers.ModelSerializer):

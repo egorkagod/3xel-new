@@ -4,18 +4,21 @@ from django.contrib.auth.models import User
 
 from order.models import Order, OrderItem, GoodVariant
 from filehandler.models import File
+from order.dto import CreateOrdeRepoDTO
 
 
-def create(user_id: int, goods: list, video_id: int, amount: int):
-    video = File.objects.filter(id=video_id).first()
+def create(data: CreateOrdeRepoDTO) -> uuid.UUID | None:
+    video = File.objects.filter(id=data.video_id).first()
     if video:
-        order = Order.objects.create(user_id=user_id, amount=amount, video=video)
-        group_goods = _group_good_variants(goods)
-        for good in group_goods:
-            good_variant = GoodVariant.objects.filter(pk=good).first()
-            OrderItem.objects.create(order=order,
-                                     good_variant = good_variant,
-                                     quantity=group_goods[good])
+        order = Order.objects.create(user_id=data.user_id, amount=data.amount, video=video)
+        for item in data.items:
+            good_variant = GoodVariant.objects.filter(pk=item.good_variant_id).first()
+            if good_variant:
+                OrderItem.objects.create(
+                    order=order,
+                    good_variant=good_variant,
+                    quantity=item.quantity,
+                )
         return order.id
     return None
 
@@ -33,8 +36,4 @@ def get_all(user_id: int):
         orders = user.orders.all()
         return orders 
 
-def _group_good_variants(goods: list):
-    result = {}
-    for good in goods:
-        result[good] = result.setdefault(good, 0) + 1
-    return result
+"""Grouping now happens in service layer; keep repo lean."""

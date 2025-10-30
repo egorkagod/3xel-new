@@ -38,7 +38,7 @@ class GoodVariant(models.Model):
     cost = models.IntegerField()
 
     def __str__(self):
-        return f'{self.good} - {self.size}см - {self.color}'
+        return f'{self.good} размера {self.size}см и цвета {self.color}'
 
 
 class GoodVariantImage(models.Model):
