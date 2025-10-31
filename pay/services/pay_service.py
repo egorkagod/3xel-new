@@ -5,6 +5,7 @@ import hashlib
 from dotenv import load_dotenv
 import logging
 from pydantic import BaseModel
+import json
 
 from django.urls import reverse
 from django.conf import settings
@@ -59,6 +60,8 @@ def init(data: InitPayServiceDTO):
         order.payment = payment
         order.save()
         return data['PaymentURL']
+    # Log failure details to payment log
+    logging.getLogger('pay').info('Init failed: %s', data)
     return False
     
 def update_status(data):
@@ -99,16 +102,25 @@ def _normalize_data_like_json(data):
     return result
 
 def _sign_by_token(payload: dict):
-    # Sign using all top-level fields (including Receipt) as expected by this merchant setup.
-    # Build a copy including secret and compute SHA256 over sorted values.
-    signed = payload.copy()
+    # Build signature as per Tinkoff v2: add Password, sort by keys, concatenate stringified values
+    # Include nested objects by JSON-dumping them with stable key order and no spaces
+    signed = {k: v for k, v in payload.items() if k != 'Token'}
     signed['Password'] = os.getenv('TERMINAL_PASSWORD')
-    payload['Token'] = _get_token(signed)
+    token = _get_token(signed)
+    payload['Token'] = token
     return payload
 
 def _get_token(payload: dict):
     payload = payload.copy()
-    string = ''.join([str(item[1]) for item in sorted(payload.items())])
+    def _stringify(v):
+        if isinstance(v, bool):
+            return str(v).lower()
+        if isinstance(v, (int, float)):
+            return str(v)
+        if isinstance(v, (dict, list)):
+            return json.dumps(v, ensure_ascii=False, separators=(',', ':'), sort_keys=True)
+        return str(v)
+    string = ''.join([_stringify(item[1]) for item in sorted(payload.items())])
     bytes = string.encode('utf-8')
     hash_object = hashlib.sha256(bytes)
     token = hash_object.hexdigest()
