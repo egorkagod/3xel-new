@@ -2,8 +2,8 @@ from order.repositories import order_rep
 from order.exceptions import InvalidGoodsError, OrderCreationError, PaymentInitializationError
 from order.dto import CreateOrderServiceDTO, CreateOrdeRepoDTO, CreateOrderItemRepoDTO
 from pay.services import pay_service
-from root import root_services
-from models import GoodVariant, Order
+from root.services import user_service
+from order.models import GoodVariant, Order
 
 
 def get(user_id, order_id):
@@ -61,7 +61,7 @@ def create(data: CreateOrderServiceDTO):
     if not order_id:
         raise OrderCreationError()
     
-    email = root_services.user_service.get_email(data.user_id)
+    email = user_service.get_email(data.user_id)
     if not email:
         OrderCreationError(detail='Ошибка при получении email пользователя')
 
