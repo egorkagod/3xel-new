@@ -13,23 +13,27 @@ from filehandler.models import File
 
 def upload_chunk(user_id, filename, format, chunk, chunk_number, total_chunks):
     upload_token = _normalize_identifier(filename)
-    # Логика сохранения части файла
+    # Сохраняем текущий чанк на диск (в общий для всех воркеров каталог)
     path = Path(str(user_id)) / upload_token / str(chunk_number)
     chunk_path = _get_or_create_filepath(path, 'chunks')
     with open(chunk_path, 'wb') as f:
         f.write(chunk)
 
-    cache_key = _build_cache_key(user_id, upload_token)
-    status = _write_that_chunk_upload(cache_key, chunk_number, total_chunks)
+    # Проверяем наличие всех чанков по факту файловой системы, а не через кэш (устойчиво к нескольким воркерам)
+    chunks_dir = chunk_path.parent
+    present = {int(p.name) for p in chunks_dir.iterdir() if p.is_file() and p.name.isdigit()}
+    is_complete = len(present) >= int(total_chunks) and all(i in present for i in range(int(total_chunks)))
+
+    status = statuses.UPLOADED
     file_id = -1
-    if status == statuses.ALL_UPLOADED:
+    if is_complete:
+        status = statuses.ALL_UPLOADED
         extension = _sanitize_extension(format)
         storage_name = _generate_storage_name(upload_token, extension)
         relative_path = Path(str(user_id)) / storage_name
-        chunks_dir = chunk_path.parent
         filepath, urlpath = _get_or_create_mediapath(relative_path, 'uploads')
         with open(filepath, 'wb') as f:
-            for i in range(0, total_chunks):
+            for i in range(0, int(total_chunks)):
                 with open(chunks_dir / str(i), 'rb') as chunk_file:
                     f.write(chunk_file.read())
         shutil.rmtree(chunks_dir)
@@ -58,7 +62,10 @@ def _get_or_create_filepath(filename, parent_dir='uploads'):
     return filepath
 
 def _write_that_chunk_upload(cache_key, chunk_number, total_chunks):
-    # Логика записи, что эта часть файла загружена
+    """
+    Поддержка прежней логики через кэш оставлена на случай отката,
+    но фактическое определение завершения сборки теперь делается через файловую систему.
+    """
     uploaded_chunks = set(cache.get(cache_key, set()))
     uploaded_chunks.add(chunk_number)
     cache.set(cache_key, uploaded_chunks, None)
