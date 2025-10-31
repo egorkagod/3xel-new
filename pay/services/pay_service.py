@@ -102,10 +102,15 @@ def _normalize_data_like_json(data):
     return result
 
 def _sign_by_token(payload: dict):
-    # Build signature as per Tinkoff v2: add Password, sort by keys, concatenate stringified values
-    # Include nested objects by JSON-dumping them with stable key order and no spaces
-    signed = {k: v for k, v in payload.items() if k != 'Token'}
+    signed = {}
+    for k, v in payload.items():
+        if k == 'Token':
+            continue
+        if isinstance(v, (dict, list)):  # <-- игнорируем вложенные структуры
+            continue
+        signed[k] = v
     signed['Password'] = os.getenv('TERMINAL_PASSWORD')
+
     token = _get_token(signed)
     payload['Token'] = token
     return payload
