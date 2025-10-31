@@ -50,7 +50,8 @@ def init(data: InitPayServiceDTO):
     response = requests.post(url, headers=headers, json=payload)
     data = response.json()
 
-    if data["Success"]:
+    # Tinkoff responds with key 'Success' (boolean)
+    if data.get("Success"):
         payment_id = int(data['PaymentId'])
         # Tinkoff returns full status string, store it as is (matches choices)
         payment = pay_rep.create(id=payment_id, amount=payload['Amount'] // 100, status=data['Status'])
@@ -98,11 +99,11 @@ def _normalize_data_like_json(data):
     return result
 
 def _sign_by_token(payload: dict):
-    # Exclude nested objects like Receipt from signature to match Tinkoff expectations
-    signature_base = _filter_payload(payload)
-    signature_base['Password'] = os.getenv('TERMINAL_PASSWORD')
-    token = _get_token(signature_base)
-    payload['Token'] = token
+    # Sign using all top-level fields (including Receipt) as expected by this merchant setup.
+    # Build a copy including secret and compute SHA256 over sorted values.
+    signed = payload.copy()
+    signed['Password'] = os.getenv('TERMINAL_PASSWORD')
+    payload['Token'] = _get_token(signed)
     return payload
 
 def _get_token(payload: dict):
@@ -114,16 +115,5 @@ def _get_token(payload: dict):
     return token
 
 def _filter_payload(payload):
-    # Keep only scalar fields commonly used for token; exclude nested dicts (e.g., Receipt)
-    need_keys = (
-        'TerminalKey',
-        'Amount',
-        'OrderId',
-        'PayType',
-        'Description',
-    )
-    result = {}
-    for key in need_keys:
-        if key in payload:
-            result[key] = payload[key]
-    return result
+    """Unused utility kept for reference."""
+    return {k: payload[k] for k in payload if k in ('TerminalKey','Amount','OrderId','PayType','Description')}
