@@ -50,23 +50,35 @@ class OrderViewSerializer(serializers.Serializer):
 
 class OrderModelSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
-    payment_status = serializers.CharField(source='payment.get_status_display')
+    payment_status = serializers.SerializerMethodField()
     status = serializers.CharField(source='get_status_display')
     created_at = serializers.CharField(source='formatted_created_at')
 
     class Meta:
         model = Order
         fields = ['id', 'items', 'payment_status', 'amount', 'status', 'video', 'created_at']
+    
+    def get_payment_status(self, obj):
+        payment = getattr(obj, 'payment', None)
+        if payment:
+            return payment.get_status_display()
+        return None
 
 
 class OrderPreviewSerializer(serializers.ModelSerializer):
-    payment_status = serializers.CharField(source='payment.get_status_display')
+    payment_status = serializers.SerializerMethodField()
     status = serializers.CharField(source='get_status_display')
     created_at = serializers.CharField(source='formatted_created_at')
 
     class Meta:
         model = Order
         fields = ['id', 'status', 'amount', 'created_at', 'payment_status']
+    
+    def get_payment_status(self, obj):
+        payment = getattr(obj, 'payment', None)
+        if payment:
+            return payment.get_status_display()
+        return None
 
 
 class PaymentInitResponseSerializer(serializers.Serializer):
