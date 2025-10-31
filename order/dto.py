@@ -7,8 +7,8 @@ from pydantic import BaseModel
 class CreateOrderServiceDTO(BaseModel):
     user_id: int
     goods: list[int]
-    video_id: int
-    previous_order_id: uuid.UUID
+    video_id: int | None = None
+    previous_order_id: uuid.UUID | None = None
 
 # Repository DTO's
 
