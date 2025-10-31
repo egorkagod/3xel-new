@@ -65,9 +65,16 @@ def init(data: InitPayServiceDTO):
     return False
     
 def update_status(data):
-    token = data.pop('Token')
-    if token == _get_token(_normalize_data_like_json(data)):
-        pay_rep.update_state(data)
+    # Do not mutate original request data
+    payload = dict(data)
+    token = payload.pop('Token', None)
+    # Reproduce Tinkoff token algorithm: add merchant password
+    signed = {k: v for k, v in payload.items()}
+    signed['Password'] = os.getenv('TERMINAL_PASSWORD')
+    if token == _get_token(signed):
+        pay_rep.update_state(payload)
+    else:
+        notification_logger.warning('Invalid notification token: %s', payload)
 
 def create_receipt_items(goods: list) -> list:
     # goods: list of dicts like {'good__name': str, 'cost': int} per item occurrence
@@ -89,17 +96,6 @@ def create_receipt_items(goods: list) -> list:
             'Tax': 'vat5',
         })
     return items
-def _normalize_data_like_json(data):
-    result = dict()
-    for key, value in data.items():
-        match value:
-            case bool():
-                result[key] = str(value).lower()
-            case int():
-                result[key] = str(value)
-            case _:
-                result[key] = value
-    return result
 
 def _sign_by_token(payload: dict):
     signed = {}
@@ -130,7 +126,3 @@ def _get_token(payload: dict):
     hash_object = hashlib.sha256(bytes)
     token = hash_object.hexdigest()
     return token
-
-def _filter_payload(payload):
-    """Unused utility kept for reference."""
-    return {k: payload[k] for k in payload if k in ('TerminalKey','Amount','OrderId','PayType','Description')}
