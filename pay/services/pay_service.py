@@ -49,19 +49,19 @@ def init(data: InitPayServiceDTO):
 
     payload = _sign_by_token(payload)
     response = requests.post(url, headers=headers, json=payload)
-    data = response.json()
+    resp = response.json()
 
     # Tinkoff responds with key 'Success' (boolean)
-    if data.get("Success"):
-        payment_id = int(data['PaymentId'])
+    if resp.get("Success"):
+        payment_id = int(resp['PaymentId'])
         # Tinkoff returns full status string, store it as is (matches choices)
-        payment = pay_rep.create(id=payment_id, amount=payload['Amount'] // 100, status=data['Status'])
+        payment = pay_rep.create(id=payment_id, amount=payload['Amount'] // 100, status=resp['Status'])
         order = Order.objects.filter(pk=payload['OrderId']).first()
         order.payment = payment
         order.save()
-        return data['PaymentURL']
+        return resp['PaymentURL']
     # Log failure details to payment log
-    logging.getLogger('pay').info('Init failed: %s', data)
+    logging.getLogger('pay').info('Init failed: %s', resp)
     return False
     
 def update_status(data):
