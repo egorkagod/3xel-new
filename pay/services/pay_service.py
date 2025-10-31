@@ -81,6 +81,7 @@ def create_receipt_items(goods: list) -> list:
             'Price': price * 100,
             'Quantity': qty,
             'Amount': price * 100 * qty,
+            # Tax code per merchant settings. Required: vat5 on all items.
             'Tax': 'vat5',
         })
     return items
@@ -97,13 +98,15 @@ def _normalize_data_like_json(data):
     return result
 
 def _sign_by_token(payload: dict):
-    payload['Token'] = _get_token(payload)
+    # Exclude nested objects like Receipt from signature to match Tinkoff expectations
+    signature_base = _filter_payload(payload)
+    signature_base['Password'] = os.getenv('TERMINAL_PASSWORD')
+    token = _get_token(signature_base)
+    payload['Token'] = token
     return payload
 
 def _get_token(payload: dict):
     payload = payload.copy()
-    # payload = _filter_payload(payload)
-    payload['Password'] = os.getenv('TERMINAL_PASSWORD')
     string = ''.join([str(item[1]) for item in sorted(payload.items())])
     bytes = string.encode('utf-8')
     hash_object = hashlib.sha256(bytes)
@@ -111,9 +114,16 @@ def _get_token(payload: dict):
     return token
 
 def _filter_payload(payload):
-    need_keys = ('TerminalKey', 'Amount', 'OrderId', 'Description')
+    # Keep only scalar fields commonly used for token; exclude nested dicts (e.g., Receipt)
+    need_keys = (
+        'TerminalKey',
+        'Amount',
+        'OrderId',
+        'PayType',
+        'Description',
+    )
     result = {}
-    for key in payload:
-        if key in need_keys:
+    for key in need_keys:
+        if key in payload:
             result[key] = payload[key]
     return result
