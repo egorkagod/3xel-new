@@ -146,12 +146,58 @@ export default function OrderForm() {
 
         let fileId = uploadedFileId
 
+        if (!data.name) {
+            setGeneralError('Заполните все обязательные поля')
+            setError('name', { type: 'manual', message: 'Введите имя' })
+            return
+        }
+
+        if (!data.surname) {
+            setGeneralError('Заполните все обязательные поля')
+            setError('surname', { type: 'manual', message: 'Введите фамилию' })
+            return
+        }
+
+        if (!data.patronymic) {
+            setGeneralError('Заполните все обязательные поля')
+            setError('patronymic', { type: 'manual', message: 'Введите отчество' })
+            return
+        }
+
+        if (!data.phone) {
+            setGeneralError('Заполните все обязательные поля')
+            setError('phone', { type: 'manual', message: 'Введите номер телефона' })
+            return
+        }
+
+        const phoneRegex = /^(\+7|8)\s?\(?\d{3}\)?\s?\d{3}[- ]?\d{2}[- ]?\d{2}$/
+
+        if (!phoneRegex.test(phone)) {
+            setGeneralError('Введите корректный номер телефона')
+            setError('phone', {type: 'manual', message: "Введите корректный номер телефона"})
+            return
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+        if (!emailRegex.test(email)) {
+            setGeneralError('Введите корректный email')
+            setError('email', {type: 'manual', message: "Введите корректный email"})
+            return
+        }
+
+        if (!data.address) {
+            setGeneralError('Введите адрес доставки')
+            setError('address', {type: 'manual', message: 'Введите адрес доставки'})
+            return
+        }
+
         if (orderId) {
             setGeneralError(null)
             setError('file', null)
         } else {
 
-            if (!fileId) {
+            if (!fileId && !data.fileLink) {
                 if (!selectedFile) {
                     setError('file', { type: 'manual', message: 'Загрузите видеофайл' })
                     setGeneralError('Прикрепите видеофайл, чтобы продолжить.')
@@ -179,7 +225,12 @@ export default function OrderForm() {
             }
         }
 
-
+        clearErrors('name')
+        clearErrors('surname')
+        clearErrors('patronymic')
+        clearErrors('phone')
+        clearErrors('email')
+        clearErrors('address')
         setIsSubmitting(true)
         try {
             const payload = {
@@ -242,7 +293,7 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="address">Адрес ПВЗ СДЭК</label>
-                        <input type="text" id='address' placeholder='Город, улица, номер ПВЗ' />
+                        <input type="text" id='address' placeholder='Город, улица, номер ПВЗ' {...register('address')} />
                     </div>
                     <div className={classes.calcDelivery}>
                         <Button type='button'>Рассчитать доставку</Button>
