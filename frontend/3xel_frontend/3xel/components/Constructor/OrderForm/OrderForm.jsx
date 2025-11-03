@@ -25,6 +25,7 @@ export default function OrderForm() {
                 root: cdekRef.current,
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
                 defaultLocation: "Новосибирск",
+                servicePath: 'https://3xel.ru/service.php',
             })
         }
 
@@ -340,7 +341,7 @@ export default function OrderForm() {
                     <div className={classes.formField}>
                         <label htmlFor="address">Адрес ПВЗ СДЭК</label>
                         <input type="text" id='address' placeholder='Город, улица, номер ПВЗ' {...register('address')} />
-                        {/* <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '200px' }}></div> */}
+                        <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '200px' }}></div>
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
