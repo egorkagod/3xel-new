@@ -115,6 +115,7 @@
         display: grid;
         gap: 12px;
         overflow-y: auto;
+        max-height: 400px;
     }
 
     .orderCard {

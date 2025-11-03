@@ -42,12 +42,6 @@ export default function Profile({ isActive, onClose }) {
     }
   }
 
-  const handleOverlayClick = (event) => {
-    if (event.target === event.currentTarget) {
-      handleClose()
-    }
-  }
-
   let content = null
   switch (mode) {
     case MODES.SIGN_UP:
@@ -91,7 +85,6 @@ export default function Profile({ isActive, onClose }) {
       className={classNames(classes.overlay, {
         [classes.active]: isActive,
       })}
-      onClick={handleOverlayClick}
     >
       <div
         className={classes.profileModal}
