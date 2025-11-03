@@ -383,11 +383,11 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.checkboxFields}>
                         <div className={classes.field}>
-                            <input type="checkbox" id='instruction' {...register('instruction')} />
+                            <input type="checkbox" id='instruction' {...register('instruction')} required />
                             <label htmlFor="instruction">С инструкцией по съемке видео ознакомился(-ась) — <Link to='/instruction' style={{ cursor: 'pointer' }}>как снять видео</Link></label>
                         </div>
                         <div className={classes.field}>
-                            <input type="checkbox" id='offer' {...register('offer')} />
+                            <input type="checkbox" id='offer' {...register('offer')} required />
                             <label htmlFor="offer">С <a href="/files/offer_3xel.pdf" target='_blank'>офертой</a> ознакомился(-ась)</label>
                         </div>
                     </div>
