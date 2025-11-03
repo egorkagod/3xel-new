@@ -36,7 +36,10 @@ class GoodVariant(models.Model):
     colorName = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'{self.good} размера {self.size}см и цвета {self.color}'
+        try:
+            return f'{self.good} размера {self.good.size}см и цвета {self.color}'
+        except Exception:
+            return f'{self.good} цвета {self.color}'
 
 
 class GoodVariantImage(models.Model):
