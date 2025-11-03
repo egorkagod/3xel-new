@@ -6,7 +6,7 @@ from root.services import user_service
 from order.models import GoodVariant, Order
 
 
-def get(user_id, order_id):
+def get(user_id, order_id: int):
     order = order_rep.get(user_id, order_id)
     return order
 
@@ -32,6 +32,9 @@ def create(data: CreateOrderServiceDTO):
             items=items,
             video_id=data.video_id,
             amount=amount,
+            comment=data.comment or '',
+            phone=data.phone,
+            address=data.address,
         )
     else:
         goods = get_goods_with_sale(data.goods)
@@ -41,7 +44,7 @@ def create(data: CreateOrderServiceDTO):
 
         order = Order.objects.filter(id=data.previous_order_id).first()
         try:
-            video_id = order.video
+            video_id = order.video_id
         except:
             raise OrderCreationError(detail='Не нашли видео с предыдущего заказа')
 
@@ -56,6 +59,9 @@ def create(data: CreateOrderServiceDTO):
             items=items,
             video_id=video_id,
             amount=amount,
+            comment=data.comment or '',
+            phone=data.phone,
+            address=data.address,
         )
     order_id = order_rep.create(repo_dto)
     if not order_id:

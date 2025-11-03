@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -15,6 +13,8 @@ class Good(models.Model):
         verbose_name_plural = 'Виды товаров'
 
     name = models.CharField(max_length=250)
+    size = models.IntegerField()
+    cost = models.IntegerField()
     description = models.TextField(null=True, blank=True)
     technology = models.JSONField(default=list)
 
@@ -32,10 +32,8 @@ class GoodVariant(models.Model):
         verbose_name_plural = 'Товары'
 
     good = models.ForeignKey(Good, on_delete=models.PROTECT, related_name='variants')
-    size = models.IntegerField()
     color = models.CharField(max_length=30)
     colorName = models.CharField(max_length=30)
-    cost = models.IntegerField()
 
     def __str__(self):
         return f'{self.good} размера {self.size}см и цвета {self.color}'
@@ -82,7 +80,7 @@ class Order(models.Model):
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='orders')
     payment = models.ForeignKey(Payment, on_delete=models.PROTECT, null=True)
     amount = models.IntegerField()
@@ -91,6 +89,9 @@ class Order(models.Model):
         choices=OrderStatus.choices(),
         default=OrderStatus.NEW.value,
     )    
+    phone = models.CharField(max_length=32, default='')
+    address = models.CharField(max_length=300, default='')
+    comment = models.TextField(max_length=1000)
     promocode = models.OneToOneField(Promocode, on_delete=models.SET_NULL, null=True, default=None)
     video = models.ForeignKey(File, on_delete=models.SET_NULL, null=True)
     updated_at = models.DateTimeField(auto_now=True)

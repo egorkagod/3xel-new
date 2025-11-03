@@ -10,7 +10,7 @@ class GoodVariantModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GoodVariant
-        fields = ['id', 'size', 'color', 'colorName', 'cost', 'images', 'type']
+        fields = ['id', 'color', 'colorName', 'images', 'type']
 
     def get_images(self, obj):
         request = self.context.get('request')
@@ -26,7 +26,7 @@ class GoodModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Good
-        fields = ['id', 'name', 'description', 'technology', 'variants']
+        fields = ['id', 'name', 'cost', 'size', 'description', 'technology', 'variants']
 
 # OrderItem
 
@@ -45,7 +45,13 @@ class OrderViewSerializer(serializers.Serializer):
         allow_empty=False,
     )
     video_id = serializers.IntegerField(required=False, default=None)
-    order_id = serializers.UUIDField(required=False, default=None)
+    order_id = serializers.IntegerField(required=False, default=None)
+    name = serializers.CharField()
+    surname = serializers.CharField()
+    patronymic = serializers.CharField()
+    address = serializers.CharField()
+    phone = serializers.CharField()
+    comment = serializers.CharField(source='wishes')
 
 
 class OrderModelSerializer(serializers.ModelSerializer):

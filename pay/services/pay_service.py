@@ -1,5 +1,4 @@
 import os
-import uuid
 import requests
 import hashlib
 from dotenv import load_dotenv
@@ -19,7 +18,7 @@ load_dotenv()
 notification_logger = logging.getLogger('notification')
 
 class InitPayServiceDTO(BaseModel):
-    order_id: uuid.UUID
+    order_id: int
     goods: list
     amount: int
     email: str
@@ -56,7 +55,7 @@ def init(data: InitPayServiceDTO):
         payment_id = int(resp['PaymentId'])
         # Tinkoff returns full status string, store it as is (matches choices)
         payment = pay_rep.create(id=payment_id, amount=payload['Amount'] // 100, status=resp['Status'])
-        order = Order.objects.filter(pk=payload['OrderId']).first()
+        order = Order.objects.filter(pk=int(payload['OrderId'])).first()
         order.payment = payment
         order.save()
         return resp['PaymentURL']

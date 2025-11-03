@@ -53,3 +53,4 @@ class Promocode(models.Model):
     denomination = models.IntegerField()
     promo = models.CharField(max_length=40, unique=True)
     is_used = models.BooleanField(default=False)
+    is_sold = models.BooleanField(default=False)

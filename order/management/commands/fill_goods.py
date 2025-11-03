@@ -19,7 +19,6 @@ CARDBOARD_SIZE = 18
 CARDBOARD_COST = 3500
 CARDBOARD_SLUG = 'natural_cardboard'
 
-# Цвета, прописанные вручную по ColorName
 COLOR_MAP = {
     'Apple Green': '#8DB255',
     'Ash Gray': '#B2BEB5',
@@ -48,8 +47,9 @@ COLOR_MAP = {
     'Sky Blue': '#87CEEB',
 }
 
+
 class Command(BaseCommand):
-    help = 'Создание товаров и вариантов с изображениями из каталога (цвета заданы вручную)'
+    help = 'Создание товаров и вариантов с изображениями из каталога (цены и размеры в Good)'
 
     def handle(self, *args, **options):
         image_groups = self._group_images()
@@ -57,27 +57,15 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR('Нет изображений в media/catalog/images'))
             return
 
-        plastic_good, _ = Good.objects.update_or_create(
-            name='Пластиковый бюст',
-            defaults={
-                'description': 'Размеры: 12 / 16 / 20 см. Большая карта цветов.',
-                'technology': ['PLA Matte/PETG-CF', 'Премиум-поверхность'],
-            },
-        )
-        cardboard_good, _ = Good.objects.update_or_create(
-            name='Картонный бюст',
-            defaults={
-                'description': 'Один размер — 18 см. Цвет — натуральный картон.',
-                'technology': ['HDF/картон', 'Конструктор'],
-            },
-        )
-
         with transaction.atomic():
-            plastic_good.variants.all().delete()
-            cardboard_good.variants.all().delete()
+            # Удаляем старые данные
+            Good.objects.all().delete()
 
-            self._create_plastic_variants(plastic_good, image_groups)
-            self._create_cardboard_variant(cardboard_good, image_groups)
+            # Создаём пластиковые бюсты для каждого размера
+            self._create_plastic_goods(image_groups)
+
+            # Создаём картонный бюст
+            self._create_cardboard_good(image_groups)
 
         self.stdout.write(self.style.SUCCESS('Каталог товаров обновлён'))
 
@@ -96,37 +84,56 @@ class Command(BaseCommand):
             groups[slug].sort()
         return groups
 
-    def _create_plastic_variants(self, good, image_groups):
+    def _create_plastic_goods(self, image_groups):
         plastic_slugs = [slug for slug in image_groups.keys() if slug != CARDBOARD_SLUG]
-        for slug in sorted(plastic_slugs):
-            paths = image_groups[slug]
-            color_name = self._humanize(slug)
-            color_hex = COLOR_MAP.get(color_name)
-            if not color_hex:
-                self.stdout.write(self.style.WARNING(f'Неизвестный цвет: {color_name}, slug: {slug}'))
-                continue
-            for size, cost in PLASTIC_SIZES:
+
+        for size, cost in PLASTIC_SIZES:
+            good, _ = Good.objects.update_or_create(
+                name=f'Пластиковый бюст {size} см',
+                defaults={
+                    'description': f'Пластиковый бюст размером {size} см. Большая карта цветов.',
+                    'technology': ['PLA Matte/PETG-CF', 'Премиум-поверхность'],
+                    'size': size,
+                    'cost': cost,
+                },
+            )
+            good.variants.all().delete()
+
+            for slug in sorted(plastic_slugs):
+                color_name = self._humanize(slug)
+                color_hex = COLOR_MAP.get(color_name)
+                if not color_hex:
+                    self.stdout.write(self.style.WARNING(f'Неизвестный цвет: {color_name}, slug: {slug}'))
+                    continue
+
                 variant = GoodVariant.objects.create(
                     good=good,
-                    size=size,
                     color=color_hex,
                     colorName=color_name,
-                    cost=cost,
                 )
-                self._attach_images(variant, paths)
+                self._attach_images(variant, image_groups[slug])
 
-    def _create_cardboard_variant(self, good, image_groups):
+    def _create_cardboard_good(self, image_groups):
         paths = image_groups.get(CARDBOARD_SLUG)
         if not paths:
             self.stdout.write(self.style.WARNING('Нет изображений для картона, пропускаю'))
             return
 
+        good, _ = Good.objects.update_or_create(
+            name='Картонный бюст',
+            defaults={
+                'description': 'Один размер — 18 см. Цвет — натуральный картон.',
+                'technology': ['HDF/картон', 'Конструктор'],
+                'size': CARDBOARD_SIZE,
+                'cost': CARDBOARD_COST,
+            },
+        )
+        good.variants.all().delete()
+
         variant = GoodVariant.objects.create(
             good=good,
-            size=CARDBOARD_SIZE,
             color=COLOR_MAP['Natural Cardboard'],
             colorName='Natural Cardboard',
-            cost=CARDBOARD_COST,
         )
         self._attach_images(variant, paths)
 

@@ -92,9 +92,9 @@ class OrderView(APIView):
             OpenApiParameter(
                 name='id',
                 location=OpenApiParameter.QUERY,
-                description='UUID заказа',
+                description='Идентификатор заказа',
                 required=True,
-                type=OpenApiTypes.STR,
+                type=OpenApiTypes.INT,
             ),
         ],
         responses={
@@ -105,8 +105,12 @@ class OrderView(APIView):
     )
     def get(self, request):
         order_id = request.query_params.get('id')
-        if order_id:
-            order = order_service.get(request.user.id, order_id)
+        if order_id is not None:
+            try:
+                order_id_int = int(order_id)
+            except (TypeError, ValueError):
+                return Response({'error': 'Некорректный идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
+            order = order_service.get(request.user.id, order_id_int)
             if order:
                 payload = OrderModelSerializer(order).data
                 return Response(payload, status=status.HTTP_200_OK)
@@ -115,7 +119,7 @@ class OrderView(APIView):
     
     @extend_schema(
         operation_id='create_order',
-        summary='Создать заказ и инициализировать оплату',
+        summary='Создать заказ, обновить данные пользователя и инициализировать оплату',
         request=OrderViewSerializer,
         responses={
             status.HTTP_200_OK: OpenApiResponse(PaymentInitResponseSerializer, description='Оплата успешно инициализирована'),
@@ -132,6 +136,31 @@ class OrderView(APIView):
         video_id = serializer.validated_data['video_id']
         order_id = serializer.validated_data['order_id']
         user_id = request.user.id
+        name = serializer.validated_data['name']
+        surname = serializer.validated_data['surname']
+        patronymic = serializer.validated_data['patronymic']
+        address = serializer.validated_data['address']
+        phone = serializer.validated_data['phone']
+        # comment is validated as 'wishes' via source mapping
+        wishes = serializer.validated_data.get('wishes', '')
+
+        # Update user profile fields: first_name (Имя Отчество) and last_name (Фамилия)
+        try:
+            user = request.user
+            new_first = f"{name} {patronymic}".strip()
+            updates = {}
+            if user.first_name != new_first:
+                user.first_name = new_first
+                updates['first_name'] = True
+            if user.last_name != surname:
+                user.last_name = surname
+                updates['last_name'] = True
+            if updates:
+                user.save(update_fields=list(updates.keys()))
+        except Exception:
+            # Do not block order creation on user update issues
+            pass
+
 
         if (video_id and order_id) or not(video_id or order_id):
             return Response({'error': 'Нужно либо прикрепить видео, либо сделать повторный заказ'}, status=status.HTTP_400_BAD_REQUEST)
@@ -142,6 +171,9 @@ class OrderView(APIView):
                 goods=goods,
                 video_id=video_id,
                 previous_order_id=order_id,
+                comment=wishes,
+                phone=phone,
+                address=address,
             )
             payment_url = order_service.create(dto)
         except OrderError as exc:

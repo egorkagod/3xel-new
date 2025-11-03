@@ -1,4 +1,3 @@
-import uuid
 from pydantic import BaseModel
 
 
@@ -8,7 +7,10 @@ class CreateOrderServiceDTO(BaseModel):
     user_id: int
     goods: list[int]
     video_id: int | None = None
-    previous_order_id: uuid.UUID | None = None
+    previous_order_id: int | None = None
+    comment: str | None = ''
+    phone: str
+    address: str
 
 # Repository DTO's
 
@@ -22,3 +24,6 @@ class CreateOrdeRepoDTO(BaseModel):
     items: list[CreateOrderItemRepoDTO]
     video_id: int
     amount: int
+    comment: str | None = ''
+    phone: str
+    address: str
