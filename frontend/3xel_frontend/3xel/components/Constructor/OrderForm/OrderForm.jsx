@@ -274,26 +274,45 @@ export default function OrderForm() {
                     <div className={classes.formField}>
                         <label htmlFor="surname">Фамилия</label>
                         <input type="text" id='surname' placeholder='Введите фамилию' {...register('surname')} />
+                        {errors.surname ? (
+                            <span className={classes.errorText}>{errors.surname.message}</span>
+                        ) : null}
+                        
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="name">Имя</label>
                         <input type="text" id='name' placeholder='Введите имя' {...register('name')} />
+                        {errors.name ? (
+                            <span className={classes.errorText}>{errors.name.message}</span>
+                        ) : null}
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="patronymic">Отчество</label>
                         <input type="text" id='patronymic' placeholder='Введите отчество' {...register('patronymic')} />
+                        {errors.patronymic ? (
+                            <span className={classes.errorText}>{errors.patronymic.message}</span>
+                        ) : null}
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="phone">Телефон</label>
                         <input type="tel" id='phone' placeholder='+7 (___) ___-__-__' {...register('phone')} />
+                        {errors.phone ? (
+                            <span className={classes.errorText}>{errors.phone.message}</span>
+                        ) : null}
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="email">E-mail</label>
                         <input type="email" id='email' placeholder='Введите email' {...register('email')} />
+                        {errors.email ? (
+                            <span className={classes.errorText}>{errors.email.message}</span>
+                        ) : null}
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="address">Адрес ПВЗ СДЭК</label>
                         <input type="text" id='address' placeholder='Город, улица, номер ПВЗ' {...register('address')} />
+                        {errors.address ? (
+                            <span className={classes.errorText}>{errors.address.message}</span>
+                        ) : null}
                     </div>
                     <div className={classes.calcDelivery}>
                         <Button type='button'>Рассчитать доставку</Button>
