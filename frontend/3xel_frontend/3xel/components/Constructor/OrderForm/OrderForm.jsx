@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,6 +15,30 @@ export default function OrderForm() {
     const location = useLocation()
     const locationState = location.state?.value || null
     const dispatcher = useDispatch()
+    const cdekRef = useRef(null)
+
+    useEffect(() => {
+        const initWidget = () => {
+            if (!cdekRef.current) return
+            new window.CDEKWidget({
+                from: "Новосибирск",
+                root: cdekRef.current,
+                apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
+                defaultLocation: "Новосибирск",
+            })
+        }
+
+        if (window.CDEKWidget) {
+            initWidget()
+        } else {
+            const script = document.createElement('script')
+            script.src = "https://cdn.jsdelivr.net/npm/@cdek-it/widget@3"
+            script.type = "text/javascript"
+            script.onload = initWidget
+            document.head.appendChild(script)
+        }
+
+    }, [])
 
     const {
         register,
@@ -174,7 +198,7 @@ export default function OrderForm() {
 
         if (!phoneRegex.test(data.phone)) {
             setGeneralError('Введите корректный номер телефона')
-            setError('phone', {type: 'manual', message: "Введите корректный номер телефона"})
+            setError('phone', { type: 'manual', message: "Введите корректный номер телефона" })
             return
         }
 
@@ -182,13 +206,13 @@ export default function OrderForm() {
 
         if (!emailRegex.test(data.email)) {
             setGeneralError('Введите корректный email')
-            setError('email', {type: 'manual', message: "Введите корректный email"})
+            setError('email', { type: 'manual', message: "Введите корректный email" })
             return
         }
 
         if (!data.address) {
             setGeneralError('Введите адрес доставки')
-            setError('address', {type: 'manual', message: 'Введите адрес доставки'})
+            setError('address', { type: 'manual', message: 'Введите адрес доставки' })
             return
         }
 
@@ -237,6 +261,12 @@ export default function OrderForm() {
                 goods: cart.map(item => item.id),
                 video_id: fileId,
                 order_id: orderId,
+                name: data.name,
+                surname: data.surname,
+                patronymic: data.patronymic,
+                address: data.address,
+                phone: data.phone,
+                wishes: data.wishes,
             }
             const response = await apiFetch('/api-order/order/', {
                 method: 'POST',
@@ -277,7 +307,7 @@ export default function OrderForm() {
                         {errors.surname ? (
                             <span className={classes.errorText}>{errors.surname.message}</span>
                         ) : null}
-                        
+
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="name">Имя</label>
@@ -310,6 +340,7 @@ export default function OrderForm() {
                     <div className={classes.formField}>
                         <label htmlFor="address">Адрес ПВЗ СДЭК</label>
                         <input type="text" id='address' placeholder='Город, улица, номер ПВЗ' {...register('address')} />
+                        <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '200px' }}></div>
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
@@ -379,7 +410,7 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor='wishes'>Комментарий</label>
-                        <textarea name="Wishes" id="wishes" placeholder='Введите ваши пожелания' {...register('wishes')}></textarea>
+                        <textarea name="Wishes" id="wishes" rows={5} placeholder='Введите ваши пожелания' {...register('wishes')}></textarea>
                     </div>
                     <div className={classes.checkboxFields}>
                         <div className={classes.field}>
