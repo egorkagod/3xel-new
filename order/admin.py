@@ -33,6 +33,14 @@ class GoodVariantAdmin(admin.ModelAdmin):
         )
     color_swatch.short_description = "Цвет"
 
+    def size(self, obj):
+        return getattr(obj.good, 'size', None)
+    size.short_description = 'Размер'
+
+    def cost(self, obj):
+        return getattr(obj.good, 'cost', None)
+    cost.short_description = 'Цена'
+
 
 @admin.register(GoodVariantImage)
 class GoodVariantImageAdmin(admin.ModelAdmin):
