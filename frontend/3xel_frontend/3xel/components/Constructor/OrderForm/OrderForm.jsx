@@ -172,7 +172,7 @@ export default function OrderForm() {
 
         const phoneRegex = /^(\+7|8)\s?\(?\d{3}\)?\s?\d{3}[- ]?\d{2}[- ]?\d{2}$/
 
-        if (!phoneRegex.test(phone)) {
+        if (!phoneRegex.test(data.phone)) {
             setGeneralError('Введите корректный номер телефона')
             setError('phone', {type: 'manual', message: "Введите корректный номер телефона"})
             return
@@ -180,7 +180,7 @@ export default function OrderForm() {
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(data.email)) {
             setGeneralError('Введите корректный email')
             setError('email', {type: 'manual', message: "Введите корректный email"})
             return
