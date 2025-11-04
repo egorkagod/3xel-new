@@ -12,6 +12,9 @@ const DEFAULT_COLOR = '#d8b98a'
 
 export default function GoodCard({ goods, forConstructor }) {
 
+    if (goods) {
+        console.log(goods)
+    }
     const dispatcher = useDispatch()
     const good = goods?.[0]
 
