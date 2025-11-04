@@ -31,9 +31,7 @@ export default function SelectGood() {
             acc[newKey].push(cur)
             return acc
         }, {})
-
-        console.log(resultGoods)
-
+        
         return Object.entries(resultGoods).map(([name, items]) => (
             <GoodCard forConstructor={true} key={name} goods={items}></GoodCard>
         ))
