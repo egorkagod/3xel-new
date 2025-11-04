@@ -22,8 +22,20 @@ export default function SelectGood() {
             return <span className={classes.stateMessage}>Каталог пока пуст.</span>
         }
 
-        return goods.map((good) => (
-            <GoodCard key={good.id} forConstructor={true} good={good}></GoodCard>
+        const resultGoods = goods.reduce((acc, cur) => {
+            const newKey = cur.name
+            if (!acc[newKey]) {
+                acc[newKey] = []
+            }
+
+            acc[newKey].push(cur)
+            return acc
+        }, {})
+
+        console.log(resultGoods)
+
+        return Object.entries(resultGoods).map(([name, items]) => (
+            <GoodCard key={name} goods={items}></GoodCard>
         ))
     }
 

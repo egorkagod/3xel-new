@@ -16,7 +16,7 @@ export default function Catalogue() {
         }
 
         if (status === 'failed') {
-            return <span className={classes.stateMessage}>{'Не удалось загрузить каталог'}</span>
+            return <span className={classes.stateMessage}>{error || 'Не удалось загрузить каталог'}</span>
         }
 
         if (!goods.length) {
