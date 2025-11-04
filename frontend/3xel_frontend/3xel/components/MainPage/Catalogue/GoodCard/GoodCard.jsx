@@ -14,13 +14,11 @@ export default function GoodCard({ good, forConstructor }) {
 
     const dispatcher = useDispatch()
 
-    const variants = useMemo(() => good?.variants || [], [good])
+    const variants = useMemo(() => good[0]?.variants || [], [good])
     const initialVariant = variants[0] || {
         id: null,
         color: DEFAULT_COLOR,
         colorName: 'Цвет',
-        size: '—',
-        cost: 0,
         images: [],
     }
 
@@ -30,9 +28,9 @@ export default function GoodCard({ good, forConstructor }) {
     }, [variants])
 
     const uniqueSizes = useMemo(() => {
-        const sizes = variants.map((v) => v.size || '—')
-        return sizes.length ? [...new Set(sizes)] : [initialVariant.size]
-    }, [variants, initialVariant.size])
+        const sizes = good.map(item => item.size || '—')
+        return sizes
+    }, [good])
 
     const uniqueImages = useMemo(() => {
         const allImages = variants.flatMap((v) => (v.images || [])).filter(Boolean)
@@ -41,14 +39,18 @@ export default function GoodCard({ good, forConstructor }) {
     }, [variants, initialVariant.images])
 
     const [selectedColor, setSelectedColor] = useState(initialVariant.color || DEFAULT_COLOR)
-    const [selectedSize, setSelectedSize] = useState(initialVariant.size || '—')
+    const [selectedSize, setSelectedSize] = useState(good[0].size || '—')
+    const selectedGood = useMemo(() => 
+        good.find(item => item.size === selectedSize),
+        [good, selectedSize]
+    )
     const [userSelected, setUserSelected] = useState(false)
     const selectedVariant = useMemo(
         () =>
             variants.find(
-                (v) => v.size === selectedSize && v.color === selectedColor,
+                (v) => v.color === selectedColor,
             ) || initialVariant,
-        [selectedColor, selectedSize, variants, initialVariant],
+        [selectedColor, variants, initialVariant, selectedGood]
     )
 
     const [selectedImage, setSelectedImage] = useState(
@@ -59,14 +61,14 @@ export default function GoodCard({ good, forConstructor }) {
 
     useEffect(() => {
         const newVariant = variants.find(v =>
-            v.color === selectedColor && v.size === selectedSize
+            v.color === selectedColor
         )
 
         if (newVariant?.images?.length) {
             setSelectedImage(newVariant.images[0])
         }
 
-    }, [selectedVariant, variants, selectedColor, selectedSize])
+    }, [selectedVariant, variants, selectedColor, selectedGood, selectedSize])
 
     useEffect(() => {
         if (!uniqueImages.length) {
@@ -106,11 +108,11 @@ export default function GoodCard({ good, forConstructor }) {
         dispatcher(addToCart({
             id: selectedVariant.id,
             type: selectedVariant.type,
-            name: good.name,
+            name: selectedGood.name,
             color: selectedColor,
             size: selectedSize,
             colorName: selectedVariant.colorName || 'Цвет',
-            cost: selectedVariant.cost ?? 0,
+            cost: selectedGood.cost ?? 0,
         }))
         setPopupIsActive(true)
         setTimeout(() => setPopupIsActive(false), 3000)

@@ -23,8 +23,17 @@ export default function Catalogue() {
             return <span className={classes.stateMessage}>Каталог пока пуст.</span>
         }
 
-        return goods.map(good => (
-            <GoodCard key={good.id} good={good}></GoodCard>
+        const resultGoods = goods.reduce((acc, cur) => {
+            if (!acc[cur.name]) {
+                acc[cur.name] = []
+            }
+
+            acc[cur.name].push(cur)
+            return acc
+        }, {})
+
+        return Object.entries(resultGoods).map(([name, items]) => (
+            <GoodCard key={name} good={items}></GoodCard>
         ))
     }
 

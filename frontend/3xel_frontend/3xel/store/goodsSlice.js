@@ -36,12 +36,9 @@ const transformGoods = (goods) =>
       const images = variant.images
       return {
         id: variant.id,
-        size: variant.size ? `${variant.size} см` : '—',
-        numericSize: variant.size ?? null,
         color: hex,
         type: variant.type,
         colorName: label,
-        cost: variant.cost ?? 0,
         images,
       }
     })
@@ -49,6 +46,8 @@ const transformGoods = (goods) =>
     return {
       id: good.id,
       name: good.name,
+      cost: good.cost,
+      size: good.size,
       description: good.description,
       technology: good.technology || [],
       variants,
