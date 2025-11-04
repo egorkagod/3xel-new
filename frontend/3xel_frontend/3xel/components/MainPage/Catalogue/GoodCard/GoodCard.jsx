@@ -12,7 +12,7 @@ const DEFAULT_COLOR = '#d8b98a'
 
 export default function GoodCard({ goods, forConstructor }) {
 
-    if (goods.length === 0) return null
+    if (!goods || !goods.length) return null
 
     const dispatcher = useDispatch()
     const good = goods?.[0] || null
