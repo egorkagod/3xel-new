@@ -32,6 +32,8 @@ export default function Catalogue() {
             return acc
         }, {})
 
+        console.log(resultGoods)
+
         return Object.entries(resultGoods).map(([name, items]) => (
             <GoodCard key={name} goods={items}></GoodCard>
         ))
