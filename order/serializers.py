@@ -53,7 +53,7 @@ class OrderViewSerializer(serializers.Serializer):
     patronymic = serializers.CharField()
     address = serializers.CharField()
     phone = serializers.CharField()
-    wishes = serializers.CharField(required=False, default=None)
+    wishes = serializers.CharField(allow_blank=True, default='')
 
 
 class OrderModelSerializer(serializers.ModelSerializer):
