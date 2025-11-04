@@ -24,7 +24,7 @@ export default function Catalogue() {
         }
 
         const resultGoods = goods.reduce((acc, cur) => {
-            const newKey = cur.name.split(' ')[0]
+            const newKey = cur.name
             if (!acc[newKey]) {
                 acc[newKey] = []
             }
