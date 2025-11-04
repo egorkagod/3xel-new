@@ -129,6 +129,7 @@ export default function GoodCard({ goods, forConstructor }) {
                         key={image}
                         src={image}
                         className={classNames(classes.image, { [classes.active]: image === selectedImage })}
+                        loading='lazy'
                     />
                 ))}
             </div>
@@ -199,7 +200,9 @@ export default function GoodCard({ goods, forConstructor }) {
                             key={image}
                             src={image}
                             alt={`${good?.name} в цвете ${selectedVariant.colorName || ''}`}
-                            onClick={() => { setSelectedImage(image); setUserSelected(true) }} style={{ outline: image === selectedImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
+                            onClick={() => { setSelectedImage(image); setUserSelected(true) }} style={{ outline: image === selectedImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}
+                            loading='lazy'
+                            >
                         </img>)
                     }
                 </div>

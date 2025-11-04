@@ -39,7 +39,7 @@ export default function Order() {
                 <div className={classes.items}>
                     {order?.items?.map((item, index) =>
                         <div className={classes.item} key={index}>
-                            <img src={item.good_variant.images[0]} alt={item.good_variant.type} />
+                            <img src={item.good_variant.images[0]} alt={item.good_variant.type} loading='lazy' />
                             <div className={classes.itemInfo}>
                                 <h4>{item.good_variant.type}</h4>
                                 <div className={classes.sizeBlock}>

@@ -31,7 +31,7 @@ export default function MainUpperSection() {
     return (
         <section className={classes.upperSection}>
             <div className={classes.leftSide}>
-                {slides.map(slide => <img src={slide} className={classNames(classes.slide, { [classes.active]: slide === slides[currentSlide] })} alt='Картинка клиента с бюстом' />)}
+                {slides.map(slide => <img src={slide} className={classNames(classes.slide, { [classes.active]: slide === slides[currentSlide] })} alt='Картинка клиента с бюстом' loading='lazy' />)}
             </div>
             <div className={classes.rightSide}>
                 <span className={classes.supText}>Подарок, который помнят</span>

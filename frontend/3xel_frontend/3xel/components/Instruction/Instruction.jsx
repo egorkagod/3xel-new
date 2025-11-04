@@ -17,21 +17,21 @@ export default function Instruction() {
 
             <section className={classes.instructionSection}>
                 <p className={classes.leftSide}>1. <b>Протрите объективы</b> — меньше бликов и размытия.</p>
-                <img src={clearCam} alt="clear camera photo" />
+                <img src={clearCam} alt="clear camera photo" loading='lazy' />
             </section>
             <section className={classes.instructionSection}>
                 <p className={classes.leftSide}>
                     2. <b>Разрешение и FPS</b> — идеально <b>4K при 60 к/c.</b><br />
                     Если нет 4K 60 к/с: <b>30/25/24</b> или <b>1080p при 60 к/с</b> или <b>1080p при 30/25/24.</b>
                 </p>
-                <img src={options} alt="camera options photo" />
+                <img src={options} alt="camera options photo" loading='lazy' />
             </section>
             <section className={classes.instructionSection}>
                 <p className={classes.leftSide}>
                     3. <b>Без отражений</b><br />
                     Избегайте глянцевых полов/стен (мрамор/металл), стеклянных витрин и зеркал.
                 </p>
-                <img src={reflections} alt="reflections photo" />
+                <img src={reflections} alt="reflections photo" loading='lazy' />
             </section>
             <section className={classes.instructionSection}>
                 <p className={classes.leftSide}>
@@ -40,14 +40,14 @@ export default function Instruction() {
                     не светите только с одной стороны, избегайте жёстких теней.
 
                 </p>
-                <img src={light} alt="light photo" />
+                <img src={light} alt="light photo" loading='lazy' />
             </section>
             <section className={classes.instructionSection}>
                 <p className={classes.leftSide}>
                     5. <b>Достаточно места</b><br />
                     Оставьте запас, чтобы объект целиком помещался в кадре и не выпадал из него.
                 </p>
-                <img src={place} alt="placement photo" />
+                <img src={place} alt="placement photo" loading='lazy' />
             </section>
             <section className={classes.instructionSection}>
                 <div className={classes.leftSide}>
@@ -61,7 +61,7 @@ export default function Instruction() {
                         </li>
                     </ul>
                 </div>
-                <img src={instruction} alt="instruction gif" />
+                <img src={instruction} alt="instruction gif" loading='lazy' />
             </section>
             <section className={classes.instructionSection}>
                 <div className={classes.leftSide}>
@@ -94,7 +94,7 @@ export default function Instruction() {
                         </span>
                     </p>
                 </div>
-                <img src={steps} alt="video steps" />
+                <img src={steps} alt="video steps" loading='lazy' />
             </section>
         </main>
     )
