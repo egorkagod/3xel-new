@@ -13,7 +13,7 @@ const DEFAULT_COLOR = '#d8b98a'
 export default function GoodCard({ goods, forConstructor }) {
 
     const dispatcher = useDispatch()
-    const good = goods[0] || null
+    const good = goods?.[0] || null
 
     const variants = useMemo(() => good?.variants || [], [good])
     const initialVariant = variants[0] || {
@@ -29,7 +29,7 @@ export default function GoodCard({ goods, forConstructor }) {
     }, [variants])
 
     const uniqueSizes = useMemo(() => {
-        const sizes = goods.map(item => item.size || '—')
+        const sizes = goods?.map(item => item.size || '—')
         return sizes
     }, [goods])
 
@@ -40,9 +40,9 @@ export default function GoodCard({ goods, forConstructor }) {
     }, [variants, initialVariant.images])
 
     const [selectedColor, setSelectedColor] = useState(initialVariant.color || DEFAULT_COLOR)
-    const [selectedSize, setSelectedSize] = useState(goods[0].size || '—')
+    const [selectedSize, setSelectedSize] = useState(goods?.[0].size || '—')
     const selectedGood = useMemo(() => 
-        goods.find(item => item.size === selectedSize),
+        goods?.find(item => item.size === selectedSize),
         [goods, selectedSize]
     )
     const [userSelected, setUserSelected] = useState(false)
