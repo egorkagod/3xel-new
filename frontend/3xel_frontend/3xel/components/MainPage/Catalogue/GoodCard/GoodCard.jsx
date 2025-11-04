@@ -45,7 +45,7 @@ export default function GoodCard({ goods, forConstructor }) {
 
     const [selectedColor, setSelectedColor] = useState(initialVariant.color || DEFAULT_COLOR)
     const [selectedSize, setSelectedSize] = useState(goods?.[0].size || '—')
-    const selectedGood = useMemo(() => 
+    const selectedGood = useMemo(() =>
         goods?.find(item => item.size === selectedSize),
         [goods, selectedSize]
     )
@@ -137,13 +137,13 @@ export default function GoodCard({ goods, forConstructor }) {
             </div>
             <div className={classes.properties}>
                 <div className={classes.technologies}>
-                    {good.technology ? (
-                        good.technology.map(tech => (
-                            <span key={tech} className={classes.technology}>
-                                {tech}
-                            </span>
-                        ))
-                    ) : null}
+
+                    {good?.technology?.map(tech => (
+                        <span key={tech} className={classes.technology}>
+                            {tech}
+                        </span>
+                    ))}
+
                 </div>
                 <h4 className={classes.goodName}>
                     {good.name}
@@ -152,7 +152,7 @@ export default function GoodCard({ goods, forConstructor }) {
                     null
                 ) : (
                     <div className={classes.description}>
-                        {good.description}
+                        {good?.description}
                     </div>
                 )}
                 {forConstructor ? (
