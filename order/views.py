@@ -141,8 +141,7 @@ class OrderView(APIView):
         patronymic = serializer.validated_data['patronymic']
         address = serializer.validated_data['address']
         phone = serializer.validated_data['phone']
-        # comment is validated as 'wishes' via source mapping
-        wishes = serializer.validated_data.get('wishes', '')
+        wishes = serializer.validated_data['wishes']
 
         # Update user profile fields: first_name (Имя Отчество) and last_name (Фамилия)
         try:

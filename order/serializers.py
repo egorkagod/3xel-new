@@ -51,7 +51,7 @@ class OrderViewSerializer(serializers.Serializer):
     patronymic = serializers.CharField()
     address = serializers.CharField()
     phone = serializers.CharField()
-    comment = serializers.CharField(source='wishes')
+    wishes = serializers.CharField()
 
 
 class OrderModelSerializer(serializers.ModelSerializer):

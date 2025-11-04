@@ -19,7 +19,7 @@ class Good(models.Model):
     technology = models.JSONField(default=list)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} {self.size}см'
 
 def timestamp_filename(instance, filename):
     ext = filename.split('.')[-1]
