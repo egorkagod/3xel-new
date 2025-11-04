@@ -146,7 +146,7 @@ export default function GoodCard({ goods, forConstructor }) {
 
                 </div>
                 <h4 className={classes.goodName}>
-                    {good.name}
+                    {good?.name}
                 </h4>
                 {forConstructor ? (
                     null
@@ -201,7 +201,7 @@ export default function GoodCard({ goods, forConstructor }) {
                         <img
                             key={image}
                             src={image}
-                            alt={`${good.name} в цвете ${selectedVariant.colorName || ''}`}
+                            alt={`${good?.name} в цвете ${selectedVariant.colorName || ''}`}
                             onClick={() => { setSelectedImage(image); setUserSelected(true) }} style={{ outline: image === selectedImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
                         </img>)
                     }
