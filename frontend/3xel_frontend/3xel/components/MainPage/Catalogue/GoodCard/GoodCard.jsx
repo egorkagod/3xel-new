@@ -165,7 +165,7 @@ export default function GoodCard({ goods, forConstructor }) {
                                         className={classNames(classes.size, { [classes.active]: selectedSize === size })}
                                         onClick={() => setSelectedSize(size)}
                                     >
-                                        {size}
+                                        {size} см
                                     </div>
                                 ))
                             ) : (null)}
