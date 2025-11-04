@@ -10,11 +10,12 @@ import classes from './GoodCard.module.scss'
 
 const DEFAULT_COLOR = '#d8b98a'
 
-export default function GoodCard({ good, forConstructor }) {
+export default function GoodCard({ goods, forConstructor }) {
 
     const dispatcher = useDispatch()
+    const good = goods[0]
 
-    const variants = useMemo(() => good[0]?.variants || [], [good])
+    const variants = useMemo(() => good?.variants || [], [good])
     const initialVariant = variants[0] || {
         id: null,
         color: DEFAULT_COLOR,
@@ -28,9 +29,9 @@ export default function GoodCard({ good, forConstructor }) {
     }, [variants])
 
     const uniqueSizes = useMemo(() => {
-        const sizes = good.map(item => item.size || '—')
+        const sizes = goods.map(item => item.size || '—')
         return sizes
-    }, [good])
+    }, [goods])
 
     const uniqueImages = useMemo(() => {
         const allImages = variants.flatMap((v) => (v.images || [])).filter(Boolean)
@@ -39,10 +40,10 @@ export default function GoodCard({ good, forConstructor }) {
     }, [variants, initialVariant.images])
 
     const [selectedColor, setSelectedColor] = useState(initialVariant.color || DEFAULT_COLOR)
-    const [selectedSize, setSelectedSize] = useState(good[0].size || '—')
+    const [selectedSize, setSelectedSize] = useState(goods[0].size || '—')
     const selectedGood = useMemo(() => 
-        good.find(item => item.size === selectedSize),
-        [good, selectedSize]
+        goods.find(item => item.size === selectedSize),
+        [goods, selectedSize]
     )
     const [userSelected, setUserSelected] = useState(false)
     const selectedVariant = useMemo(

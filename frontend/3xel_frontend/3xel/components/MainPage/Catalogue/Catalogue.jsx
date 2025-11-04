@@ -33,7 +33,7 @@ export default function Catalogue() {
         }, {})
 
         return Object.entries(resultGoods).map(([name, items]) => (
-            <GoodCard key={name} good={items}></GoodCard>
+            <GoodCard key={name} goods={items}></GoodCard>
         ))
     }
 
