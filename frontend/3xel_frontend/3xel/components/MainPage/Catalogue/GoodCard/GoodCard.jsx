@@ -12,10 +12,8 @@ const DEFAULT_COLOR = '#d8b98a'
 
 export default function GoodCard({ goods, forConstructor }) {
 
-    if (!goods || !goods.length) return null
-
     const dispatcher = useDispatch()
-    const good = goods?.[0] || null
+    const good = goods?.[0]
 
     const variants = useMemo(() => good?.variants || [], [good])
     const initialVariant = variants[0] || {
