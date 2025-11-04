@@ -33,7 +33,8 @@ export default function GoodCard({ goods, forConstructor }) {
 
     const uniqueSizes = useMemo(() => {
         const sizes = goods?.map(item => item.size || '—')
-        return sizes
+        const sortedSizes = sizes.sort((a, b) => a - b)
+        return sortedSizes
     }, [goods])
 
     const uniqueImages = useMemo(() => {
