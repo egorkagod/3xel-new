@@ -35,7 +35,7 @@ export default function SelectGood() {
         console.log(resultGoods)
 
         return Object.entries(resultGoods).map(([name, items]) => (
-            <GoodCard key={name} goods={items}></GoodCard>
+            <GoodCard forConstructor={true} key={name} goods={items}></GoodCard>
         ))
     }
 
