@@ -7,10 +7,12 @@ from .models import Good, GoodVariant, Order, OrderItem
 class GoodVariantModelSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     type = serializers.CharField(source='good.name', read_only=True)
+    size = serializers.IntegerField(source='good.size', read_only=True)
+    cost = serializers.IntegerField(source='good.cost', read_only=True)
 
     class Meta:
         model = GoodVariant
-        fields = ['id', 'color', 'colorName', 'images', 'type']
+        fields = ['id', 'color', 'colorName', 'images', 'type', 'size', 'cost']
 
     def get_images(self, obj):
         request = self.context.get('request')

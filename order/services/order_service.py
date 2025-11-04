@@ -93,10 +93,10 @@ def get_goods_with_sale(goods: list[int], is_repeated=False) -> list:
     # Build a map of unique GoodVariant id -> {name, cost}
     unique_ids = list(set(goods))
     goods_map = {
-        obj['id']: {'good__name': obj['good__name'], 'cost': obj['cost']}
+        obj['id']: {'good__name': obj['good__name'], 'cost': obj['good__cost']}
         for obj in GoodVariant.objects.filter(id__in=unique_ids)
         .select_related("good")
-        .values("id", "good__name", "cost")
+        .values("id", "good__name", "good__cost")
     }
     if len(goods_map) != len(set(goods)):
         # If any id is missing, invalid goods present
