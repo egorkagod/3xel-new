@@ -28,7 +28,7 @@ class GoodModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Good
-        fields = ['id', 'name', 'cost', 'size', 'description', 'technology', 'variants']
+        fields = ['id', 'name', 'box_sizes', 'weight', 'cost', 'size', 'description', 'technology', 'variants']
 
 # OrderItem
 
