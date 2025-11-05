@@ -14,6 +14,8 @@ class Good(models.Model):
 
     name = models.CharField(max_length=250)
     size = models.IntegerField()
+    box_sizes = models.CharField(max_length=20)
+    weight = models.IntegerField()
     cost = models.IntegerField()
     description = models.TextField(null=True, blank=True)
     technology = models.JSONField(default=list)
