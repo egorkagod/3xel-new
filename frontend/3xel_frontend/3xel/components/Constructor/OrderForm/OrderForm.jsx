@@ -31,14 +31,8 @@ export default function OrderForm() {
 
         if (window.CDEKWidget) {
             initWidget()
-        } else {
-            const script = document.createElement('script')
-            script.src = "https://cdn.jsdelivr.net/npm/@cdek-it/widget@3"
-            script.type = "text/javascript"
-            script.onload = initWidget
-            document.head.appendChild(script)
-        }
-
+        } 
+        
     }, [])
 
     const {
@@ -211,11 +205,11 @@ export default function OrderForm() {
             return
         }
 
-        if (!data.address) {
-            setGeneralError('Введите адрес доставки')
-            setError('address', { type: 'manual', message: 'Введите адрес доставки' })
-            return
-        }
+        // if (!data.address) {
+        //     setGeneralError('Введите адрес доставки')
+        //     setError('address', { type: 'manual', message: 'Введите адрес доставки' })
+        //     return
+        // }
 
         if (orderId) {
             setGeneralError(null)
@@ -339,8 +333,6 @@ export default function OrderForm() {
                         ) : null}
                     </div>
                     <div className={classes.formField}>
-                        <label htmlFor="address">Адрес ПВЗ СДЭК</label>
-                        <input type="text" id='address' placeholder='Город, улица, номер ПВЗ' {...register('address')} />
                         <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '200px' }}></div>
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
