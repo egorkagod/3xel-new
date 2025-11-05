@@ -18,14 +18,20 @@ export default function OrderForm() {
     const cdekRef = useRef(null)
 
     const [deliveryCost, setDeliveryCost] = useState(null)
+    const [selectedAddress, setSelectedAddress] = useState(null)
+    const [selectedTariff, setSelectedTariff] = useState(null)
+
+    const cart = useSelector(state => state.cart.items)
+    const user = useSelector(state => state.user.data)
+    const orders = useSelector(state => state.orders.items)
+
+    const widgetRef = useRef(null)
 
     useEffect(() => {
 
-        let widget
-
         const initWidget = () => {
             if (!cdekRef.current) return
-            widget = new window.CDEKWidget({
+            widgetRef.current = new window.CDEKWidget({
                 from: {
                     country_code: "RU",
                     city: "Москва",
@@ -41,8 +47,14 @@ export default function OrderForm() {
                 lang: "rus",
                 currency: "RUB",
                 fixBounds: "locality",
-
-
+                onCalculate(tariff) {
+                    setDeliveryCost(tariff.delivery_sum)
+                },
+                onChoose(_, tariff, address) {
+                    setSelectedTariff(tariff)
+                    setSelectedAddress(address)
+                    setValue('address', address.name)
+                }
             })
         }
 
@@ -51,14 +63,21 @@ export default function OrderForm() {
         }
 
         return () => {
-            if (widget) {
-                try {
-                    widget.destroy?.()
-                } catch (_) { }
-            }
+            try {
+                widgetRef.current?.destroy?.()
+            } catch {}
+            if (cdekRef.current) cdekRef.current.innerHTML = ''
         }
 
     }, [])
+
+    const calculateDelivery = () => {
+        const widget = widgetRef.current
+        if (!widget) return
+
+        widget.resetParcels()
+        widget.addParcel(cart)
+    }
 
     const {
         register,
@@ -83,9 +102,6 @@ export default function OrderForm() {
         },
     })
 
-    const cart = useSelector(state => state.cart.items)
-    const user = useSelector(state => state.user.data)
-    const orders = useSelector(state => state.orders.items)
     const completedOrders = useMemo(
         () => orders.filter(order => order.status === 'Завершен'),
         [orders],
@@ -359,13 +375,20 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '400px' }}></div>
+                        {selectedAddress ? (
+                            <span>{selectedAddress.name}</span>
+                        ) : null}
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
                     </div>
                     <div className={classes.calcDelivery}>
-                        <Button type='button'>Рассчитать доставку</Button>
-                        <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
+                        <Button type='button' onClick={calculateDelivery}>Рассчитать доставку</Button>
+                        {deliveryCost ? (
+                            <span>Стоимость доставки: {deliveryCost}</span>
+                        ) : (
+                            <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
+                        )}
                     </div>
                     <div className={classes.formField}>
                         {watch('orderId') ? (
@@ -446,7 +469,7 @@ export default function OrderForm() {
                 <div className={classes.resultBlock}>
                     <div className={classes.resultCost}>
                         <strong>Итого:</strong>
-                        <span className={classes.result}>{resultCost - resultDiscount} ₽ (Включая доставку: 0 ₽)</span>
+                        <span className={classes.result}>{resultCost - resultDiscount + (deliveryCost ?? 0)} ₽ (Включая доставку: {(deliveryCost ?? 0)} ₽)</span>
                     </div>
                     <span className={classes.goodsCost}>
                         {resultDiscount === 0 ? (
