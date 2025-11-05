@@ -48,6 +48,8 @@ const transformGoods = (goods) =>
       name: good.name,
       cost: good.cost,
       size: good.size,
+      box_sizes: good.box_sizes,
+      weight: good.weight,
       description: good.description,
       technology: good.technology || [],
       variants,
