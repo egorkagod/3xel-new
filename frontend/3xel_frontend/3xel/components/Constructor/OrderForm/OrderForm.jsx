@@ -325,7 +325,7 @@ export default function OrderForm() {
                             <span className={classes.errorText}>{errors.phone.message}</span>
                         ) : null}
                     </div>
-                    <div className={classes.formField}>
+                    <div className={classes.formField} style={{ alignSelf: 'start' }}>
                         <label htmlFor="email">E-mail</label>
                         <input type="email" id='email' placeholder='Введите email' {...register('email')} />
                         {errors.email ? (
