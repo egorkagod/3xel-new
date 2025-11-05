@@ -73,12 +73,17 @@ export default function OrderForm() {
 
     }, [])
 
+    const cdekGoods = useMemo(() => 
+        cart.map(item => ({width: item.width, height: item.height, length: item.boxLength, weight: item.weight})),
+        [cart]
+    )
+
     const calculateDelivery = () => {
         const widget = widgetRef.current
         if (!widget) return
 
         widget.resetParcels()
-        widget.addParcel(cart)
+        widget.addParcel(cdekGoods)
     }
 
     const {

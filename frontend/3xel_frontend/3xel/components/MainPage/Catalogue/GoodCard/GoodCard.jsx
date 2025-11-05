@@ -46,6 +46,22 @@ export default function GoodCard({ goods, forConstructor }) {
         goods?.find(item => item.size === selectedSize),
         [goods, selectedSize]
     )
+    const cdekWidth = useMemo(() =>
+        Number(selectedGood.box_sizes.split('-')[0]),
+        [selectedGood, goods]
+    )
+    const cdekHeight = useMemo(() =>
+        Number(selectedGood.box_sizes.split('-')[1]),
+        [selectedGood, goods]
+    )
+    const cdekLength = useMemo(() =>
+        Number(selectedGood.box_sizes.split('-')[2]),
+        [selectedGood, goods]
+    )
+    const cdekWeight = useMemo(() =>
+        Number(selectedGood.weight),
+        [selectedGood, goods]
+    )
     const [userSelected, setUserSelected] = useState(false)
     const selectedVariant = useMemo(
         () =>
@@ -115,6 +131,10 @@ export default function GoodCard({ goods, forConstructor }) {
             size: selectedSize,
             colorName: selectedVariant.colorName || 'Цвет',
             cost: selectedGood.cost ?? 0,
+            width: cdekWidth,
+            height: cdekHeight,
+            boxLength: cdekLength,
+            weight: cdekWeight,
         }))
         setPopupIsActive(true)
         setTimeout(() => setPopupIsActive(false), 3000)
@@ -202,7 +222,7 @@ export default function GoodCard({ goods, forConstructor }) {
                             alt={`${good?.name} в цвете ${selectedVariant.colorName || ''}`}
                             onClick={() => { setSelectedImage(image); setUserSelected(true) }} style={{ outline: image === selectedImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}
                             loading='lazy'
-                            >
+                        >
                         </img>)
                     }
                 </div>
