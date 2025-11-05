@@ -333,7 +333,7 @@ export default function OrderForm() {
                         ) : null}
                     </div>
                     <div className={classes.formField}>
-                        <div id="cdek-map" ref={cdekRef}></div>
+                        <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '400px' }}></div>
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
