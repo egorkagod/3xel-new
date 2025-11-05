@@ -20,6 +20,7 @@ export default function OrderForm() {
     const [deliveryCost, setDeliveryCost] = useState(null)
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [selectedTariff, setSelectedTariff] = useState(null)
+    const [selectedMode, setSelectedMode] = useState(null)
 
     const cart = useSelector(state => state.cart.items)
     const user = useSelector(state => state.user.data)
@@ -50,9 +51,10 @@ export default function OrderForm() {
                 onCalculate(tariff) {
                     setDeliveryCost(tariff.delivery_sum)
                 },
-                onChoose(_, tariff, address) {
+                onChoose(mode, tariff, address) {
                     setSelectedTariff(tariff)
                     setSelectedAddress(address)
+                    setSelectedMode(mode)
                     setValue('address', address.name)
                 }
             })
@@ -376,7 +378,9 @@ export default function OrderForm() {
                     <div className={classes.formField}>
                         <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '400px' }}></div>
                         {selectedAddress ? (
-                            <span>{selectedAddress.name}</span>
+                            <span>Выбранный адрес доставки: {selectedMode ? (
+                                selectedMode == 'office' ? 'Пункт выдачи —' : null
+                            ) : null} <b>{selectedAddress.name}</b></span>
                         ) : null}
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
