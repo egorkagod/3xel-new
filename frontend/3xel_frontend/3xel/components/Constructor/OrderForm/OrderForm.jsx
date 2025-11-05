@@ -18,9 +18,12 @@ export default function OrderForm() {
     const cdekRef = useRef(null)
 
     useEffect(() => {
+
+        let widget
+
         const initWidget = () => {
             if (!cdekRef.current) return
-            new window.CDEKWidget({
+            widget = new window.CDEKWidget({
                 from: "Новосибирск",
                 root: 'cdek-map',
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
@@ -31,8 +34,16 @@ export default function OrderForm() {
 
         if (window.CDEKWidget) {
             initWidget()
-        } 
-        
+        }
+
+        return () => {
+            if (widget) {
+                try {
+                    widget.destroy?.()
+                } catch (_) { }
+            }
+        }
+
     }, [])
 
     const {
