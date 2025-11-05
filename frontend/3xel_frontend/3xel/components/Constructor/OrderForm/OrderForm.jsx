@@ -22,7 +22,7 @@ export default function OrderForm() {
             if (!cdekRef.current) return
             new window.CDEKWidget({
                 from: "Новосибирск",
-                root: cdekRef.current,
+                root: 'cdek-map',
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
                 defaultLocation: "Новосибирск",
                 servicePath: 'https://3xel.ru/service.php',
