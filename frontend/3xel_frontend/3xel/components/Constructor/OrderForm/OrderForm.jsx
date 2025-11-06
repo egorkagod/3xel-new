@@ -49,6 +49,7 @@ export default function OrderForm() {
                 },
                 onChoose(mode, tariff, address) {
                     setSelectedTariff(tariff)
+                    console.log(tariff)
                     setSelectedAddress(address)
                     setSelectedMode(mode)
                     setValue('address', address.name)
