@@ -79,7 +79,8 @@ export default function OrderForm() {
         if (!widget) return
 
         widget.resetParcels()
-        widget.addParcel(cdekGoods)
+        
+        cdekGoods.forEach(parcel => widget.addParcel(parcel))
     }
 
     const {
