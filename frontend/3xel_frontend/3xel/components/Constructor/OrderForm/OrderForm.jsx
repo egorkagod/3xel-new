@@ -80,7 +80,6 @@ export default function OrderForm() {
 
         widgetRef.current.resetParcels()
         widgetRef.current.addParcel(cdekGoods)
-        widgetRef.current.calculate()
     }, [cdekGoods])
 
     const {
