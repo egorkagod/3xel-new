@@ -27,6 +27,10 @@ export default function OrderForm() {
     const orders = useSelector(state => state.orders.items)
 
     const widgetRef = useRef(null)
+    const cdekGoods = useMemo(() =>
+        cart.map(item => ({ width: item.width, height: item.height, length: item.boxLength, weight: item.weight })),
+        [cart]
+    )
 
     useEffect(() => {
 
@@ -39,6 +43,7 @@ export default function OrderForm() {
                 defaultLocation: "Москва",
                 servicePath: 'https://3xel.ru/service.php',
                 canChoose: true,
+                goods: cdekGoods,
                 debug: true,
                 lang: "rus",
                 currency: "RUB",
@@ -64,25 +69,11 @@ export default function OrderForm() {
         return () => {
             try {
                 widgetRef.current?.destroy?.()
-            } catch {}
+            } catch { }
             if (cdekRef.current) cdekRef.current.innerHTML = ''
         }
 
-    }, [])
-
-    const cdekGoods = useMemo(() => 
-        cart.map(item => ({width: item.width, height: item.height, length: item.boxLength, weight: item.weight})),
-        [cart]
-    )
-
-    const calculateDelivery = () => {
-        const widget = widgetRef.current
-        if (!widget) return
-
-        widget.resetParcels()
-        
-        cdekGoods.forEach(parcel => widget.addParcel(parcel))
-    }
+    }, [cdekGoods])
 
     const {
         register,
@@ -390,7 +381,7 @@ export default function OrderForm() {
                         ) : null}
                     </div>
                     <div className={classes.calcDelivery}>
-                        <Button type='button' onClick={calculateDelivery}>Рассчитать доставку</Button>
+                        <Button type='button'>Рассчитать доставку</Button>
                         {deliveryCost ? (
                             <span>Стоимость доставки: {deliveryCost}</span>
                         ) : (
