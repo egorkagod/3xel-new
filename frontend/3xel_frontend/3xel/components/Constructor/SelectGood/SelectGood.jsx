@@ -9,6 +9,8 @@ export default function SelectGood() {
     const goodsStatus = useSelector((state) => state.goods.status)
     const goodsError = useSelector((state) => state.goods.error)
 
+    console.log(goods)
+
     const renderGoods = () => {
         if (goodsStatus === 'loading') {
             return <span className={classes.stateMessage}>Загружаем каталог...</span>

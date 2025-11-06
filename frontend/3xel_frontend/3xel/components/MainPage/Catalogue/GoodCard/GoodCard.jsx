@@ -62,6 +62,9 @@ export default function GoodCard({ goods, forConstructor }) {
         Number(selectedGood.weight),
         [selectedGood, goods]
     )
+
+    console.log(cdekLength)
+
     const [userSelected, setUserSelected] = useState(false)
     const selectedVariant = useMemo(
         () =>
