@@ -32,8 +32,6 @@ export default function OrderForm() {
         [cart]
     )
 
-    console.log(cdekGoods)
-
     useEffect(() => {
 
         const initWidget = () => {
@@ -74,6 +72,13 @@ export default function OrderForm() {
             if (cdekRef.current) cdekRef.current.innerHTML = ''
         }
 
+    }, [cdekGoods])
+
+    useEffect(() => {
+        if (!widgetRef.current) return
+
+        widgetRef.current.resetParcels()
+        widgetRef.current.addParcel(cdekGoods)
     }, [cdekGoods])
 
     const {

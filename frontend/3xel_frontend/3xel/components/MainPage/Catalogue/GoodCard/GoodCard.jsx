@@ -46,24 +46,20 @@ export default function GoodCard({ goods, forConstructor }) {
         goods?.find(item => item.size === selectedSize),
         [goods, selectedSize]
     )
-    const cdekWidth = useMemo(() =>
-        Number(selectedGood.box_sizes.split('-')[0]),
-        [selectedGood, goods]
-    )
-    const cdekHeight = useMemo(() =>
-        Number(selectedGood.box_sizes.split('-')[1]),
-        [selectedGood, goods]
-    )
-    const cdekLength = useMemo(() =>
-        Number(selectedGood.box_sizes.split('-')[2]),
-        [selectedGood, goods]
-    )
-    const cdekWeight = useMemo(() =>
-        Number(selectedGood.weight),
-        [selectedGood, goods]
-    )
 
-    console.log(cdekLength)
+    const [cdekWidth, cdekHeight, cdekLength] = useMemo(() => {
+        const sizes = selectedGood?.box_sizes
+            ?.replace(',', '.')
+            ?.split('-')
+            ?.map(Number)
+
+        return sizes
+    })
+
+    const cdekWeight = useMemo(() =>
+        Number(selectedGood?.weight?.replace(',', '.')),
+        [selectedGood, goods]
+    )
 
     const [userSelected, setUserSelected] = useState(false)
     const selectedVariant = useMemo(
