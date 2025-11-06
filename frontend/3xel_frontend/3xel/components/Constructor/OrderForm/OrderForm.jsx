@@ -32,8 +32,6 @@ export default function OrderForm() {
         [cart]
     )
 
-    console.log(cdekGoods)
-
     useEffect(() => {
 
         const initWidget = () => {
@@ -45,6 +43,7 @@ export default function OrderForm() {
                 defaultLocation: "Москва",
                 servicePath: 'https://3xel.ru/service.php',
                 canChoose: true,
+                goods: cdekGoods,
                 debug: true,
                 lang: "rus",
                 currency: "RUB",
@@ -81,6 +80,7 @@ export default function OrderForm() {
 
         widgetRef.current.resetParcels()
         widgetRef.current.addParcel(cdekGoods)
+        widgetRef.current.calculate()
     }, [cdekGoods])
 
     const {
