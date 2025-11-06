@@ -44,7 +44,6 @@ export default function OrderForm() {
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
                 defaultLocation: "Москва",
                 servicePath: 'https://3xel.ru/service.php',
-                goods: cdekGoods,
                 canChoose: true,
                 debug: true,
                 lang: "rus",
@@ -75,7 +74,7 @@ export default function OrderForm() {
             if (cdekRef.current) cdekRef.current.innerHTML = ''
         }
 
-    }, [cdekGoods])
+    }, [])
 
     useEffect(() => {
         if (!widgetRef.current) return
