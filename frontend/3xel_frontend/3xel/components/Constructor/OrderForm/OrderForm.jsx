@@ -32,6 +32,8 @@ export default function OrderForm() {
         [cart]
     )
 
+    console.log(cdekGoods)
+
     useEffect(() => {
 
         const initWidget = () => {
