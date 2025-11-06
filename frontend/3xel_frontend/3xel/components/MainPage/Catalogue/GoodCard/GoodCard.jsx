@@ -52,7 +52,6 @@ export default function GoodCard({ goods, forConstructor }) {
         if (!selectedGood) return [null, null, null]
 
         const sizes = selectedGood?.box_sizes
-            ?.replace(',', '.')
             ?.split('-')
             ?.map(Number)
 
@@ -62,7 +61,7 @@ export default function GoodCard({ goods, forConstructor }) {
     const cdekWeight = useMemo(() => {
         if (!selectedGood) return
 
-        return Number(selectedGood?.weight?.replace(',', '.'))
+        return Number(selectedGood?.weight)
     }, [selectedGood, goods])
 
     const [userSelected, setUserSelected] = useState(false)
