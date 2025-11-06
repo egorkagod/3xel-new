@@ -26,6 +26,8 @@ export default function OrderForm() {
     const user = useSelector(state => state.user.data)
     const orders = useSelector(state => state.orders.items)
 
+    console.log(cart)
+
     const widgetRef = useRef(null)
     const cdekGoods = useMemo(() =>
         cart.map(item => ({ width: Number(item.width), height: Number(item.height), length: Number(item.boxLength), weight: Number(item.weight) })),
