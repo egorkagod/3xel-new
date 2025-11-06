@@ -81,6 +81,7 @@ export default function OrderForm() {
         
         widgetRef.current.resetParcels()
         cdekGoods.forEach(good => widgetRef.current.addParcel(good))
+        console.log(widgetRef.current.getParcels())
     }, [cdekGoods])
 
     const {
