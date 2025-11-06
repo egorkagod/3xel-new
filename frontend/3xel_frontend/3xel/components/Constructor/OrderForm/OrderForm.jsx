@@ -43,7 +43,6 @@ export default function OrderForm() {
                 defaultLocation: "Москва",
                 servicePath: 'https://3xel.ru/service.php',
                 canChoose: true,
-                goods: cdekGoods,
                 debug: true,
                 lang: "rus",
                 currency: "RUB",
@@ -77,9 +76,9 @@ export default function OrderForm() {
 
     useEffect(() => {
         if (!widgetRef.current) return
-
+        
         widgetRef.current.resetParcels()
-        widgetRef.current.addParcel(cdekGoods)
+        cdekGoods.forEach(good => widgetRef.current.addParcel(good))
     }, [cdekGoods])
 
     const {
