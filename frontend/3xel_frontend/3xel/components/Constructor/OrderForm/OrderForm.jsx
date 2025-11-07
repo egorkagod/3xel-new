@@ -36,7 +36,12 @@ export default function OrderForm() {
         const initWidget = () => {
             if (!cdekRef.current) return
             widgetRef.current = new window.CDEKWidget({
-                from: "Москва",
+                from: {
+                    country_code: "RU",
+                    city: "Москва",
+                    postal_code: "109518",
+                    address: "ул. 2-й Грайвороновский проезд, д. 42к4"
+                },
                 root: 'cdek-map',
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
                 defaultLocation: "Москва",
@@ -47,7 +52,7 @@ export default function OrderForm() {
                 currency: "RUB",
                 fixBounds: "locality",
                 onCalculate(tariff) {
-                    null
+                    console.log(tariff)
                 },
                 onChoose(mode, tariff, address) {
                     setSelectedAddress(address)
