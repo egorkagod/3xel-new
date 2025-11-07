@@ -47,7 +47,7 @@ export default function OrderForm() {
                 currency: "RUB",
                 fixBounds: "locality",
                 onCalculate(tariff) {
-                    console.log(tariff)
+                    null
                 },
                 onChoose(mode, tariff, address) {
                     setSelectedAddress(address)
@@ -76,7 +76,6 @@ export default function OrderForm() {
         
         widgetRef.current.resetParcels()
         cdekGoods.forEach(good => widgetRef.current.addParcel(good))
-        console.log(widgetRef.current.getParcels())
     }, [cdekGoods])
 
     const {
