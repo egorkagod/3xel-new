@@ -17,7 +17,6 @@ export default function OrderForm() {
     const dispatcher = useDispatch()
     const cdekRef = useRef(null)
 
-    const [deliveryCost, setDeliveryCost] = useState(null)
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [selectedTariff, setSelectedTariff] = useState(null)
     const [selectedMode, setSelectedMode] = useState(null)
@@ -50,12 +49,9 @@ export default function OrderForm() {
                 currency: "RUB",
                 fixBounds: "locality",
                 onCalculate(tariff) {
-                    console.log(tariff)
-                    setDeliveryCost(tariff.delivery_sum)
-                },
-                onChoose(mode, tariff, address) {
                     setSelectedTariff(tariff)
-                    console.log(tariff)
+                },
+                onChoose(mode, _, address) {
                     setSelectedAddress(address)
                     setSelectedMode(mode)
                     setValue('address', address.name)
@@ -389,14 +385,14 @@ export default function OrderForm() {
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
                     </div>
-                    <div className={classes.calcDelivery}>
+                    {/* <div className={classes.calcDelivery}>
                         <Button type='button'>Рассчитать доставку</Button>
                         {deliveryCost ? (
                             <span>Стоимость доставки: {deliveryCost}</span>
                         ) : (
                             <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
                         )}
-                    </div>
+                    </div> */}
                     <div className={classes.formField}>
                         {watch('orderId') ? (
                             <span className={classes.attention}>Обратите внимание! При повторном заказе будет использоваться видео, которое вы прикрепляли в первый раз!</span>
@@ -476,7 +472,7 @@ export default function OrderForm() {
                 <div className={classes.resultBlock}>
                     <div className={classes.resultCost}>
                         <strong>Итого:</strong>
-                        <span className={classes.result}>{resultCost - resultDiscount + (deliveryCost ?? 0)} ₽ (Включая доставку: {(deliveryCost ?? 0)} ₽)</span>
+                        <span className={classes.result}>{resultCost - resultDiscount + (selectedTariff.delivery_sum ?? 0)} ₽ (Включая доставку: {(selectedTariff.delivery_sum ?? 0)} ₽)</span>
                     </div>
                     <span className={classes.goodsCost}>
                         {resultDiscount === 0 ? (
