@@ -10,3 +10,5 @@ uploads/
 db.sqlite3/
 logging/*
 !logging/.gitkeep
+service.php
+staticfiles/
