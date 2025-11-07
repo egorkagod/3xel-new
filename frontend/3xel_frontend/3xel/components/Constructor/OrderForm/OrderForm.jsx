@@ -50,13 +50,14 @@ export default function OrderForm() {
                 debug: true,
                 lang: "rus",
                 currency: "RUB",
-                fixBounds: "locality",
-                onCalculate(tariff) {
-                    console.log(tariff)
+                fixBounds: "country",
+                onCalculate(tariff, address) {  
+                    console.log(tariff, address)
                 },
                 onChoose(mode, tariff, address) {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
+                    console.log(tariff)
                     setSelectedMode(mode)
                     setValue('address', address.name)
                 }
