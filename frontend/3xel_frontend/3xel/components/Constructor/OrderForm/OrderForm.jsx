@@ -472,7 +472,7 @@ export default function OrderForm() {
                 <div className={classes.resultBlock}>
                     <div className={classes.resultCost}>
                         <strong>Итого:</strong>
-                        <span className={classes.result}>{resultCost - resultDiscount + (selectedTariff.delivery_sum ?? 0)} ₽ (Включая доставку: {(selectedTariff.delivery_sum ?? 0)} ₽)</span>
+                        <span className={classes.result}>{resultCost - resultDiscount + (selectedTariff?.delivery_sum ?? 0)} ₽ (Включая доставку: {(selectedTariff?.delivery_sum ?? 0)} ₽)</span>
                     </div>
                     <span className={classes.goodsCost}>
                         {resultDiscount === 0 ? (
