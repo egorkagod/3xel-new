@@ -51,7 +51,7 @@ export default function GoodCard({ goods, forConstructor }) {
 
         if (!selectedGood) return [null, null, null]
 
-        const sizes = selectedGood?.box_sizes.replace(',', '.').split('-').map(Number)
+        const sizes = selectedGood?.box_sizes.replace(',', '.').split('-').map(size => Number(Math.ceil(size)))
         return sizes
     }, [selectedGood, goods])
 
