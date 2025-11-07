@@ -25,8 +25,6 @@ export default function OrderForm() {
     const user = useSelector(state => state.user.data)
     const orders = useSelector(state => state.orders.items)
 
-    console.log(cart)
-
     const widgetRef = useRef(null)
     const cdekGoods = useMemo(() =>
         cart.map(item => ({ width: Number(item.width), height: Number(item.height), length: Number(item.boxLength), weight: Number(item.weight) })),
@@ -49,11 +47,11 @@ export default function OrderForm() {
                 currency: "RUB",
                 fixBounds: "locality",
                 onCalculate(tariff) {
-                    setSelectedTariff(tariff)
                     console.log(tariff)
                 },
-                onChoose(mode, _, address) {
+                onChoose(mode, tariff, address) {
                     setSelectedAddress(address)
+                    setSelectedTariff(tariff)
                     setSelectedMode(mode)
                     setValue('address', address.name)
                 }
