@@ -50,6 +50,7 @@ export default function OrderForm() {
                 fixBounds: "locality",
                 onCalculate(tariff) {
                     setSelectedTariff(tariff)
+                    console.log(tariff)
                 },
                 onChoose(mode, _, address) {
                     setSelectedAddress(address)
