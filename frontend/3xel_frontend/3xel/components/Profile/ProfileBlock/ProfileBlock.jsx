@@ -57,11 +57,11 @@ export default function ProfileBlock({
     return (
       <div className={classes.ordersList}>
         {orders.map((order) => (
-          <Link style={{ all: 'unset' }} to={`/order/${order.id}`}>
-            <div key={order.id} className={classes.orderCard}>
+          <Link key={String(order.id)} style={{ all: 'unset' }} to={`/order/${order.id}`}>
+            <div className={classes.orderCard}>
               <div className={classes.orderHeader}>
                 <span className={classes.orderId}>
-                  Заказ #{order.id.slice(0, 8)}
+                  Заказ #{String(order.id ?? '')}
                 </span>
                 <span className={classes.orderStatus}>
                   {order.status}

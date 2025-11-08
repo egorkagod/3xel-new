@@ -120,9 +120,10 @@ export default function OrderForm() {
     const isAuthenticated = Boolean(user)
 
     const options = useMemo(
-        () => completedOrders.map(order => {
-            return { value: order.id, label: `Заказ #${order.id.split('-')[0]}` }
-        }),
+        () => completedOrders.map(order => ({
+            value: order.id,
+            label: `Заказ #${String(order.id ?? '')}`,
+        })),
         [completedOrders]
     )
 

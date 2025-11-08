@@ -70,7 +70,7 @@ export default function Order() {
                         </Link>
                         {order.status === 'Завершен' ? (
                                 <Button color='golden' onClick={() => navigate('/constructor#select', {
-                                    state: { value: order.id, label: `Заказ #${order.id.split('-')[0]}` }
+                                    state: { value: order.id, label: `Заказ #${String(order.id ?? '')}` }
                                 })}>Повторить заказ</Button>
                         ) : null}
                     </div>

@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
         for plastic in PLASTIC_DATA:
             good, _ = Good.objects.update_or_create(
-                name=f'Пластиковый бюст {plastic['size']} см',
+                name='Пластиковый бюст',
                 defaults={
                     'description': f'Пластиковый бюст размером {plastic['size']} см. Большая карта цветов.',
                     'technology': ['PLA Matte/PETG-CF', 'Премиум-поверхность'],
