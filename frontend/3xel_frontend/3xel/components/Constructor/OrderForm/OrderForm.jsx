@@ -20,6 +20,7 @@ export default function OrderForm() {
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [selectedTariff, setSelectedTariff] = useState(null)
     const [selectedMode, setSelectedMode] = useState(null)
+    const [isCalculating, setIsCalculating] = useState(false)
 
     const cart = useSelector(state => state.cart.items)
     const user = useSelector(state => state.user.data)
@@ -51,15 +52,20 @@ export default function OrderForm() {
                 lang: "rus",
                 currency: "RUB",
                 fixBounds: "country",
-                onCalculate(tariff, address) {  
-                    console.log(tariff, address)
+                tariffs: {
+                    office: [136, 234, 779, 62, 483],
+                    door: [137, 233],
+                    pickup: [368, 378],
+                },
+                onCalculate() {  
+                    setIsCalculating(false)
                 },
                 onChoose(mode, tariff, address) {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
-                    console.log(tariff)
                     setSelectedMode(mode)
                     setValue('address', address.name)
+                    setIsCalculating(true)
                 }
             })
         }
@@ -390,14 +396,6 @@ export default function OrderForm() {
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
                     </div>
-                    {/* <div className={classes.calcDelivery}>
-                        <Button type='button'>Рассчитать доставку</Button>
-                        {deliveryCost ? (
-                            <span>Стоимость доставки: {deliveryCost}</span>
-                        ) : (
-                            <span>Выберите ПВЗ СДЭК и нажмите на кнопку — стоимость доставки подставится автоматически.</span>
-                        )}
-                    </div> */}
                     <div className={classes.formField}>
                         {watch('orderId') ? (
                             <span className={classes.attention}>Обратите внимание! При повторном заказе будет использоваться видео, которое вы прикрепляли в первый раз!</span>
@@ -496,7 +494,7 @@ export default function OrderForm() {
                     <Button
                         color='golden'
                         type='submit'
-                        disabled={isUploading || isSubmitting || !isAuthenticated}
+                        disabled={isCalculating || isUploading || isSubmitting || !isAuthenticated}
                     >
                         {payButtonLabel}
                     </Button>
