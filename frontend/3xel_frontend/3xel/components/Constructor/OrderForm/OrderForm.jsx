@@ -64,6 +64,7 @@ export default function OrderForm() {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
                     setSelectedMode(mode)
+                    console.log(tariff)
                     setValue('address', address.name)
                     setIsCalculating(true)
                 }
@@ -258,11 +259,10 @@ export default function OrderForm() {
             return
         }
 
-        // if (!data.address) {
-        //     setGeneralError('Введите адрес доставки')
-        //     setError('address', { type: 'manual', message: 'Введите адрес доставки' })
-        //     return
-        // }
+        if (!selectedTariff) {
+            setGeneralError('Выберите тариф доставки')
+            return
+        }
 
         if (orderId) {
             setGeneralError(null)
@@ -315,6 +315,8 @@ export default function OrderForm() {
                 address: data.address,
                 phone: data.phone,
                 wishes: data.wishes,
+                tariff_code: selectedTariff.tariff_code,
+                delivery_sum: selectedTariff.delivery_sum,
             }
             const response = await apiFetch('/api-order/order/', {
                 method: 'POST',
