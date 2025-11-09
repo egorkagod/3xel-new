@@ -13,7 +13,7 @@ export default function AboutSection() {
                     <p>3xel — про важные моменты и людей.</p>
                 </div>
                 <div className={classes.infoBlock}>
-                    <p>E‑mail: hello@3xel.ru · Telegram: @three_xel</p>
+                    <p>E‑mail: hello@3xel.ru · Telegram: @shop_3xel</p>
                 </div>
             </div>
         </section>
