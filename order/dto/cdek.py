@@ -7,6 +7,9 @@ class CdekOrderRegisterDTO(BaseModel):
     user_fullname: str
     email: str
     phone: str
+    city_code: int | None = None
+    city: str
+    address: str
     packages: list
 
 

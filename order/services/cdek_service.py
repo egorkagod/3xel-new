@@ -81,13 +81,18 @@ def register_order(dto: CdekOrderRegisterDTO):
         'email':dto.email,
         'phone':dto.phone,
     }
-    packages = dto.packages
     payload = {
         'type': 1,
         'number': dto.order_id,
         'tariff_code': dto.tariff_code,
+        'shipment_point': os.getenv('CDEK_PVZ_CODE'),
+        'to_location':{
+            'code':  dto.city_code,
+            'city': dto.city,
+            'address': dto.address,
+        },
         'recipient': recipient,
-        'packages': packages,
+        'packages': dto.packages,
     }
     response = requests.post(url, headers=headers, json=payload)
     if response.status_code != 202:

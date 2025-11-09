@@ -218,6 +218,9 @@ class OrderView(APIView):
                     tariff_code=data.cdek.tariff_code,
                     user_fullname=full_name,
                     email=email,
+                    city_code=data.cdek.city_code,
+                    city=data.cdek.city,
+                    address=data.cdek.address,
                     phone=data.phone,
                     packages=packages,
                 )
