@@ -57,7 +57,7 @@ export default function OrderForm() {
                     door: [137, 233],
                     pickup: [368, 378],
                 },
-                onCalculate() {  
+                onCalculate() {
                     setIsCalculating(false)
                 },
                 onChoose(mode, tariff, address) {
@@ -84,7 +84,7 @@ export default function OrderForm() {
 
     useEffect(() => {
         if (!widgetRef.current) return
-        
+
         widgetRef.current.resetParcels()
         cdekGoods.forEach(good => widgetRef.current.addParcel(good))
     }, [cdekGoods])
@@ -392,9 +392,13 @@ export default function OrderForm() {
                     <div className={classes.formField}>
                         <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '400px' }}></div>
                         {selectedAddress ? (
-                            <span>Выбранный адрес доставки: {selectedMode ? (
-                                selectedMode == 'office' ? 'Пункт выдачи —' : null
-                            ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
+                            <>
+                                <span>Выбранный адрес доставки: {selectedMode ? (
+                                    selectedMode == 'office' ? 'Пункт выдачи —' : null
+                                ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
+                                <span className={classes.attention}>Срок доставки указан без учета срока изготовления изделия!</span>
+                            </>
+
                         ) : null}
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
