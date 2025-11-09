@@ -20,31 +20,31 @@ CARDBOARD_DATA = {
 }
 
 COLOR_MAP = {
-    'Apple Green': '#8DB600',       # ярко-зелёный, как кожура яблока
-    'Ash Gray': '#B2BEB5',          # мягкий серый с лёгким зеленоватым тоном
-    'Bone White': '#E3DAC9',        # слегка тёплый белый с кремовым оттенком
-    'Caramel': '#AF6F09',           # насыщенный тёплый карамельный
-    'Charcoal': '#36454F',          # глубокий угольно-серый, ближе к графиту
-    'Dark Blue': '#003366',         # темно-синий с лёгкой холодной ноткой
-    'Dark Brown': '#4B3621',        # густой кофейно-коричневый
-    'Dark Chocolate': '#381819',    # насыщенный шоколадный с бордовым подтоном
-    'Dark Green': '#013220',        # тёмно-зелёный, близкий к хвое
-    'Dark Red': '#8B0000',          # классический насыщенный красно-тёмный
-    'Desert Tan': '#CBB994',        # песочно-бежевый, слегка сероватый
-    'Grass Green': '#7CFC00',       # травянисто-зелёный, яркий
-    'Ice Blue': '#A1CAF1',          # холодный голубой с белым тоном
-    'Ivory White': '#FFFFF0',       # классическая "слоновая кость"
-    'Latte Brown': '#A67B5B',       # тёплый кофейно-кремовый
-    'Lemon Yellow': '#FFF44F',      # чистый лимонный, чуть мягче жёлтого
-    'Lilac Purple': '#C8A2C8',      # светло-сиреневый, ближе к пастельному
-    'Mandarin Orange': '#FF8243',   # яркий оранжево-мандариновый
-    'Marine Blue': '#01386A',       # глубокий морской сине-зелёный
-    'Nardo Gray': '#979797',        # типичный автомобильный Nardo Gray (Audi)
-    'Natural Cardboard': '#B19876', # натуральный картон — бежево-коричневый
-    'Plum': '#8E4585',              # классический сливовый
-    'Sakura Pink': '#FADADD',       # нежно-розовый как лепестки сакуры
-    'Scarlet Red': '#FF2400',       # яркий алый, без примесей
-    'Sky Blue': '#76D7EA',          # чистый небесный, светлее стандартного
+    'Apple Green': '#8DB600',
+    'Ash Gray': '#B2BEB5',
+    'Bone White': '#E3DAC9',
+    'Caramel': '#AF6F09',
+    'Charcoal': '#36454F',
+    'Dark Blue': '#003366',
+    'Dark Brown': '#4B3621',
+    'Dark Chocolate': '#381819',
+    'Dark Green': '#013220',
+    'Dark Red': '#8B0000',
+    'Desert Tan': '#CBB994',
+    'Grass Green': '#7CFC00',
+    'Ice Blue': '#A1CAF1',
+    'Ivory White': '#FFFFF0',
+    'Latte Brown': '#A67B5B',
+    'Lemon Yellow': '#FFF44F',
+    'Lilac Purple': '#C8A2C8',
+    'Mandarin Orange': '#FF8243',
+    'Marine Blue': '#01386A',
+    'Nardo Gray': '#979797',
+    'Natural Cardboard': '#B19876',
+    'Plum': '#8E4585',
+    'Sakura Pink': '#FADADD',
+    'Scarlet Red': '#FF2400',
+    'Sky Blue': '#76D7EA',
 }
 
 
@@ -58,13 +58,13 @@ class Command(BaseCommand):
             return
 
         with transaction.atomic():
-            # Удаляем старые данные
+            # очищаем старые товары
             Good.objects.all().delete()
 
-            # Создаём пластиковые бюсты для каждого размера
+            # создаём пластиковые
             self._create_plastic_goods(image_groups)
 
-            # Создаём картонный бюст
+            # создаём картонный
             self._create_cardboard_good(image_groups)
 
         self.stdout.write(self.style.SUCCESS('Каталог товаров обновлён'))
@@ -88,19 +88,23 @@ class Command(BaseCommand):
         plastic_slugs = [slug for slug in image_groups.keys() if slug != CARDBOARD_DATA['slug']]
 
         for plastic in PLASTIC_DATA:
+            # создаём отдельный Good для каждого размера
             good, _ = Good.objects.update_or_create(
-                name='Пластиковый бюст',
+                name=f'Пластиковый бюст {plastic['size']}',
+                size=plastic['size'],  # ключевое поле для уникальности
                 defaults={
-                    'description': f'Пластиковый бюст размером {plastic['size']} см. Большая карта цветов.',
+                    'description': f'Пластиковый бюст размером {plastic["size"]} см. Большая карта цветов.',
                     'technology': ['PLA Matte/PETG-CF', 'Премиум-поверхность'],
-                    'size': plastic['size'],
                     'cost': plastic['cost'],
                     'box_sizes': plastic['box_sizes'],
                     'weight': plastic['weight']
                 },
             )
+
+            # чистим старые варианты
             good.variants.all().delete()
 
+            # создаём все цветовые варианты
             for slug in sorted(plastic_slugs):
                 color_name = self._humanize(slug)
                 color_hex = COLOR_MAP.get(color_name)
@@ -123,13 +127,16 @@ class Command(BaseCommand):
 
         good, _ = Good.objects.update_or_create(
             name='Картонный бюст',
+            size=CARDBOARD_DATA['size'],
             defaults={
                 'description': 'Один размер — 18 см. Цвет — натуральный картон.',
                 'technology': ['HDF/картон', 'Конструктор'],
-                'size': CARDBOARD_DATA['size'],
                 'cost': CARDBOARD_DATA['cost'],
+                'box_sizes': CARDBOARD_DATA['box_sizes'],
+                'weight': CARDBOARD_DATA['weight'],
             },
         )
+
         good.variants.all().delete()
 
         variant = GoodVariant.objects.create(
