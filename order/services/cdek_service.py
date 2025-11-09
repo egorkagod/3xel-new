@@ -36,6 +36,8 @@ def get_cdek_token() -> str:
             'client_secret': CDEK_PASSWORD,
         }
         response = requests.post(url, headers=headers, json=payload)
+        if not response.status_code == 200:
+            raise CdekBadRequest(response.text)
         resp = response.json()
         token = resp.get('access_token')
         expires_in = resp.get('expires_in')
