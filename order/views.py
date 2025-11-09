@@ -197,7 +197,7 @@ class OrderView(APIView):
 
             order_id = order_service.create(
                 CreateOrderServiceDTO(
-                    user_id=request.user_id,
+                    user_id=request.user.id,
                     goods=data.goods,
                     video_id=data.video_id,
                     previous_order_id=data.order_id,
