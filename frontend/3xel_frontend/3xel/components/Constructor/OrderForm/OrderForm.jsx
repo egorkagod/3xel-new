@@ -65,6 +65,8 @@ export default function OrderForm() {
                     setSelectedTariff(tariff)
                     setSelectedMode(mode)
                     setIsCalculating(true)
+                    console.log(tariff)
+                    console.log(address)
                 }
             })
         }
