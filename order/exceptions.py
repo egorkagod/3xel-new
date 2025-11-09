@@ -32,3 +32,8 @@ class PaymentInitializationError(OrderError):
 class CdekBadRequest(OrderError):
     default_detail = 'Ошибка при обращении к сдэку'
     status_code = status.HTTP_400_BAD_REQUEST
+
+
+class NotFoundOrderByPayment(OrderError):
+    default_detail = 'Ошибка поиска заказа после оплаты'
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR

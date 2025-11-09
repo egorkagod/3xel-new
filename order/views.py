@@ -13,7 +13,7 @@ from order.exceptions import PaymentInitializationError
 
 from root.services import user_service
 from pay.services import pay_service
-from .models import Good
+from .models import Good, CdekOrder
 from .serializers import (
     OrderCreateView,
     GoodModelSerializer,
@@ -212,19 +212,15 @@ class OrderView(APIView):
             email = user_service.get_email(request.user.id)
             if not email:
                 return Response({'error': 'Ошибка при получении email пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            cdek_service.register_order(
-                CdekOrderRegisterDTO(
-                    order_id=order_id,
-                    tariff_code=data.cdek.tariff_code,
-                    user_fullname=full_name,
-                    email=email,
-                    city_code=data.cdek.city_code,
-                    city=data.cdek.city,
-                    address=data.cdek.address,
-                    phone=data.phone,
-                    packages=packages,
-                )
+            
+            CdekOrder.objects.create(
+                email=email,
+                user_fullname=full_name,
+                tarrif_code=data.cdek.tariff_code,
+                city_code=data.cdek.city_code,
+                city=data.cdek.city,
+                address=data.cdek.address,
+                order_id=order_id,
             )
 
             payment_url = pay_service.init(

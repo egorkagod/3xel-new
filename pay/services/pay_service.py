@@ -9,8 +9,13 @@ import json
 from django.urls import reverse
 from django.conf import settings
 
+from order.exceptions import NotFoundOrderByPayment
 from order.models import Order
+from order.services.cdek_service import get_packages as cdek_build_packages
 from pay.repositories import pay_rep
+from pay.models import PaymentStatus
+from order.services import cdek_service
+from order.dto.cdek import CdekOrderRegisterDTO
 
 
 load_dotenv()
@@ -65,7 +70,6 @@ def init(data: InitPayServiceDTO):
     return False
     
 def update_status(data):
-    # Do not mutate original request data
     payload = dict(data)
     token = payload.pop('Token', None)
     # Reproduce Tinkoff token algorithm: add merchant password
@@ -73,8 +77,50 @@ def update_status(data):
     signed['Password'] = os.getenv('TERMINAL_PASSWORD')
     if token == _get_token(signed):
         pay_rep.update_state(payload)
+
+        # Создание заказа в СДЭК
+        if PaymentStatus(data['Status'].upper()) == PaymentStatus.CONFIRMED:
+            payment_id = data['PaymentId']
+            order = (
+                Order.objects
+                    .select_related("cdek")
+                    .filter(payment_id=payment_id)
+                    .values("id", "cdek__email", "cdek__user_fullname", "cdek__tariff_code", "cdek__city_code", "cdek__city", "cdek__address")
+            )
+            if not order:
+                raise NotFoundOrderByPayment()
+            order = order[0]
+
+            cdek_service.register_order(
+                CdekOrderRegisterDTO(
+                    order_id=order['id'],
+                    tariff_code=order['cdek__tariff_code'],
+                    user_fullname=order['cdek__user_fullname'],
+                    email=order['cdek__email'],
+                    city_code=order['cdek__city_code'],
+                    city=order['cdek__city'],
+                    address=order['cdek__address'],
+                    phone=order['cdek__phone'],
+                    packages=build_order_packages(order['id']),
+                )
+            )
+
     else:
         notification_logger.warning('Invalid notification token: %s', payload)
+
+
+def build_order_packages(order_id: int) -> list:
+    order = Order.objects.filter(pk=order_id).prefetch_related('items').first()
+    if not order:
+        return []
+    variant_ids: list[int] = []
+    for item in order.items.all():
+        if item.good_variant_id and item.quantity:
+            variant_ids.extend([item.good_variant_id] * int(item.quantity))
+    if not variant_ids:
+        return []
+    return cdek_build_packages(variant_ids)
+
 
 def create_receipt_items(goods: list, delivery_cost: int) -> list:
     # goods: list of dicts like {'good__name': str, 'cost': int} per item occurrence
