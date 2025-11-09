@@ -5,7 +5,7 @@ import shutil
 
 from order.models import Order, OrderItem, GoodVariant
 from filehandler.models import File
-from order.dto import CreateOrdeRepoDTO
+from order.dto.order import CreateOrdeRepoDTO
 
 
 def create(data: CreateOrdeRepoDTO) -> int | None:
@@ -17,7 +17,7 @@ def create(data: CreateOrdeRepoDTO) -> int | None:
             video=video,
             comment=(data.comment or ''),
             phone=data.phone,
-            address=data.address,
+            address=data.full_address,
         )
         for item in data.items:
             good_variant = GoodVariant.objects.filter(pk=item.good_variant_id).first()
