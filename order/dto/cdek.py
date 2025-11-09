@@ -12,7 +12,7 @@ class CdekOrderRegisterDTO(BaseModel):
 
 class CdekDeliveryGetPriceDTO(BaseModel):
     tariff_code: int
-    city_code: int
+    city_code: int | None = None
     city: str
     address: str
     packages: list
