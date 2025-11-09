@@ -1,3 +1,4 @@
+import logging
 from django.contrib.auth import authenticate, login, logout
 
 from rest_framework.views import APIView
@@ -13,6 +14,8 @@ from .exceptions import InvalidCode, EmailMismatchError, UserCreationFailed, Use
 from .services import email_service, user_service
 from .repositories import user_rep
 from .serializers import LoginViewSerializer, RegisterViewSerializer, UserModelSerializer, ChangePasswordSerializer, ChangeNameSerializer
+
+root_logger = logging.getLogger('root')
 
 
 class EmailCodeView(APIView): # TODO все еще ошибка
@@ -173,13 +176,15 @@ class UserView(APIView):
         # Более безопасная реализация, избегаем лишних запросов в БД
         try:
             if not getattr(request.user, 'is_authenticated', False):
+                root_logger.info('User GET unauthorized')
                 return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
 
             user = request.user
             payload = UserModelSerializer(user).data
+            root_logger.info('User GET ok: user=%s', getattr(user, 'id', None))
             return Response(payload, status=status.HTTP_200_OK)
         except Exception:
-            # Никогда не роняем 500 наружу без контроля
+            root_logger.exception('User GET failed')
             return Response({'error': 'Не удалось получить данные пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @extend_schema(

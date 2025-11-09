@@ -1,3 +1,4 @@
+import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -27,6 +28,8 @@ from .exceptions import OrderError
 from order.dto.order import CreateOrderServiceDTO
 from order.dto.cdek import CdekDeliveryGetPriceDTO, CdekOrderRegisterDTO
 
+order_logger = logging.getLogger('order')
+
 
 @extend_schema(
     operation_id='list_catalogue',
@@ -38,6 +41,15 @@ from order.dto.cdek import CdekDeliveryGetPriceDTO, CdekOrderRegisterDTO
 class CatalogView(generics.ListAPIView):
     queryset = Good.objects.prefetch_related('variants__images').all()
     serializer_class = GoodModelSerializer
+
+    def list(self, request, *args, **kwargs):
+        try:
+            response = super().list(request, *args, **kwargs)
+            order_logger.info('Catalogue GET ok: status=%s user=%s', response.status_code, getattr(request.user, 'id', None))
+            return response
+        except Exception:
+            order_logger.exception('Catalogue GET failed')
+            return Response({'error': 'Не удалось получить каталог'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class GoodView(APIView):
@@ -82,11 +94,17 @@ class OrdersListView(APIView):
         },
     )
     def get(self, request):
-        orders = order_service.get_all(request.user.id)
-        if orders is not None:
-            payload = OrderPreviewSerializer(orders, many=True).data
-            return Response(payload, status=status.HTTP_200_OK)
-        return Response({'error': 'Не удалось получить заказы'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            orders = order_service.get_all(request.user.id)
+            if orders is not None:
+                payload = OrderPreviewSerializer(orders, many=True).data
+                order_logger.info('Orders list ok: user=%s count=%s', request.user.id, len(payload))
+                return Response(payload, status=status.HTTP_200_OK)
+            order_logger.error('Orders list failed: user=%s', request.user.id)
+            return Response({'error': 'Не удалось получить заказы'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            order_logger.exception('Orders list crashed: user=%s', getattr(request.user, 'id', None))
+            return Response({'error': 'Произошла ошибка при получении заказов'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class OrderView(APIView):
@@ -111,18 +129,24 @@ class OrderView(APIView):
         },
     )
     def get(self, request):
-        order_id = request.query_params.get('id')
-        if order_id is not None:
-            try:
-                order_id_int = int(order_id)
-            except (TypeError, ValueError):
-                return Response({'error': 'Некорректный идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
-            order = order_service.get(request.user.id, order_id_int)
-            if order:
-                payload = OrderModelSerializer(order).data
-                return Response(payload, status=status.HTTP_200_OK)
-            return Response({'error': 'Заказ не найден'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({'error': 'Нужно указать идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            order_id = request.query_params.get('id')
+            if order_id is not None:
+                try:
+                    order_id_int = int(order_id)
+                except (TypeError, ValueError):
+                    return Response({'error': 'Некорректный идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
+                order = order_service.get(request.user.id, order_id_int)
+                if order:
+                    payload = OrderModelSerializer(order).data
+                    order_logger.info('Order detail ok: user=%s order=%s', request.user.id, order_id_int)
+                    return Response(payload, status=status.HTTP_200_OK)
+                order_logger.warning('Order not found: user=%s order=%s', request.user.id, order_id_int)
+                return Response({'error': 'Заказ не найден'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Нужно указать идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            order_logger.exception('Order detail crashed: user=%s id=%s', getattr(request.user, 'id', None), request.query_params.get('id'))
+            return Response({'error': 'Произошла ошибка при получении заказа'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @extend_schema(
         operation_id='create_order',
