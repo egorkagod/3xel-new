@@ -260,7 +260,7 @@ export default function OrderForm() {
         }
 
         if (!selectedTariff) {
-            setGeneralError('Выберите тариф доставки')
+            setGeneralError('Выберите адрес и тариф доставки')
             return
         }
 
