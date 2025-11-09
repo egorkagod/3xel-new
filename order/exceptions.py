@@ -27,3 +27,8 @@ class OrderCreationError(OrderError):
 class PaymentInitializationError(OrderError):
     default_detail = 'Не удалось инициировать платёж.'
     status_code = status.HTTP_502_BAD_GATEWAY
+
+
+class CdekBadRequest(OrderError):
+    default_detail = 'Ошибка при обращении к сдэку'
+    status_code = status.HTTP_400_BAD_REQUEST

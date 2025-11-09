@@ -4,11 +4,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, generics
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from pydantic import ValidationError
 
 from online_shop.schema import ErrorResponseSerializer
 
+from order.exceptions import PaymentInitializationError
+
+from root.services import user_service
+from pay.services import pay_service
 from .models import Good
 from .serializers import (
+    OrderCreateView,
     GoodModelSerializer,
     OrderViewSerializer,
     OrderPreviewSerializer,
@@ -16,9 +22,10 @@ from .serializers import (
     PaymentInitResponseSerializer,
 )
 from .repositories import good_rep
-from .services import order_service
+from .services import order_service, cdek_service
 from .exceptions import OrderError
-from .dto import CreateOrderServiceDTO
+from order.dto.order import CreateOrderServiceDTO
+from order.dto.cdek import CdekDeliveryGetPriceDTO, CdekOrderRegisterDTO
 
 
 @extend_schema(
@@ -129,52 +136,80 @@ class OrderView(APIView):
         },
     )
     def post(self, request):
-        serializer = OrderViewSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        try:
+            data = OrderCreateView(**request.data)
+        except ValidationError as e:
+            return Response({'error': e.errors()})
 
-        goods = serializer.validated_data['goods']
-        video_id = serializer.validated_data['video_id']
-        order_id = serializer.validated_data['order_id']
-        user_id = request.user.id
-        name = serializer.validated_data['name']
-        surname = serializer.validated_data['surname']
-        patronymic = serializer.validated_data['patronymic']
-        address = serializer.validated_data['address']
-        phone = serializer.validated_data['phone']
-        wishes = serializer.validated_data['wishes']
-
-        # Update user profile fields: first_name (Имя Отчество) and last_name (Фамилия)
+        # Обновление данных пользователя
+        full_name = f"{data.surname} {data.name} {data.patronymic}".strip()
         try:
             user = request.user
-            new_first = f"{name} {patronymic}".strip()
-            updates = {}
-            if user.first_name != new_first:
-                user.first_name = new_first
-                updates['first_name'] = True
-            if user.last_name != surname:
-                user.last_name = surname
-                updates['last_name'] = True
-            if updates:
-                user.save(update_fields=list(updates.keys()))
+            new_name = full_name
+            if user.first_name != new_name:
+                user.first_name = new_name
+                user.save()
         except Exception:
-            # Do not block order creation on user update issues
             pass
 
-
-        if (video_id and order_id) or not(video_id or order_id):
-            return Response({'error': 'Нужно либо прикрепить видео, либо сделать повторный заказ'}, status=status.HTTP_400_BAD_REQUEST)
-
+        # Создание заказа
         try:
-            dto = CreateOrderServiceDTO(
-                user_id=user_id,
-                goods=goods,
-                video_id=video_id,
-                previous_order_id=order_id,
-                comment=wishes,
-                phone=phone,
-                address=address,
+            goods = order_service.get_goods_with_sale(data.goods)
+            packages = cdek_service.get_packages(goods)
+            delivery_cost = cdek_service.get_delivery_price(
+                CdekDeliveryGetPriceDTO(
+                    packages=packages,
+                    tariff_code=data.cdek.tariff_code,
+                    city_code=data.cdek.city_code,
+                    city=data.cdek.city,
+                    address=data.cdek.address
+                )
             )
-            payment_url = order_service.create(dto)
+            if not delivery_cost:
+                return Response({'error': 'Не удалось подсчитать стоимость доставки'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            goods_amount = order_service._get_goods_amount(goods)
+            total_amount = goods_amount + int(delivery_cost * 1.1) + 1
+
+            order_id = order_service.create(
+                CreateOrderServiceDTO(
+                    user_id=request.user_id,
+                    goods=data.goods,
+                    video_id=data.video_id,
+                    previous_order_id=data.order_id,
+                    comment=data.wishes,
+                    phone=data.phone,
+                    full_address=f'{data.cdek.city}, {data.cdek.address}',
+                    amount=total_amount
+                )
+            )
+
+            email = user_service.get_email(request.user_id)
+            if not email:
+                return Response({'error': 'Ошибка при получении email пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            cdek_service.register_order(
+                CdekOrderRegisterDTO(
+                    order_id=order_id,
+                    tariff_code=data.cdek.tariff_code,
+                    user_fullname=full_name,
+                    email=email,
+                    phone=data.phone,
+                    packages=packages,
+                )
+            )
+
+            payment_url = pay_service.init(
+                pay_service.InitPayServiceDTO(
+                    order_id=order_id,
+                    goods=goods,
+                    amount=total_amount,
+                    email=email,
+                )
+            )
+            if not payment_url:
+                raise PaymentInitializationError()
+
         except OrderError as exc:
             return Response({'error': exc.detail}, status=exc.status_code)
 

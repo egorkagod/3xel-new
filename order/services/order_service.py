@@ -1,8 +1,6 @@
 from order.repositories import order_rep
 from order.exceptions import InvalidGoodsError, OrderCreationError, PaymentInitializationError
-from order.dto import CreateOrderServiceDTO, CreateOrdeRepoDTO, CreateOrderItemRepoDTO
-from pay.services import pay_service
-from root.services import user_service
+from order.dto.order import CreateOrderServiceDTO, CreateOrdeRepoDTO, CreateOrderItemRepoDTO
 from order.models import GoodVariant, Order
 
 
@@ -14,28 +12,15 @@ def get_all(user_id):
     orders = order_rep.get_all(user_id)
     return orders
 
+
 def create(data: CreateOrderServiceDTO):
+    video_id = None
+
     if not data.previous_order_id:
         goods = get_goods_with_sale(data.goods)
         amount = _get_goods_amount(goods)
         if not amount:
             OrderCreationError(detail='Ошибка при подсчете суммы заказа')
-
-        # Group goods by id to get quantities for OrderItems
-        grouped = {}
-        for gid in data.goods:
-            grouped[gid] = grouped.get(gid, 0) + 1
-        items = [CreateOrderItemRepoDTO(good_variant_id=gid, quantity=qty) for gid, qty in grouped.items()]
-
-        repo_dto = CreateOrdeRepoDTO(
-            user_id=data.user_id,
-            items=items,
-            video_id=data.video_id,
-            amount=amount,
-            comment=data.comment or '',
-            phone=data.phone,
-            address=data.address,
-        )
     else:
         goods = get_goods_with_sale(data.goods)
         amount = _get_goods_amount(goods)
@@ -48,40 +33,28 @@ def create(data: CreateOrderServiceDTO):
         except:
             raise OrderCreationError(detail='Не нашли видео с предыдущего заказа')
 
-        # Group goods by id to get quantities for OrderItems
-        grouped = {}
-        for gid in data.goods:
-            grouped[gid] = grouped.get(gid, 0) + 1
-        items = [CreateOrderItemRepoDTO(good_variant_id=gid, quantity=qty) for gid, qty in grouped.items()]
+    # Группировка товаров для получения их количества
+    grouped = {}
+    for gid in data.goods:
+        grouped[gid] = grouped.get(gid, 0) + 1
+    items = [CreateOrderItemRepoDTO(good_variant_id=gid, quantity=qty) for gid, qty in grouped.items()]
 
-        repo_dto = CreateOrdeRepoDTO(
-            user_id=data.user_id,
-            items=items,
-            video_id=video_id,
-            amount=amount,
-            comment=data.comment or '',
-            phone=data.phone,
-            address=data.address,
-        )
+    repo_dto = CreateOrdeRepoDTO(
+        user_id=data.user_id,
+        items=items,
+        video_id=video_id or data.video_id,
+        amount=amount,
+        comment=data.comment,
+        phone=data.phone,
+        full_address=data.full_address
+    )
+
     order_id = order_rep.create(repo_dto)
     if not order_id:
         raise OrderCreationError()
     
-    email = user_service.get_email(data.user_id)
-    if not email:
-        OrderCreationError(detail='Ошибка при получении email пользователя')
-
-    payment_url = pay_service.init( # Передаются товары с подсчитанной скидкой
-        pay_service.InitPayServiceDTO(
-            order_id=order_id,
-            goods=goods,
-            amount=amount,
-            email=email,
-        )
-    )
-    if not payment_url:
-        raise PaymentInitializationError()
-    return payment_url
+    return order_id
+   
 
 def get_goods_with_sale(goods: list[int], is_repeated=False) -> list:
     '''Эта функция возвращает товары с итоговой ценой, внутри реализована скидочная система'''
@@ -90,7 +63,7 @@ def get_goods_with_sale(goods: list[int], is_repeated=False) -> list:
         raise InvalidGoodsError('Список товаров пуст.')
     total_goods = []
 
-    # Build a map of unique GoodVariant id -> {name, cost}
+    # id -> {good_name, cost}
     unique_ids = list(set(goods))
     goods_map = {
         obj['id']: {'good__name': obj['good__name'], 'cost': obj['good__cost']}
@@ -98,13 +71,11 @@ def get_goods_with_sale(goods: list[int], is_repeated=False) -> list:
         .select_related("good")
         .values("id", "good__name", "good__cost")
     }
-    if len(goods_map) != len(set(goods)):
-        # If any id is missing, invalid goods present
+    if len(goods_map) != len(unique_ids):
         missing = set(goods) - set(goods_map.keys())
         if missing:
             raise InvalidGoodsError('Присутствуют недопустимые товары.')
 
-    # Reconstruct a list preserving duplicates
     goods_objects = []
     for gid in goods:
         base = goods_map.get(gid)

@@ -5,12 +5,13 @@ from pydantic import BaseModel
 
 class CreateOrderServiceDTO(BaseModel):
     user_id: int
-    goods: list[int]
+    goods: list
     video_id: int | None = None
     previous_order_id: int | None = None
     comment: str | None = ''
     phone: str
-    address: str
+    full_address: str
+    amount: int
 
 # Repository DTO's
 
@@ -26,4 +27,4 @@ class CreateOrdeRepoDTO(BaseModel):
     amount: int
     comment: str | None = ''
     phone: str
-    address: str
+    full_address: str

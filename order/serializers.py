@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from pydantic import BaseModel, model_validator, ValidationError
 
 from .models import Good, GoodVariant, Order, OrderItem
 
@@ -40,6 +41,31 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'good_variant', 'quantity']
 
 # Order
+
+class CdekInfoView(BaseModel):
+    city_code: int | None = None
+    city: str
+    address: str
+    tariff_code: int
+    
+
+class OrderCreateView(BaseModel):
+    goods: list[int]
+    video_id: int | None = None
+    order_id: int | None = None
+    name: str
+    surname: str
+    patronymic: str
+    phone: str
+    wishes: str = ''
+    cdek: CdekInfoView
+
+    @model_validator(mode='after')
+    def check_gotten_id(self):
+        if (self.video_id is None) == (self.order_id is None):
+            raise ValueError('Должно быть указано либо video_id, либо order_id, но не оба и не ни одно')
+        return self
+
 
 class OrderViewSerializer(serializers.Serializer):
     goods = serializers.ListField(
