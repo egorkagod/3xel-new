@@ -42,6 +42,7 @@ export default function OrderForm() {
                     city: "Москва",
                     postal_code: "109518",
                     address: "ул. 2-й Грайвороновский проезд, д. 42к4",
+                    code: 44,
                 },
                 root: 'cdek-map',
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
