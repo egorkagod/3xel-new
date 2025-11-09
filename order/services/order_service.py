@@ -1,6 +1,6 @@
 from order.repositories import order_rep
-from order.exceptions import InvalidGoodsError, OrderCreationError, PaymentInitializationError
-from order.dto.order import CreateOrderServiceDTO, CreateOrdeRepoDTO, CreateOrderItemRepoDTO
+from order.exceptions import InvalidGoodsError, OrderCreationError
+from order.dto.order import CreateOrderServiceDTO, CreateOrderItemRepoDTO
 from order.models import GoodVariant, Order
 
 
@@ -46,7 +46,6 @@ def create(data: CreateOrderServiceDTO):
         amount=amount,
         comment=data.comment,
         phone=data.phone,
-        full_address=data.full_address
     )
 
     order_id = order_rep.create(repo_dto)

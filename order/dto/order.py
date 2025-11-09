@@ -10,7 +10,6 @@ class CreateOrderServiceDTO(BaseModel):
     previous_order_id: int | None = None
     comment: str | None = ''
     phone: str
-    full_address: str
     amount: int
 
 # Repository DTO's
@@ -20,11 +19,10 @@ class CreateOrderItemRepoDTO(BaseModel):
     quantity: int
 
 
-class CreateOrdeRepoDTO(BaseModel):
+class CreateOrderRepoDTO(BaseModel):
     user_id: int
     items: list[CreateOrderItemRepoDTO]
     video_id: int
     amount: int
     comment: str | None = ''
     phone: str
-    full_address: str

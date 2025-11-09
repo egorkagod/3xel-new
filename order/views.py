@@ -26,7 +26,7 @@ from .repositories import good_rep
 from .services import order_service, cdek_service
 from .exceptions import OrderError
 from order.dto.order import CreateOrderServiceDTO
-from order.dto.cdek import CdekDeliveryGetPriceDTO, CdekOrderRegisterDTO
+from order.dto.cdek import CdekDeliveryGetPriceDTO
 
 order_logger = logging.getLogger('order')
 
@@ -204,7 +204,6 @@ class OrderView(APIView):
                     previous_order_id=data.order_id,
                     comment=data.wishes,
                     phone=data.phone,
-                    full_address=f'{data.cdek.city}, {data.cdek.address}',
                     amount=total_amount
                 )
             )
