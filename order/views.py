@@ -179,7 +179,7 @@ class OrderView(APIView):
         # Создание заказа
         try:
             goods = order_service.get_goods_with_sale(data.goods)
-            packages = cdek_service.get_packages(goods)
+            packages = cdek_service.get_packages(data.goods)
             delivery_cost = cdek_service.get_delivery_price(
                 CdekDeliveryGetPriceDTO(
                     packages=packages,
