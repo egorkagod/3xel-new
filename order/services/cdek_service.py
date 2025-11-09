@@ -58,14 +58,17 @@ def get_packages(goods: list[int]) -> list:
 
     packages = []
     for good in meta.values():
+        cnt = 1
         length, width, height = good['box_sizes'].split('-')
         pkg = {
+            "number": str(cnt),
             "weight": good['weight'],
             "length": length,
             "width": width,
             "height": height,
         }
         packages.append(pkg)
+        cnt += 1
 
     return packages
 
@@ -79,7 +82,9 @@ def register_order(dto: CdekOrderRegisterDTO):
     recipient = {
         'name': dto.user_fullname,
         'email':dto.email,
-        'phone':dto.phone,
+        'phone':[
+            {'number': dto.phone}
+        ],
     }
     payload = {
         'type': 1,
