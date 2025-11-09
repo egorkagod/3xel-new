@@ -144,6 +144,10 @@
             display: flex;
             justify-content: space-between;
 
+            @media (max-width: 767px) {
+                flex-direction: column;
+            }
+
             .result {
                 color: #2b2b2b;
             }

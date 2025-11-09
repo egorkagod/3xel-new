@@ -142,9 +142,14 @@ export default function OrderForm() {
     const [isUploading, setIsUploading] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
+    const [firstName, surName, patronymic] = useMemo(() => {
+        return user?.first_name.split(' ') || ['', '', '']
+    }, [user])
+
     useEffect(() => {
-        setValue('name', user?.first_name || '', { shouldDirty: false })
-        setValue('email', user?.email || '', { shouldDirty: false })
+        setValue('name', firstName, {shouldDirty: false})
+        setValue('surname', surName, {shouldDirty: false})
+        setValue('patronymic', patronymic, {shouldDirty: false})
     }, [user, setValue])
 
     useEffect(() => {
