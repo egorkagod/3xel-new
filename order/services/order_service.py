@@ -1,6 +1,6 @@
 from order.repositories import order_rep
 from order.exceptions import InvalidGoodsError, OrderCreationError
-from order.dto.order import CreateOrderServiceDTO, CreateOrderItemRepoDTO
+from order.dto.order import CreateOrderServiceDTO, CreateOrderItemRepoDTO, CreateOrderRepoDTO
 from order.models import GoodVariant, Order
 
 
@@ -39,7 +39,7 @@ def create(data: CreateOrderServiceDTO):
         grouped[gid] = grouped.get(gid, 0) + 1
     items = [CreateOrderItemRepoDTO(good_variant_id=gid, quantity=qty) for gid, qty in grouped.items()]
 
-    repo_dto = CreateOrdeRepoDTO(
+    repo_dto = CreateOrderRepoDTO(
         user_id=data.user_id,
         items=items,
         video_id=video_id or data.video_id,
