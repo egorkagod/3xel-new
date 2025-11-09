@@ -208,7 +208,7 @@ class OrderView(APIView):
                 )
             )
 
-            email = user_service.get_email(request.user_id)
+            email = user_service.get_email(request.user.id)
             if not email:
                 return Response({'error': 'Ошибка при получении email пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
