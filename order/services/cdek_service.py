@@ -27,15 +27,12 @@ def get_cdek_token() -> str:
     if not token:
         url = f'{CDEK_URL}/v2/oauth/token'
 
-        headers = {
-            'Content-Type': 'application/json',
-        }
         payload = {
             'grant_type': 'client_credentials',
             'client_id': CDEK_ID,
             'client_secret': CDEK_PASSWORD,
         }
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.post(url, data=payload)
         if not response.status_code == 200:
             raise CdekBadRequest(f'Ошибка при получении токена: {response.text}')
         resp = response.json()
