@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from pydantic import BaseModel, model_validator, ValidationError
+from pydantic import BaseModel, model_validator
 
 from .models import Good, GoodVariant, Order, OrderItem
 
@@ -17,9 +17,17 @@ class GoodVariantModelSerializer(serializers.ModelSerializer):
 
     def get_images(self, obj):
         request = self.context.get('request')
-        urls = [image.image.url for image in obj.images.all()]
-        if request:
-            return [request.build_absolute_uri(url) for url in urls]
+        urls = []
+        for image in obj.images.all():
+            try:
+                url = image.image.url
+            except Exception:
+                # Если у изображения нет файла — пропускаем, чтобы не ронять 500
+                continue
+            if request:
+                urls.append(request.build_absolute_uri(url))
+            else:
+                urls.append(url)
         return urls
 
 # Good

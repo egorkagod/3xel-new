@@ -169,12 +169,18 @@ class UserView(APIView):
             status.HTTP_404_NOT_FOUND: OpenApiResponse(ErrorResponseSerializer, description='Пользователь не найден'),
         },
     )
-    def get(self, request):                
-        user = user_rep.get(request.user.id)
-        if user:
+    def get(self, request):
+        # Более безопасная реализация, избегаем лишних запросов в БД
+        try:
+            if not getattr(request.user, 'is_authenticated', False):
+                return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            user = request.user
             payload = UserModelSerializer(user).data
             return Response(payload, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        except Exception:
+            # Никогда не роняем 500 наружу без контроля
+            return Response({'error': 'Не удалось получить данные пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @extend_schema(
         operation_id='reset_password_with_code',
