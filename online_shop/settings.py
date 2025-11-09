@@ -216,6 +216,24 @@ LOGGING = {
             'filename': BASE_DIR / 'logging' / 'pay.log',
             'formatter': 'verbose',
         },
+        'order': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logging' / 'order.log',
+            'formatter': 'verbose',
+        },
+        'root_app': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logging' / 'root.log',
+            'formatter': 'verbose',
+        },
+        'filehandler_app': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logging' / 'filehandler.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django': {
@@ -225,6 +243,22 @@ LOGGING = {
         },
         'pay': { 
             'handlers': ['pay'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        # Application loggers
+        'order': {
+            'handlers': ['order'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'root': {
+            'handlers': ['root_app'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'filehandler': {
+            'handlers': ['filehandler_app'],
             'level': 'INFO',
             'propagate': True,
         },
