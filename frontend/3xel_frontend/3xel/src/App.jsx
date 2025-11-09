@@ -76,8 +76,7 @@ function App() {
   return (
     <div className="app">
       <Header />
-      {/* Reset scroll only when effective page changes (not modal/hash) */}
-      <ScrollToUp watchPathname={routeKey} />
+      <ScrollToUp />
       <div className="page-transition" key={routeKey}>
         <Routes location={routesLocation}>
           <Route path="/" element={<MainPage />} />
