@@ -192,8 +192,9 @@ class OrderView(APIView):
             if not delivery_cost:
                 return Response({'error': 'Не удалось подсчитать стоимость доставки'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
+            delivery_cost = int(delivery_cost * 1.1) + 1
             goods_amount = order_service._get_goods_amount(goods)
-            total_amount = goods_amount + int(delivery_cost * 1.1) + 1
+            total_amount = goods_amount + delivery_cost
 
             order_id = order_service.create(
                 CreateOrderServiceDTO(
