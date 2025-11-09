@@ -119,6 +119,6 @@ def get_delivery_price(dto: CdekDeliveryGetPriceDTO):
     }
     response = requests.post(url, headers=headers, json=payload)
     if response.status_code != 200:
-        raise CdekBadRequest(f'{response.json().get('errors')}')
+        raise CdekBadRequest(response.text)
     resp = response.json()
     return resp.get('delivery_sum')
