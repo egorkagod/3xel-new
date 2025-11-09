@@ -5,8 +5,7 @@ export default function ScrollToUp() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-    console.log('scroll to up')
+    setTimeout(() => window.scrollTo(0, 0), 0)
   }, [pathname])
 
   return null
