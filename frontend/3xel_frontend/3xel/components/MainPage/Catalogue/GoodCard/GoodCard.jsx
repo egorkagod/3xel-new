@@ -47,7 +47,7 @@ export default function GoodCard({ goods, forConstructor }) {
         [goods, selectedSize]
     )
 
-    const [cdekWidth, cdekHeight, cdekLength] = useMemo(() => {
+    const [cdekLength, cdekWidth, cdekHeight] = useMemo(() => {
         if (!selectedGood || !selectedGood.box_sizes) return [null, null, null]
 
         const raw = String(selectedGood.box_sizes)
