@@ -105,7 +105,7 @@ class Order(models.Model):
     )    
     phone = models.CharField(max_length=32, default='')
     comment = models.TextField(max_length=1000, default='')
-    cdek = models.OneToOneField(CdekOrder, on_delete=models.PROTECT, related_name='order')
+    cdek = models.OneToOneField(CdekOrder, on_delete=models.PROTECT, related_name='order', null=True, default=None)
     promocode = models.OneToOneField(Promocode, on_delete=models.SET_NULL, null=True, default=None)
     video = models.ForeignKey(File, on_delete=models.SET_NULL, null=True)
     updated_at = models.DateTimeField(auto_now=True)
