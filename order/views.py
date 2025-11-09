@@ -212,15 +212,18 @@ class OrderView(APIView):
             if not email:
                 return Response({'error': 'Ошибка при получении email пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
-            CdekOrder.objects.create(
+            # Create CDEK order and link it to Order via Order.cdek (OneToOne)
+            cdek = CdekOrder.objects.create(
                 email=email,
                 user_fullname=full_name,
-                tarriff_code=data.cdek.tariff_code,
+                tariff_code=data.cdek.tariff_code,
                 city_code=data.cdek.city_code,
                 city=data.cdek.city,
                 address=data.cdek.address,
-                order=Order.objects.get(id=order_id),
             )
+            order_obj = Order.objects.get(id=order_id)
+            order_obj.cdek = cdek
+            order_obj.save(update_fields=["cdek"]) 
 
             payment_url = pay_service.init(
                 pay_service.InitPayServiceDTO(
