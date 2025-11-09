@@ -54,7 +54,7 @@ def get_packages(goods: list[int]) -> list:
         .values("id", "good__cost", "good__box_sizes", "good__weight", "good__name", "good__size")
     )
 
-    meta = {v["id"]: {"box_sizes": v["good__box_sizes"], "weight": v["good__weight"], "name": v["good__name"], "size": v["good__size"], "cost": v["good__cost"]} for v in variants}
+    meta = {v["id"]: {"id": v["id"], "box_sizes": v["good__box_sizes"], "weight": v["good__weight"], "name": v["good__name"], "size": v["good__size"], "cost": v["good__cost"]} for v in variants}
 
     packages = []
     for good in meta.values():
@@ -70,6 +70,7 @@ def get_packages(goods: list[int]) -> list:
                 {
                     "name": f'{good['name']} размера {good['size']}см',
                     "amount": 1,
+                    "ware_key": good['id'],
                     "weight": good['weight'],
                     "cost": 0,
                     "payment": {
