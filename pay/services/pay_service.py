@@ -99,7 +99,7 @@ def create_receipt_items(goods: list, delivery_cost: int) -> list:
         'Price': delivery_cost * 100,
         'Quantity': 1,
         'Amount': delivery_cost * 100,
-        'Tax': None,
+        'Tax': 'none',
     })
     return items
 
