@@ -64,9 +64,6 @@ export default function OrderForm() {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
                     setSelectedMode(mode)
-                    console.log(tariff)
-                    console.log(address)
-                    setValue('address', address.name)
                     setIsCalculating(true)
                 }
             })
@@ -313,11 +310,15 @@ export default function OrderForm() {
                 name: data.name,
                 surname: data.surname,
                 patronymic: data.patronymic,
-                address: data.address,
                 phone: data.phone,
                 wishes: data.wishes,
-                tariff_code: selectedTariff.tariff_code,
-                delivery_sum: selectedTariff.delivery_sum,
+                cdek: {
+                    tariff_code: selectedTariff.tariff_code,
+                    pvz_code: selectedMode === 'office' ? selectedAddress.code : null,
+                    address: selectedMode === 'door' ? selectedAddress.formatted : null,
+                    longitude: selectedMode === 'office' ? selectedAddress.location[0] : selectedAddress.position[0],
+                    latitude: selectedMode === 'office' ? selectedAddress.location[1] : selectedAddress.position[1]
+                }
             }
             const response = await apiFetch('/api-order/order/', {
                 method: 'POST',
@@ -393,7 +394,7 @@ export default function OrderForm() {
                         {selectedAddress ? (
                             <span>Выбранный адрес доставки: {selectedMode ? (
                                 selectedMode == 'office' ? 'Пункт выдачи —' : null
-                            ) : null} <b>{selectedAddress.name}</b></span>
+                            ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
                         ) : null}
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
