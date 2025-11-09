@@ -508,7 +508,7 @@ export default function OrderForm() {
                     <Button
                         color='golden'
                         type='submit'
-                        disabled={isCalculating || isUploading || isSubmitting || !isAuthenticated}
+                        disabled={isUploading || isSubmitting || !isAuthenticated}
                     >
                         {payButtonLabel}
                     </Button>
