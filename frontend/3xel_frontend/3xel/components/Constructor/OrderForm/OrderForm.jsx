@@ -316,10 +316,9 @@ export default function OrderForm() {
                 wishes: data.wishes,
                 cdek: {
                     tariff_code: selectedTariff.tariff_code,
-                    pvz_code: selectedMode === 'office' ? selectedAddress.code : null,
-                    address: selectedMode === 'door' ? selectedAddress.formatted : null,
-                    longitude: selectedMode === 'office' ? selectedAddress.location[0] : selectedAddress.position[0],
-                    latitude: selectedMode === 'office' ? selectedAddress.location[1] : selectedAddress.position[1]
+                    city_code: selectedAddress.city_code ?? null,
+                    city: selectedAddress.city,
+                    address: selectedMode === 'office' ? selectedAddress.address : selectedAddress.name,
                 }
             }
             const response = await apiFetch('/api-order/order/', {
