@@ -13,7 +13,7 @@ from order.exceptions import PaymentInitializationError
 
 from root.services import user_service
 from pay.services import pay_service
-from .models import Good, CdekOrder
+from .models import Good, CdekOrder, Order
 from .serializers import (
     OrderCreateView,
     GoodModelSerializer,
@@ -215,11 +215,11 @@ class OrderView(APIView):
             CdekOrder.objects.create(
                 email=email,
                 user_fullname=full_name,
-                tarrif_code=data.cdek.tariff_code,
+                tarriff_code=data.cdek.tariff_code,
                 city_code=data.cdek.city_code,
                 city=data.cdek.city,
                 address=data.cdek.address,
-                order_id=order_id,
+                order=Order.objects.get(id=order_id),
             )
 
             payment_url = pay_service.init(
