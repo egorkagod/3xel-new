@@ -6,6 +6,7 @@ export default function ScrollToUp() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    console.log('scroll to up')
   }, [pathname])
 
   return null
