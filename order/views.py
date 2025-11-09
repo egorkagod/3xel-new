@@ -230,6 +230,7 @@ class OrderView(APIView):
                 pay_service.InitPayServiceDTO(
                     order_id=order_id,
                     goods=goods,
+                    delivery_cost=delivery_cost,
                     amount=total_amount,
                     email=email,
                 )

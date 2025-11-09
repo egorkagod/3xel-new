@@ -21,6 +21,7 @@ class InitPayServiceDTO(BaseModel):
     order_id: int
     goods: list
     amount: int
+    delivery_cost: int
     email: str
 
 def init(data: InitPayServiceDTO):
@@ -29,7 +30,7 @@ def init(data: InitPayServiceDTO):
         'Content-Type': 'application/json',
     }
     # Build Receipt.Items from provided goods with applied discounts
-    receipt_items = create_receipt_items(data.goods)
+    receipt_items = create_receipt_items(data.goods, data.delivery_cost)
     payload = {
         'TerminalKey': os.getenv('TERMINAL_KEY'),
         'Amount': data.amount * 100,
@@ -75,7 +76,7 @@ def update_status(data):
     else:
         notification_logger.warning('Invalid notification token: %s', payload)
 
-def create_receipt_items(goods: list) -> list:
+def create_receipt_items(goods: list, delivery_cost: int) -> list:
     # goods: list of dicts like {'good__name': str, 'cost': int} per item occurrence
     grouped: dict[tuple[str, int], int] = {}
     for g in goods:
@@ -91,9 +92,15 @@ def create_receipt_items(goods: list) -> list:
             'Price': price * 100,
             'Quantity': qty,
             'Amount': price * 100 * qty,
-            # Tax code per merchant settings. Required: vat5 on all items.
             'Tax': 'vat5',
         })
+    items.append({
+        'Name': 'Доставка',
+        'Price': delivery_cost * 100,
+        'Quantity': 1,
+        'Amount': delivery_cost * 100,
+        'Tax': None,
+    })
     return items
 
 def _sign_by_token(payload: dict):
