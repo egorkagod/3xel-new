@@ -321,6 +321,7 @@ export default function OrderForm() {
                 patronymic: data.patronymic,
                 phone: data.phone,
                 wishes: data.wishes,
+                promocode: data.promocode,
                 cdek: {
                     tariff_code: selectedTariff.tariff_code,
                     city_code: selectedAddress.city_code ?? null,
@@ -411,6 +412,11 @@ export default function OrderForm() {
                         {errors.address ? (
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
+                    </div>
+                    <div className={classes.formField}>
+                        <label htmlFor="promocode">Промокод</label>
+                        <input type="text" id='promocode' placeholder='Введите промокод' {...register('promocode')} />
+                        <Button type='button' color='golden'>Применить</Button>
                     </div>
                     <div className={classes.formField}>
                         {watch('orderId') ? (
