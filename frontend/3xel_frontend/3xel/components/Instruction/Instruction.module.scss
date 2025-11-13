@@ -5,75 +5,13 @@
     padding: 80px 150px;
     width: 100%;
 
-    .pageHeader {
+    .recomendations {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 10px;
 
-        h1 {
-            font-size: 40px;
-        }
-
-        .subTitle {
-            color: #6e6a65;
-        }
-    }
-
-    .instructionSection {
-        background: #fff;
-        padding: 18px;
-        border: 1px solid rgba(0, 0, 0, .06);
-        box-shadow: 0 10px 24px #0000000f;
-        border-radius: 18px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        width: 100%;
-
-        img {
-            width: 100%;
-        }
-
-        &:last-child {
-
-            .leftSide {
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                align-self: center;
-                font-size: 24px;
-
-                p {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 6px;
-
-                    span {
-
-                        &:first-child {
-                            font-weight: 700;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media (max-width: 1199px) {
-    .instruction {
-        padding: 20px;
-
-        .instructionSection {
-            grid-template-columns: 1fr;
-
-            &:last-child {
-
-                .leftSide {
-                    font-size: 20px;
-                }
-            }
-
+        h4 {
+            margin-bottom: 20px;
         }
     }
 }

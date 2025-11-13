@@ -1,0 +1,44 @@
+.point {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+
+    .leftSide {
+        width: 100%;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+
+        .number {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f1e1c9;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .text {
+                font-size: 14px;
+                color: #555;
+            }
+        }
+    }
+
+    .image {
+        width: 50%;
+        border-radius: 18px;
+        justify-self: end;
+    }
+
+    @media (max-width: 1199px) {
+        grid-template-columns: 1fr;
+    }
+}
