@@ -90,6 +90,7 @@
 
             .denominations {
                 display: flex;
+                flex-wrap: wrap;
                 gap: 6px;
 
                 .denomination {
