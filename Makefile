@@ -32,6 +32,9 @@ push:
 celery:
 	$(VENV)/bin/celery -A $(APP) worker -l info
 
+celery-daemon:
+	$(VENV)/bin/celery -A $(APP) worker -l info --detach
+
 # Start a local Redis via Docker (recommended if redis-server not installed)
 redis-docker:
 	docker run -d --name redis-3xel -p 6379:6379 redis:7-alpine
