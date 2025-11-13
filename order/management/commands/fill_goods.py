@@ -96,7 +96,7 @@ class Command(BaseCommand):
                 defaults={
                     'description': f'Пластиковый бюст размером {plastic["size"]} см. Большая карта цветов.',
                     'technology': ['PLA Matte/PETG-CF', 'Премиум-поверхность'],
-                    'cost': plastic['cost'],
+                    'price': plastic['price'],
                     'box_sizes': plastic['box_sizes'],
                     'weight': plastic['weight']
                 },
@@ -132,7 +132,7 @@ class Command(BaseCommand):
             defaults={
                 'description': 'Один размер — 18 см. Цвет — натуральный картон.',
                 'technology': ['HDF/картон', 'Конструктор'],
-                'cost': CARDBOARD_DATA['cost'],
+                'price': CARDBOARD_DATA['price'],
                 'box_sizes': CARDBOARD_DATA['box_sizes'],
                 'weight': CARDBOARD_DATA['weight'],
             },
