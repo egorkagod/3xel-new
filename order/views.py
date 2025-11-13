@@ -8,25 +8,17 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiRespon
 from pydantic import ValidationError
 
 from online_shop.schema import ErrorResponseSerializer
-
-from order.exceptions import PaymentInitializationError
-
-from root.services import user_service
-from pay.services import pay_service
-from .models import Good, CdekOrder, Order
 from .serializers import (
-    OrderCreateView,
     GoodModelSerializer,
-    OrderViewSerializer,
     OrderPreviewSerializer,
     OrderModelSerializer,
-    PaymentInitResponseSerializer,
 )
-from .repositories import good_rep
-from .services import order_service, cdek_service
+from .models import Good
+from .api_schema import OrderCreateSchema
+from order.workflow.dto import OrderCreateWorkflowDTO
+from order.workflow import order_workflow
+from .services import order_service
 from .exceptions import OrderError
-from order.dto.order import CreateOrderServiceDTO
-from order.dto.cdek import CdekDeliveryGetPriceDTO
 
 order_logger = logging.getLogger('order')
 
@@ -74,7 +66,7 @@ class GoodView(APIView):
     def get(self, request):
         good_id = request.query_params.get('id')
         if good_id:
-            good = good_rep.get(good_id)
+            good = Good.objects.filter(pk=good_id).first()
             if good:
                 payload = GoodModelSerializer(good, context={'request': request}).data
                 return Response(payload, status=status.HTTP_200_OK)
@@ -110,134 +102,39 @@ class OrdersListView(APIView):
 class OrderView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-        operation_id='get_order',
-        summary='Получить заказ по идентификатору',
-        parameters=[
-            OpenApiParameter(
-                name='id',
-                location=OpenApiParameter.QUERY,
-                description='Идентификатор заказа',
-                required=True,
-                type=OpenApiTypes.INT,
-            ),
-        ],
-        responses={
-            status.HTTP_200_OK: OrderModelSerializer,
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(ErrorResponseSerializer, description='Не указан идентификатор заказа'),
-            status.HTTP_404_NOT_FOUND: OpenApiResponse(ErrorResponseSerializer, description='Заказ не найден'),
-        },
-    )
     def get(self, request):
         try:
             order_id = request.query_params.get('id')
             if order_id is not None:
                 try:
-                    order_id_int = int(order_id)
+                    order_id = int(order_id)
                 except (TypeError, ValueError):
                     return Response({'error': 'Некорректный идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
-                order = order_service.get(request.user.id, order_id_int)
+                order = order_service.get(order_id, request.user.id)
                 if order:
                     payload = OrderModelSerializer(order).data
-                    order_logger.info('Order detail ok: user=%s order=%s', request.user.id, order_id_int)
                     return Response(payload, status=status.HTTP_200_OK)
-                order_logger.warning('Order not found: user=%s order=%s', request.user.id, order_id_int)
                 return Response({'error': 'Заказ не найден'}, status=status.HTTP_404_NOT_FOUND)
             return Response({'error': 'Нужно указать идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
-            order_logger.exception('Order detail crashed: user=%s id=%s', getattr(request.user, 'id', None), request.query_params.get('id'))
             return Response({'error': 'Произошла ошибка при получении заказа'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    @extend_schema(
-        operation_id='create_order',
-        summary='Создать заказ, обновить данные пользователя и инициализировать оплату',
-        request=OrderViewSerializer,
-        responses={
-            status.HTTP_200_OK: OpenApiResponse(PaymentInitResponseSerializer, description='Оплата успешно инициализирована'),
-            status.HTTP_400_BAD_REQUEST: OpenApiResponse(ErrorResponseSerializer, description='Некорректные данные заказа'),
-            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(ErrorResponseSerializer, description='Не удалось создать заказ'),
-            status.HTTP_502_BAD_GATEWAY: OpenApiResponse(ErrorResponseSerializer, description='Не удалось инициализировать платеж'),
-        },
-    )
+
     def post(self, request):
         try:
-            data = OrderCreateView(**request.data)
+            data = OrderCreateSchema(**request.data)
         except ValidationError as e:
             return Response({'error': e.errors()})
-
-        # Обновление данных пользователя
-        full_name = f"{data.surname} {data.name} {data.patronymic}".strip()
+        
         try:
-            user = request.user
-            new_name = full_name
-            if user.first_name != new_name:
-                user.first_name = new_name
-                user.save()
-        except Exception:
-            pass
-
-        # Создание заказа
-        try:
-            goods = order_service.get_goods_with_sale(data.goods)
-            packages = cdek_service.get_packages(data.goods)
-            delivery_cost = cdek_service.get_delivery_price(
-                CdekDeliveryGetPriceDTO(
-                    packages=packages,
-                    tariff_code=data.cdek.tariff_code,
-                    city_code=data.cdek.city_code,
-                    city=data.cdek.city,
-                    address=data.cdek.address
-                )
-            )
-            if not delivery_cost:
-                return Response({'error': 'Не удалось подсчитать стоимость доставки'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
-            delivery_cost = int(delivery_cost * 1.1) + 1
-            goods_amount = order_service._get_goods_amount(goods)
-            total_amount = goods_amount + delivery_cost
-
-            order_id = order_service.create(
-                CreateOrderServiceDTO(
+            payment_url = order_workflow.create(
+                OrderCreateWorkflowDTO(
                     user_id=request.user.id,
-                    goods=data.goods,
-                    video_id=data.video_id,
-                    previous_order_id=data.order_id,
-                    comment=data.wishes,
-                    phone=data.phone,
-                    amount=total_amount
+                    **data.model_dump(), 
                 )
             )
-
-            email = user_service.get_email(request.user.id)
-            if not email:
-                return Response({'error': 'Ошибка при получении email пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
-            # Create CDEK order and link it to Order via Order.cdek (OneToOne)
-            cdek = CdekOrder.objects.create(
-                email=email,
-                user_fullname=full_name,
-                tariff_code=data.cdek.tariff_code,
-                city_code=data.cdek.city_code,
-                city=data.cdek.city,
-                address=data.cdek.address,
-            )
-            order_obj = Order.objects.get(id=order_id)
-            order_obj.cdek = cdek
-            order_obj.save(update_fields=["cdek"]) 
-
-            payment_url = pay_service.init(
-                pay_service.InitPayServiceDTO(
-                    order_id=order_id,
-                    goods=goods,
-                    delivery_cost=delivery_cost,
-                    amount=total_amount,
-                    email=email,
-                )
-            )
-            if not payment_url:
-                raise PaymentInitializationError()
-
-        except OrderError as exc:
-            return Response({'error': exc.detail}, status=exc.status_code)
-
-        return Response({'payment_url': payment_url}, status=status.HTTP_200_OK)
+            return Response({'payment_url': payment_url}, status=status.HTTP_200_OK)
+        except OrderError as e:
+            return Response({'error': e.detail}, status=e.status_code)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

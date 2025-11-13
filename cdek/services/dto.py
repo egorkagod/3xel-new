@@ -7,7 +7,7 @@ class CdekOrderRegisterDTO(BaseModel):
     user_fullname: str
     email: str
     phone: str
-    city_code: int | None = None
+    city_code: int | None
     city: str
     address: str
     packages: list
@@ -15,7 +15,17 @@ class CdekOrderRegisterDTO(BaseModel):
 
 class CdekDeliveryGetPriceDTO(BaseModel):
     tariff_code: int
-    city_code: int | None = None
+    city_code: int | None
     city: str
     address: str
     packages: list
+
+
+class CdekOrderCreateDTO(BaseModel):
+    order_id: int
+    email: str
+    user_fullname: str
+    tariff_code: int
+    city_code: int | None
+    city: str
+    address: str

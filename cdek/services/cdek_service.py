@@ -1,25 +1,21 @@
-import os
 import requests
-from dotenv import load_dotenv
-from order.dto.cdek import CdekOrderRegisterDTO, CdekDeliveryGetPriceDTO
-from order.models import GoodVariant
-from order.exceptions import CdekBadRequest
-
 from django.core.cache import cache
 
+from env import env_settings
+from .dto import CdekOrderRegisterDTO, CdekDeliveryGetPriceDTO, CdekOrderCreateDTO
+from cdek.models import CdekOrder
+from order.services import order_service
+from order.exceptions import CdekBadRequest
 
-load_dotenv()
 
-
-USE_TEST_CDEK = os.getenv("USE_TEST_CDEK", "False").lower() == "true"
-if USE_TEST_CDEK:
-    CDEK_URL = os.getenv('CDEK_TEST_URL')
-    CDEK_ID = os.getenv('CDEK_TEST_CLIENT_ID')
-    CDEK_PASSWORD = os.getenv('CDEK_TEST_CLIENT_PASSWORD')
+if env_settings.USE_TEST_CDEK == "true":
+    CDEK_URL = env_settings.CDEK_TEST_URL
+    CDEK_ID = env_settings.CDEK_TEST_CLIENT_ID
+    CDEK_PASSWORD = env_settings.CDEK_TEST_CLIENT_PASSWORD
 else:
-    CDEK_URL = os.getenv('CDEK_URL')
-    CDEK_ID = os.getenv('CDEK_CLIENT_ID')
-    CDEK_PASSWORD = os.getenv('CDEK_CLIENT_PASSWORD')
+    CDEK_URL = env_settings.CDEK_URL
+    CDEK_ID = env_settings.CDEK_CLIENT_ID
+    CDEK_PASSWORD = env_settings.CDEK_CLIENT_PASSWORD
 
 
 def get_cdek_token() -> str:
@@ -42,24 +38,11 @@ def get_cdek_token() -> str:
     return token
 
 
-def get_packages(goods: list[int]) -> list:
-    if not goods:
-        return []
-
-    unique_ids = list(set(goods))
-    variants = (
-        GoodVariant.objects
-        .select_related("good")
-        .filter(id__in=unique_ids)
-        .values("id", "good__cost", "good__box_sizes", "good__weight", "good__name", "good__size")
-    )
-
-    meta = {v["id"]: {"id": v["id"], "box_sizes": v["good__box_sizes"], "weight": v["good__weight"], "name": v["good__name"], "size": v["good__size"], "cost": v["good__cost"]} for v in variants}
-
+def get_packages_for_register_order(goods: list[dict]) -> list:
     packages = []
-    for good in meta.values():
-        cnt = 1
-        length, width, height = good['box_sizes'].split('-')
+    cnt = 1
+    for good in goods:
+        length, width, height = good['box_sizes']
         pkg = {
             "number": str(cnt),
             "weight": good['weight'],
@@ -85,6 +68,24 @@ def get_packages(goods: list[int]) -> list:
     return packages
 
 
+def get_packages_for_delivery_cost(goods: list[dict]) -> list:
+    packages = []
+    for good in goods:
+        cnt = 1
+        length, width, height = good['box_sizes']
+        pkg = {
+            "number": str(cnt),
+            "weight": good['weight'],
+            "length": length,
+            "width": width,
+            "height": height,
+        }
+        packages.append(pkg)
+        cnt += 1
+
+    return packages
+
+
 def register_order(dto: CdekOrderRegisterDTO):
     url = f'{CDEK_URL}/v2/orders'
     headers = {
@@ -102,7 +103,7 @@ def register_order(dto: CdekOrderRegisterDTO):
         'type': 1,
         'number': dto.order_id,
         'tariff_code': dto.tariff_code,
-        'shipment_point': os.getenv('CDEK_PVZ_CODE'),
+        'shipment_point': env_settings.CDEK_PVZ_CODE,
         'to_location':{
             'code':  dto.city_code,
             'city': dto.city,
@@ -127,9 +128,9 @@ def get_delivery_price(dto: CdekDeliveryGetPriceDTO):
     payload = {
         'tariff_code': dto.tariff_code,
         'from_location': {
-            'code':  os.getenv('CDEK_SHIPMENT_CITY_CODE'),
-            'city': os.getenv('CDEK_SHIPMENT_CITY'),
-            'address': os.getenv('CDEK_SHIPMENT_ADDRESS'),
+            'code': env_settings.CDEK_SHIPMENT_CITY_CODE,
+            'city': env_settings.CDEK_SHIPMENT_CITY,
+            'address': env_settings.CDEK_SHIPMENT_ADDRESS,
         },
         'to_location':{
             'code':  dto.city_code,
@@ -143,3 +144,19 @@ def get_delivery_price(dto: CdekDeliveryGetPriceDTO):
         raise CdekBadRequest(response.text)
     resp = response.json()
     return resp.get('delivery_sum')
+
+
+def create_order(dto: CdekOrderCreateDTO):
+    cdek_order = CdekOrder.objects.create(
+        email=dto.email,
+        user_fullname=dto.user_fullname,
+        tariff_code=dto.tariff_code,
+        city_code=dto.city_code,
+        city=dto.city,
+        address=dto.address,
+    )
+
+    order_obj = order_service.get(dto.order_id)
+    order_obj.cdek = cdek_order
+    order_obj.save(update_fields=["cdek"]) 
+    

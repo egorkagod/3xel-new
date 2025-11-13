@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.conf import settings
 from django.urls import reverse
+from pathlib import Path
 
 from .models import (
     Good,
@@ -38,7 +39,8 @@ class GoodVariantAdmin(admin.ModelAdmin):
     size.short_description = 'Размер'
 
     def cost(self, obj):
-        return getattr(obj.good, 'cost', None)
+        # В модели Good поле называется price
+        return getattr(obj.good, 'price', None)
     cost.short_description = 'Цена'
 
 
@@ -87,7 +89,24 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
         file = getattr(obj, 'video', None)
         path = getattr(file, 'path', None)
         if path:
-            return format_html('<a href="{}{}" download>Скачать видео</a>', settings.SITE_DOMEN, path)
+            try:
+                p = Path(path)
+                # Если в базе абсолютный путь и он лежит под MEDIA_ROOT — строим URL относительно MEDIA_URL
+                if p.is_absolute():
+                    try:
+                        rel = p.resolve().relative_to(Path(settings.MEDIA_ROOT).resolve())
+                        url_path = f"{settings.MEDIA_URL}{rel.as_posix()}"
+                    except Exception:
+                        # Фоллбек: используем имя файла в корне MEDIA_URL
+                        url_path = f"{settings.MEDIA_URL}{p.name}"
+                else:
+                    # Относительный путь — дополняем MEDIA_URL
+                    url_path = f"{settings.MEDIA_URL}{p.as_posix()}"
+                abs_url = f"{str(settings.SITE_DOMEN).rstrip('/')}/{url_path.lstrip('/')}"
+                return format_html('<a href="{}" download>Скачать видео</a>', abs_url)
+            except Exception:
+                # В крайнем случае возвращаем как есть
+                return format_html('<a href="{}{}" download>Скачать видео</a>', settings.SITE_DOMEN, path)
         return '-'
     download_video.short_description = 'Скачать видео'
 

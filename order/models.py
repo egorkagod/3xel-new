@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
 
 from filehandler.models import File
@@ -16,7 +16,7 @@ class Good(models.Model):
     size = models.IntegerField()
     box_sizes = models.CharField(max_length=20, null=True)
     weight = models.IntegerField(null=True)
-    cost = models.IntegerField()
+    price = models.IntegerField()
     description = models.TextField(null=True, blank=True)
     technology = models.JSONField(default=list)
 
@@ -67,15 +67,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.quantity} шт ' + str(self.good_variant)
-    
-
-class CdekOrder(models.Model):
-    email = models.CharField(max_length=100)
-    user_fullname = models.CharField(max_length=200)
-    tariff_code = models.IntegerField()
-    city_code = models.IntegerField(null=True, default=None)
-    city = models.CharField(max_length=200)
-    address = models.CharField(max_length=200, default='')
 
 
 class OrderStatus(EnumWithDescriptions):
@@ -95,7 +86,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='orders')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='orders')
     payment = models.ForeignKey(Payment, on_delete=models.PROTECT, null=True)
     amount = models.IntegerField()
     status = models.CharField(
@@ -105,9 +96,9 @@ class Order(models.Model):
     )    
     phone = models.CharField(max_length=32, default='')
     comment = models.TextField(max_length=1000, default='')
-    cdek = models.OneToOneField(CdekOrder, on_delete=models.PROTECT, related_name='order', null=True, default=None)
-    promocode = models.OneToOneField(Promocode, on_delete=models.SET_NULL, null=True, default=None)
-    video = models.ForeignKey(File, on_delete=models.SET_NULL, null=True)
+    cdek = models.OneToOneField('CdekOrder', on_delete=models.PROTECT, related_name='order', null=True, default=None)
+    promocode = models.OneToOneField(Promocode, on_delete=models.PROTECT, null=True, default=None)
+    video = models.ForeignKey(File, on_delete=models.PROTECT, null=True, related_name='order')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

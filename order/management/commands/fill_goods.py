@@ -11,12 +11,13 @@ from order.models import Good, GoodVariant, GoodVariantImage
 
 IMAGE_DIR = Path(settings.MEDIA_ROOT) / 'catalog' / 'images'
 PLASTIC_DATA = (
-    {'size': 12, 'cost': 3450, 'box_sizes': '12-12-11', 'weight': 1200},
-    {'size': 16, 'cost': 4500, 'box_sizes': '19-18-17', 'weight': 1200},
-    {'size': 20, 'cost': 5200, 'box_sizes': '23-24-21', 'weight': 1200},
+    {'size': 10, 'cost': 3500, 'box_sizes': '12-12-11', 'weight': 1200},
+    {'size': 12, 'cost': 4500, 'box_sizes': '14-15-13', 'weight': 1200},
+    {'size': 16, 'cost': 7400, 'box_sizes': '19-18-17', 'weight': 1200},
+    {'size': 20, 'cost': 11800, 'box_sizes': '23-24-21', 'weight': 1200},
 )
 CARDBOARD_DATA = {
-    'size': 18, 'cost': 3500, 'slug': 'natural_cardboard', 'box_sizes': '35-20-7', 'weight': 1200
+    'size': 18, 'cost': 4500, 'slug': 'natural_cardboard', 'box_sizes': '35-20-7', 'weight': 1200
 }
 
 COLOR_MAP = {
