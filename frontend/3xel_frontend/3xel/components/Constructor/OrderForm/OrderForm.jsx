@@ -7,7 +7,7 @@ import classes from './OrderForm.module.scss'
 import Button from '../../Button/Button'
 import { apiFetch } from '../../../utils/apiClient'
 import { uploadFileChunks } from '../../../utils/fileUpload'
-import { setIsRepeat } from '../../../store/cartSlice'
+import { setIsRepeat, clearCart } from '../../../store/cartSlice'
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024
 
@@ -336,8 +336,9 @@ export default function OrderForm() {
 
             if (response?.payment_url) {
                 window.location.href = response.payment_url
+                dispatcher(clearCart())
             } else {
-                setGeneralError('Сервер не вернул ссылку на оплату')
+                setGeneralError('Произошла ошибка при оплате')
             }
         } catch (error) {
             const message = error?.payload?.error || error?.message || 'Не удалось создать заказ'
