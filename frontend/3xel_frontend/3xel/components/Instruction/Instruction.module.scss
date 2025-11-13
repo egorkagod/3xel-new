@@ -10,7 +10,8 @@
     }
 
     .recomendations,
-    .instruction {
+    .instruction,
+    .examples {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -34,8 +35,71 @@
         }
 
         img {
-            justify-self: center;
             width: 90%;
+        }
+    }
+
+    .fourCircles {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 14px 35px rgba(15, 14, 10, 0.06);
+        background: #ffffff;
+
+        .steps {
+            display: flex;
+            gap: 10px;
+
+            .text {
+                color: #444;
+                font-size: 15px;
+            }
+        }
+
+        img {
+            width: 40%;
+            align-self: center;
+        }
+    }
+
+    .examples {
+
+        gap: 20px;
+
+        .videoBlock {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+
+            @media (max-width: 1199px) {
+                grid-template-columns: 1fr;
+            }
+
+            .videoTitle {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                h4 {
+                    margin: 0;
+                }
+            }
+
+            .leftSide, .rightSide {
+                width: 100%;
+                display: flex;
+                gap: 6px;
+                flex-direction: column;
+
+                video {
+                    height: 400px;
+                    width: 100%;
+                    border-radius: 18px;
+                    border: 1px solid rgba(164, 164, 164, 0.3);
+                }
+            }
         }
     }
 
@@ -44,6 +108,16 @@
 
         .instructionContent {
             grid-template-columns: 1fr;
+        }
+
+        .fourCircles {
+            .steps {
+                flex-direction: column;
+            }
+
+            img {
+                width: 70%;
+            }
         }
     }
 }

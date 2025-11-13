@@ -7,6 +7,8 @@ import reflections from '/3xel_images/reflections.jpg'
 import steps from '/3xel_images/steps.png'
 import instruction from '/3xel_images/instruction.gif'
 import Point from './Point/Point'
+import well from '/videos/well.mp4'
+import bad from '/videos/bad.mp4'
 
 export default function Instruction() {
     return (
@@ -36,7 +38,7 @@ export default function Instruction() {
             <section className={classes.instruction}>
                 <h2>Как снимать видео (1–2 минуты, без пауз)</h2>
                 <div className={classes.instructionContent}>
-                    <ul style={{ padding: '0' }}>
+                    <ul style={{ padding: '20px' }}>
                         <li>
                             <span className={classes.instructionPoint}>Запишите <strong>одно непрерывное видео</strong> без остановок.</span>
                         </li>
@@ -51,6 +53,58 @@ export default function Instruction() {
                         </li>
                     </ul>
                     <img src={instruction} alt="Человек обходит объект по кругу" />
+                </div>
+            </section>
+            <section className={classes.fourCircles}>
+                <h2>Четыре круга вокруг объекта</h2>
+                <div className={classes.steps}>
+                    <div className={classes.step}>
+                        <h4>Круг 1 — низкий ракурс</h4>
+                        <span className={classes.text}>
+                            Обходите на максимально низком уровне, чтобы захватить нижние детали.
+                        </span>
+                    </div>
+                    <div className={classes.step}>
+                        <h4>Круг 2 — на уровне глаз</h4>
+                        <span className={classes.text}>
+                            Поднимите камеру до уровня глаз и сделайте второй круг.
+                        </span>
+                    </div>
+                    <div className={classes.step}>
+                        <h4>Круг 3 — ~30° сверху</h4>
+                        <span className={classes.text}>
+                            Поднимите камеру чуть выше и обойдите объект ещё раз, добирая верхние плоскости.
+                        </span>
+                    </div>
+                    <div className={classes.step}>
+                        <h4>Круг 4 — высокий ракурс 45–60°</h4>
+                        <span className={classes.text}>
+                            Завершите съёмку почти сверху, чтобы покрыть все оставшиеся зоны.
+                        </span>
+                    </div>
+                </div>
+                <img src={steps} alt="Схема: четыре круга вокруг бюста" />
+            </section>
+            <section className={classes.examples}>
+                <div className={classes.examplesTitle}>
+                    <h2>Примеры видео</h2>
+                    <span className={classes.subtitle}>Ниже — как должно выглядеть видео для бюста и пример, как снимать не нужно.</span>
+                </div>
+                <div className={classes.videoBlock}>
+                    <div className={classes.leftSide}>
+                        <div className={classes.videoTitle}>
+                            <h4>Хороший пример</h4>
+                            <span className={classes.subtitle}>Ровный свет, без резких движений, 4 круга вокруг человека.</span>
+                        </div>
+                        <video src={well} controls muted></video>
+                    </div>
+                    <div className={classes.rightSide}>
+                        <div className={classes.videoTitle}>
+                            <h4 style={{ color: '#c84646' }}>Плохой пример</h4>
+                            <span className={classes.subtitle}>Темно, сильные тени, резкие движения, человек выходит из кадра.</span>
+                        </div>
+                        <video src={bad} controls muted></video>
+                    </div>
                 </div>
             </section>
         </main>

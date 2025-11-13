@@ -3,6 +3,7 @@ import image1 from '../../../assets/carusel_image1.png'
 import image2 from '../../../assets/carusel_image2.png'
 import image3 from '../../../assets/carusel_image3.png'
 import image4 from '../../../assets/carusel_image4.png'
+import image5 from '../../../assets/carusel_image5.png'
 import Button from '../../Button/Button'
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
@@ -16,6 +17,7 @@ export default function MainUpperSection() {
         image2,
         image3,
         image4,
+        image5,
     ]
 
     const [currentSlide, setCurrentSlide] = useState(0)

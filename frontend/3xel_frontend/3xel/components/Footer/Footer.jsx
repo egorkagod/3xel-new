@@ -20,13 +20,13 @@ export default function Footer() {
             <ul>
                 <li className={classes.contactsHeader}><h4>Контакты:</h4></li>
                 <li><a href="tel:+79363338890">+7 (936) 333-88-90</a></li>
-                <li className={classes.telegram}>Telegram: @shop_3xel</li>
-                <li className={classes.whatsapp}>WhatsApp: +7 (936) 333-88-90</li>
+                <li className={classes.telegram}>Telegram: <a href="https://t.me/@shop_3xel" target='_blank' rel='noopener noreferrer'>@shop_3xel</a></li>
+                <li className={classes.whatsapp}>WhatsApp: <a href="https://wa.me/79363338890" target="_blank" rel="noopener noreferrer">+7 (936) 333-88-90</a></li>
             </ul>
             <ul>
                 <li className={classes.docsHeader}><h4>Пользователю:</h4></li>
-                <li><a href="/files/offer_3xel.pdf" target='_blank'>Оферта</a></li>
-                <li><a href="/files/privacy_policy_3xel.pdf" target='_blank'>Политика конфиденциальности</a></li>
+                <li><a href="/files/Публичная_оферта_интернет_магазин_изготовления_бюстов_1.pdf" target='_blank'>Оферта</a></li>
+                <li><a href="/files/Политика_конфиденциальности_интернет_магазин_изготовления_бюстов.pdf" target='_blank'>Политика конфиденциальности</a></li>
             </ul>
 
             <span className={classes.copyright}>© {currentYear} 3xel. Все права защищены</span>
