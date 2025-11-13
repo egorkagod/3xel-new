@@ -1,12 +1,13 @@
 .point {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    align-items: start;
 
     .leftSide {
         width: 100%;
         display: flex;
         gap: 6px;
-        align-items: flex-start;
+        align-items: center;
 
         .number {
             width: 26px;
