@@ -1,7 +1,7 @@
 .point {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: start;
+    align-items: center;
 
     .leftSide {
         width: 100%;
@@ -25,6 +25,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            justify-content: start;
 
             .text {
                 font-size: 14px;
