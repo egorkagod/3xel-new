@@ -1,4 +1,4 @@
-.instruction {
+.instructions {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -9,7 +9,8 @@
         color: #6b6b6b;
     }
 
-    .recomendations {
+    .recomendations,
+    .instruction {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -23,7 +24,26 @@
         }
     }
 
+    .instructionContent {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+
+        .instructionPoint {
+            color: #444;
+            font-size: 15px;
+        }
+
+        img {
+            justify-self: center;
+            width: 90%;
+        }
+    }
+
     @media (max-width: 1199px) {
         padding: 80px 20px;
+
+        .instructionContent {
+            grid-template-columns: 1fr;
+        }
     }
 }

@@ -10,7 +10,7 @@ import Point from './Point/Point'
 
 export default function Instruction() {
     return (
-        <main className={classes.instruction}>
+        <main className={classes.instructions}>
             <div className={classes.title}>
                 <h1>Инструкция для съёмки видео</h1>
                 <span className={classes.subtitle}>Короткий чек-лист и пошаговая схема, чтобы видео для бюста получилось с первого раза.</span>
@@ -32,6 +32,26 @@ export default function Instruction() {
                 <Point number={5} header='Оставьте запас по краям кадра.' img={place} alt='Достаточно места вокруг объекта'>
                     Объект целиком в кадре, ничего не «обрезается» сверху и снизу.
                 </Point>
+            </section>
+            <section className={classes.instruction}>
+                <h2>Как снимать видео (1–2 минуты, без пауз)</h2>
+                <div className={classes.instructionContent}>
+                    <ul style={{ padding: '0' }}>
+                        <li>
+                            <span className={classes.instructionPoint}>Запишите <strong>одно непрерывное видео</strong> без остановок.</span>
+                        </li>
+                        <li>
+                            <span className={classes.instructionPoint}>Сделайте <strong>4 полных круга</strong> вокруг объекта без зума.</span>
+                        </li>
+                        <li>
+                            <span className={classes.instructionPoint}>Держите объект по центру кадра на одинаковом расстоянии.</span>
+                        </li>
+                        <li>
+                            <span className={classes.instructionPoint}>Двигайтесь плавно, без резких рывков и поворотов камеры.</span>
+                        </li>
+                    </ul>
+                    <img src={instruction} alt="Человек обходит объект по кругу" />
+                </div>
             </section>
         </main>
     )
