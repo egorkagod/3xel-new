@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Button from '../Button/Button'
 import { Link, useLocation } from 'react-router-dom'
-import Profile from '../Profile/Profile'
 import { HashLink } from 'react-router-hash-link'
 import { useSelector } from 'react-redux'
 
