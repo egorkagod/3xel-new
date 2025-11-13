@@ -1,6 +1,6 @@
 import classes from './CertificatesSection.module.scss'
 import SectionHeader from '../../SectionHeader/SectionHeader'
-import CertificateProt from './CertificateProt/CertificateProt'
+import Certificate from '../../Constructor/SelectGood/Certificates/Certificate'
 
 export default function CertificatesSection() {
     return (
@@ -9,7 +9,7 @@ export default function CertificatesSection() {
                 Изготовление, упаковка и доставка включены.
             </SectionHeader>
             <div className={classes.certificatesContainer}>
-                <CertificateProt></CertificateProt>
+                <Certificate isPrototype={true}></Certificate>
             </div>
         </section>
     )
