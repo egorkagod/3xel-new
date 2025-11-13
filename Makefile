@@ -29,8 +29,6 @@ npm-install:
 push:
 	git add . && git commit -m "update" && git push
 
-# --- Celery & Redis helpers ---
-
 celery:
 	$(VENV)/bin/celery -A $(APP) worker -l info
 

@@ -110,7 +110,7 @@ class OrderView(APIView):
                     order_id = int(order_id)
                 except (TypeError, ValueError):
                     return Response({'error': 'Некорректный идентификатор заказа'}, status=status.HTTP_400_BAD_REQUEST)
-                order = order_service.get(order_id, request.user.id)
+                order = order_service.get(order_id)
                 if order:
                     payload = OrderModelSerializer(order).data
                     return Response(payload, status=status.HTTP_200_OK)

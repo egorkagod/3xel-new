@@ -1,11 +1,11 @@
-from pydantic import BaseModel, model_validator
-from django.core.files.uploadedfile import UploadedFile
+from pydantic import BaseModel, model_validator, ConfigDict
 
 
 class ChunkUploadSchema(BaseModel):
+    # Разрешаем произвольные типы (UploadedFile из Django)
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     filename: str
     format: str
-    chunk: UploadedFile
     chunk_number: int
     total_chunks: int
 

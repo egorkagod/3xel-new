@@ -25,4 +25,4 @@ def change_data(dto: UserChangeDataDTO):
         user.first_name = dto.name
         user.last_name = dto.surname
         user.patronymic = dto.patronymic
-        user.save(update_fields=['name', 'surname', 'patronymic'])
+        user.save(update_fields=['first_name', 'last_name', 'patronymic'])

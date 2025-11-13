@@ -1,6 +1,7 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin.sites import NotRegistered
 
 from order.models import Order
 
@@ -9,7 +10,13 @@ admin.site.site_header = "Панель управления 3xel"
 admin.site.site_title = "3xel Admin"                  
 admin.site.index_title = ""
 
-admin.site.unregister(User)
+User = get_user_model()
+
+# Безопасно снимаем регистрацию, если была выполнена ранее
+try:
+    admin.site.unregister(User)
+except NotRegistered:  # если модель не была зарегистрирована — игнорируем
+    pass
 
 class OrderInline(admin.StackedInline):
     model = Order

@@ -12,14 +12,14 @@ from filehandler.models import File
 from .dto import ChunkUploadServiceDTO, ChunkUploadResponseServiceDTO
 
 
-def upload_chunk(dto: ChunkUploadServiceDTO) -> ChunkUploadResponseServiceDTO:
+def upload_chunk(dto: ChunkUploadServiceDTO, chunk) -> ChunkUploadResponseServiceDTO:
     file = None
 
     user_folder_path = Path(settings.BASE_DIR) / env_settings.UPLOAD_FILE_ROOT / f'{dto.user_id}'
     chunk_path = user_folder_path / f'{_normalize_filename(dto.filename)}' / f'{dto.chunk_number}'
     chunk_path.parent.mkdir(parents=True, exist_ok=True)
     with open(chunk_path, 'wb') as f:
-        f.write(dto.chunk.read())
+        f.write(chunk.read())
 
     status = statuses.UPLOADED
     if dto.chunk_number + 1 == dto.total_chunks:
