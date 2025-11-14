@@ -71,10 +71,10 @@ export default function GoodCard({ goods, forConstructor }) {
     const [userSelected, setUserSelected] = useState(false)
     const selectedVariant = useMemo(
         () =>
-            variants.find(
+            selectedGood.variants.find(
                 (v) => v.color === selectedColor,
             ) || initialVariant,
-        [selectedColor, variants, initialVariant, selectedGood, selectedSize]
+        [selectedColor, variants, initialVariant, selectedGood]
     )
 
     const [selectedImage, setSelectedImage] = useState(
@@ -144,7 +144,7 @@ export default function GoodCard({ goods, forConstructor }) {
             type: selectedVariant.type,
             name: selectedGood.name,
             color: selectedColor,
-            size: selectedSize,
+            size: selectedGood.size,
             colorName: selectedVariant.colorName || 'Цвет',
             cost: selectedGood.cost ?? 0,
             width: cdekWidth,
