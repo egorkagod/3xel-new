@@ -15,7 +15,14 @@ export default function GoodCard({ goods, forConstructor }) {
     const dispatcher = useDispatch()
     const good = goods?.[0]
 
-    const variants = useMemo(() => good?.variants || [], [good])
+    // Используем варианты выбранного размера, чтобы не отправлять id варианта от первого размера
+    const [selectedSize, setSelectedSize] = useState(goods?.[0].size || '—')
+    const selectedGood = useMemo(() =>
+        goods?.find(item => item.size === selectedSize),
+        [goods, selectedSize]
+    )
+
+    const variants = useMemo(() => selectedGood?.variants || [], [selectedGood])
     const initialVariant = variants[0] || {
         id: null,
         color: DEFAULT_COLOR,
@@ -41,11 +48,6 @@ export default function GoodCard({ goods, forConstructor }) {
     }, [variants, initialVariant.images])
 
     const [selectedColor, setSelectedColor] = useState(initialVariant.color || DEFAULT_COLOR)
-    const [selectedSize, setSelectedSize] = useState(goods?.[0].size || '—')
-    const selectedGood = useMemo(() =>
-        goods?.find(item => item.size === selectedSize),
-        [goods, selectedSize]
-    )
 
     const [cdekLength, cdekWidth, cdekHeight] = useMemo(() => {
         if (!selectedGood || !selectedGood.box_sizes) return [null, null, null]
