@@ -1,5 +1,8 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
+
+
+User = get_user_model()
 
 
 class RegisterViewSerializer(serializers.Serializer):
@@ -23,7 +26,7 @@ class ProfileViewSerializer(serializers.Serializer):
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'email']
+        fields = ['first_name', 'last_name', 'patronymic', 'phone', 'email']
 
 
 class ChangePasswordSerializer(serializers.Serializer):
