@@ -44,7 +44,7 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
         raise OrderCreationError('Ошибка при получении цены доставки')
     delivery_cost = math.ceil(delivery_cost * 1.1)
     total_amount = goods_amount + delivery_cost
-    logging.getLogger('order').info(f'Goods amount: {goods_amount}, Delivery: {delivery_cost}')
+    logging.getLogger('order').info(f'Goods amount: {goods_amount}, Delivery: {delivery_cost}, Goods: {goods}')
 
     # Создание заказа в бд
     order_id = order_service.create(
