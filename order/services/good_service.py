@@ -1,4 +1,5 @@
 from typing import TypedDict
+import logging
 
 from order.models import GoodVariant
 from order.exceptions import InvalidGoodsError
@@ -25,7 +26,7 @@ def get_all_goods_info(goods: list[int], is_repeated=False) -> list[dict]:
     goods_objects = {
         obj['id']: obj
         for obj in GoodVariant.objects
-            .filter(id__in=set(goods))
+            .filter(id__in=unique_ids)
             .select_related("good")
             .values('id', 'good__price', 'good__box_sizes', 'good__weight', 'good__name', 'good__size')
     }
@@ -37,7 +38,7 @@ def get_all_goods_info(goods: list[int], is_repeated=False) -> list[dict]:
     for gid in goods:
         obj = goods_objects[gid]
         good: Good = {
-            'id': obj['id'],
+            'id': gid,
             'name': obj['good__name'],
             'price': obj['good__price'],
             'discounted_price': obj['good__price'],
@@ -46,6 +47,8 @@ def get_all_goods_info(goods: list[int], is_repeated=False) -> list[dict]:
             'weight': obj['good__weight'],
         }
         total_goods.append(good)
+
+    logging.getLogger('order').info(f'Goods: {total_goods}')
 
     if is_repeated:
         for good in total_goods:
