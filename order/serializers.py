@@ -32,11 +32,12 @@ class GoodVariantModelSerializer(serializers.ModelSerializer):
 # Good
 
 class GoodModelSerializer(serializers.ModelSerializer):
+    cost = serializers.IntegerField(source='price')
     variants = GoodVariantModelSerializer(many=True, read_only=True)
 
     class Meta:
         model = Good
-        fields = ['id', 'name', 'box_sizes', 'weight', 'price', 'size', 'description', 'technology', 'variants']
+        fields = ['id', 'name', 'box_sizes', 'weight', 'cost', 'size', 'description', 'technology', 'variants']
 
 # OrderItem
 
