@@ -83,6 +83,16 @@ export default function GoodCard({ goods, forConstructor }) {
 
     const [popupIsActive, setPopupIsActive] = useState(false)
 
+    // Если при смене размера текущий цвет недоступен, переключаемся на первый доступный
+    useEffect(() => {
+        const hasCurrentColor = variants.some(v => v.color === selectedColor)
+        if (!hasCurrentColor) {
+            const nextColor = variants[0]?.color || DEFAULT_COLOR
+            setSelectedColor(nextColor)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [variants])
+
     useEffect(() => {
         const newVariant = variants.find(v =>
             v.color === selectedColor
