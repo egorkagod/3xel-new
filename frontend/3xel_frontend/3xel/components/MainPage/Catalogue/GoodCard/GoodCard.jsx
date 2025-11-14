@@ -74,7 +74,7 @@ export default function GoodCard({ goods, forConstructor }) {
             variants.find(
                 (v) => v.color === selectedColor,
             ) || initialVariant,
-        [selectedColor, variants, initialVariant, selectedGood]
+        [selectedColor, variants, initialVariant, selectedGood, selectedSize]
     )
 
     const [selectedImage, setSelectedImage] = useState(
