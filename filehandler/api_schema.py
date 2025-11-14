@@ -1,11 +1,11 @@
-from pydantic import BaseModel, model_validator, Field
+from pydantic import BaseModel, model_validator
 
 
 class ChunkUploadSchema(BaseModel):
-    filename: str = Field(alias='fileId')
+    filename: str
     format: str
-    chunk_number: int = Field(alias='chunkIndex')
-    total_chunks: int = Field(alias='totalChunks')
+    chunk_number: int
+    total_chunks: int
 
     @model_validator(mode='after')
     def check_file_format(self):

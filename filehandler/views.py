@@ -19,12 +19,20 @@ class UploadFileView(APIView):
 
     def post(self, request):
         try:
-            chunk = request.FILES.get('chunk', None)
-            data = ChunkUploadSchema(
-                **request.data,
-            )
+            chunk = request.FILES.get('chunk')
+            if not chunk:
+                return Response({'error': 'Не передан файл chunk'}, status=status.HTTP_400_BAD_REQUEST)
+
+            raw = {
+                'chunk_number': request.data.get('chunkIndex'),
+                'total_chunks': request.data.get('totalChunks'),
+                'filename': request.data.get('fileId'),
+                'format': request.data.get('format'),
+            }
+
+            data = ChunkUploadSchema(**raw)
         except ValidationError as e:
-            return Response({'error': e.errors()})
+            return Response({'error': e.errors()}, status=status.HTTP_400_BAD_REQUEST)
         
         dto = file_service.upload_chunk(
             ChunkUploadServiceDTO(
