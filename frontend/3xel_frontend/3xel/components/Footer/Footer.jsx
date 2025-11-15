@@ -20,7 +20,7 @@ export default function Footer() {
             <ul>
                 <li className={classes.contactsHeader}><h4>Контакты:</h4></li>
                 <li><a href="tel:+79363338890">+7 (936) 333-88-90</a></li>
-                <li className={classes.telegram}>Telegram: <a href="https://t.me/@shop_3xel" target='_blank' rel='noopener noreferrer'>@shop_3xel</a></li>
+                <li className={classes.telegram}>Telegram: <a href="https://t.me/shop_3xel" target='_blank' rel='noopener noreferrer'>@shop_3xel</a></li>
                 <li className={classes.whatsapp}>WhatsApp: <a href="https://wa.me/79363338890" target="_blank" rel="noopener noreferrer">+7 (936) 333-88-90</a></li>
             </ul>
             <ul>

@@ -16,7 +16,7 @@ export default function Certificate({ certificate, id, isPrototype }) {
     const [popupIsActive, setPopupIsActive] = useState(false)
 
     const handleAddTocart = () => {
-        dispatcher(addToCart({ id: certificate.id, name: certificate.name, denomination: selectedDenomination, cost: selectedDenomination }))
+        dispatcher(addToCart({ id: certificate.id, name: certificate.name, denomination: selectedDenomination, cost: selectedDenomination, type: certificate.type }))
         setPopupIsActive(true)
         setTimeout(() => setPopupIsActive(false), 3000)
     }
@@ -31,8 +31,18 @@ export default function Certificate({ certificate, id, isPrototype }) {
     return (
         <div className={classes.certificate} id={id}>
             <PopUp isActive={popupIsActive}>Товар добавлен в конструктор</PopUp>
-            <div className={classes.imageContainer}>
-                {images.map(image => <img src={image} alt='certificate photo' className={classNames(classes.image, { [classes.active]: image === activeImage })} />)}
+            <div className={classes.instructionContainer}>
+                {certificate.type === 'digital' ? (
+                    <p>
+                        Как воспользоваться электронным сертификатом: <br />
+                        <br />
+                        — Добавьте в корзину изделия, которые хотите приобрести <br />
+                        — Введите и примените промокод, который мы выслали вам на почту <br />
+                        — Совершите заказ, прикрепив видео для создания вашего уникального бюста <br />
+                    </p>
+                ) : (
+                    images.map(image => <img src={image} alt='certificate photo' className={classNames(classes.image, { [classes.active]: image === activeImage })} />)
+                )}
             </div>
             <div className={classes.certificateInfoBlock}>
                 <div className={classes.denominationsList}>
@@ -58,9 +68,13 @@ export default function Certificate({ certificate, id, isPrototype }) {
                             </div>
                         </div>
                     )}
-                    <div className={classes.imagesBlock}>
-                        {images.map(image => <img src={image} alt='certificate photo' onClick={() => setActiveImage(image)} style={{ outline: image === activeImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }} />)}
-                    </div>
+                    {certificate.type === 'digital' ? (
+                        null
+                    ) : (
+                        <div className={classes.imagesBlock}>
+                            {images.map(image => <img src={image} alt='certificate photo' onClick={() => setActiveImage(image)} style={{ outline: image === activeImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }} />)}
+                        </div>
+                    )}
                     {isPrototype ? (
                         <HashLink style={{ all: 'unset' }} to='/constructor#certificate'>
                             <Button color='golden'>Выбрать номинал</Button>

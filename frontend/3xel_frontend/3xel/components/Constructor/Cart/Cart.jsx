@@ -3,13 +3,11 @@ import classes from './Cart.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCart } from '../../../store/cartSlice'
 import { HashLink } from 'react-router-hash-link'
-import { useState } from 'react'
 
 export default function Cart() {
 
     const cart = useSelector(state => state.cart.items)
     const dispatcher = useDispatch()
-    const [showDiscountInfo, setShowDiscountInfo] = useState(false)
 
     return (
         <section className={classes.cartSection}>
@@ -18,7 +16,7 @@ export default function Cart() {
                 {cart.length > 0 ? (
                     cart.map((item, index) =>
                         <div>
-                            {item.name === 'Подарочный сертификат' ? (
+                            {item.name === 'Подарочный сертификат на персональный бюст' || 'Электронный подарочный сертификат' ? (
                                 <div className={classes.addedCertificate} key={index}>
                                     <span className={classes.itemDescription}>{item.name} — {item.cost} ₽</span>
                                     <Button color='white' onClick={() => dispatcher(removeFromCart(index))}>Удалить</Button>
