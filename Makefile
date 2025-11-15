@@ -33,7 +33,7 @@ celery:
 	$(VENV)/bin/celery -A $(APP) worker -l info
 
 celery-daemon:
-	$(VENV)/bin/celery -A $(APP) worker -l info --detach
+	$(VENV)/bin/celery -A $(APP) worker -l info --logfile=logging/celery.log --detach
 
 # Start a local Redis via Docker (recommended if redis-server not installed)
 redis-docker:
