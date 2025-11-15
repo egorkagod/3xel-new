@@ -9,7 +9,7 @@ class CreateOrderItemRepoDTO(BaseModel):
 class OrderCreateRepoDTO(BaseModel):
     user_id: int
     goods: list
-    video_id: int
+    video_id: int | None
     comment: str | None
     amount: int
     

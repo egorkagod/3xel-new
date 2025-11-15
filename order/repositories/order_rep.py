@@ -3,7 +3,7 @@ from filehandler.models import File
 from order.repositories.dto import OrderCreateRepoDTO
 
 
-def create(dto: OrderCreateRepoDTO) -> int | None:
+def create(dto: OrderCreateRepoDTO):
     video = File.objects.filter(id=dto.video_id).first()
     if not video:
         return None
@@ -28,4 +28,4 @@ def create(dto: OrderCreateRepoDTO) -> int | None:
                 quantity=quantity,
             )
     
-    return order.id
+    return order

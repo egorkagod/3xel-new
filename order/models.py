@@ -97,7 +97,7 @@ class Order(models.Model):
     comment = models.TextField(max_length=1000, default='', blank=True, null=True)
     cdek = models.OneToOneField('cdek.CdekOrder', on_delete=models.PROTECT, related_name='order', null=True, default=None)
     promocode = models.OneToOneField(Promocode, on_delete=models.PROTECT, blank=True, null=True, default=None)
-    video = models.ForeignKey(File, on_delete=models.PROTECT, null=True, related_name='order')
+    video = models.ForeignKey(File, on_delete=models.PROTECT, null=True, blank=True, related_name='order')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

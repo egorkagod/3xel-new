@@ -1,5 +1,6 @@
 from pathlib import Path
 import shutil
+import os
 
 from django.conf import settings
 from order.repositories import order_rep
@@ -23,34 +24,40 @@ def get_all(user_id):
 
 
 def create(dto: OrderCreateServiceDTO) -> int:
-    if not dto.previous_order_id:
-        order_id = order_rep.create(
-            OrderCreateRepoDTO(
-                user_id=dto.user_id,
-                goods=dto.goods,
-                video_id=dto.video_id,
-                comment=dto.comment,
-                amount=dto.amount,
-            )
+    created_order = order_rep.create(
+        OrderCreateRepoDTO(
+            user_id=dto.user_id,
+            goods=dto.goods,
+            video_id=None,
+            comment=dto.comment,
+            amount=dto.amount,
         )
-        if not order_id:
-            raise OrderCreationError('Не удалось создать заказ в бд')
-        video = File.objects.filter(pk=dto.video_id).first()
-    else:   
-        order = Order.objects.filter(pk=dto.previous_order_id).first()
-        if not order:
-            raise OrderCreationError('Не найде предыдущий заказ')
-        video = order.video
-        order_id = order.id
+    )
 
-    if not video:
-        raise OrderCreationError('Не нашел видео')
+    if not created_order:
+        raise OrderCreationError('Не удалось создать заказ в бд')
     
-    order_folder = Path(settings.BASE_DIR) / 'media' / 'orders' / f'{order_id}'
+    order_folder = Path(settings.BASE_DIR) / 'media' / 'orders' / f'{created_order.id}'
     order_folder.mkdir(parents=True, exist_ok=True)
-
     new_video_path = str(order_folder / 'video.mp4')
-    shutil.move(video.path, new_video_path)
-    video.path = new_video_path
-    video.save()
-    return order_id
+
+    if dto.previous_order_id:
+        previous_order = Order.objects.filter(pk=dto.previous_order_id).first()
+        if not previous_order or not previous_order.video:
+            raise OrderCreationError('Не найден предыдущий заказ или его видео')
+        os.link(previous_order.video.path, new_video_path)
+        video = File.objects.create(
+            user_id=dto.user_id,
+            path=new_video_path
+        )
+    else:
+        video = File.objects.filter(pk=dto.video_id).first()
+        if not video:
+            raise OrderCreationError('Не найдено загруженное видео')
+        shutil.move(video.path, new_video_path)
+        video.path = new_video_path
+        video.save(update_fields=['path'])
+
+    created_order.video = video
+    created_order.save(update_fields=['video'])
+    return created_order.id
