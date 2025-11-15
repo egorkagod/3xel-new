@@ -124,7 +124,8 @@ class OrderView(APIView):
         try:
             data = OrderCreateSchema(**request.data)
         except ValidationError as e:
-            return Response({'error': e.errors()})
+            # Преобразуем pydantic-ошибку в строку, чтобы избежать проблем с JSON-сериализацией
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             payment_url = order_workflow.create(
