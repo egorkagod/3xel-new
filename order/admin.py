@@ -55,6 +55,7 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     status_value = None  # to be set in subclasses
     list_display = (
         'id',
+        'order_items',
         'cdek_order_link',
         'status_display',
         'created_at',
@@ -68,19 +69,30 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if self.status_value:
-            return qs.filter(status=self.status_value).select_related('user', 'payment', 'video')
+            return (
+                qs.filter(status=self.status_value)
+                .select_related('user', 'payment', 'video')
+                .prefetch_related('items__good_variant', 'items__good_variant__good')
+            )
         return qs.none()
 
     def status_display(self, obj):
         return obj.get_status_display()
     status_display.short_description = 'Статус заказа'
 
+    def order_items(self, obj):
+        items = getattr(obj, 'items', None).all() if hasattr(obj, 'items') else []
+        if not items:
+            return '-'
+        return ', '.join(f'{item.quantity} x {item.good_variant}' for item in items)
+    order_items.short_description = 'Состав заказа'
+
     def cdek_order_link(self, obj):
         cdek_order = getattr(obj, 'cdek', None)
         if not cdek_order:
             return '-'
         url = reverse('admin:cdek_cdekorder_change', args=[cdek_order.id])
-        return format_html('<a href="{}">CDEK заказ</a>', url)
+        return format_html('<a href="{}">CDEK</a>', url)
     cdek_order_link.short_description = 'CDEK'
 
     def payment_status(self, obj):
@@ -118,7 +130,7 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
                 # В крайнем случае возвращаем как есть
                 return format_html('<a href="{}{}" download>Скачать видео</a>', settings.SITE_DOMEN, path)
         return '-'
-    download_video.short_description = 'Скачать видео'
+    download_video.short_description = 'Скачать'
 
 
 @admin.register(NewOrder)
