@@ -12,6 +12,7 @@ from .models import (
     ProcessingOrder,
     ShippedOrder,
     DeliveredOrder,
+    CompletedOrder,
 )
 
 @admin.register(Good)
@@ -140,11 +141,17 @@ class DeliveredOrderAdmin(BaseOrderStatusAdmin):
     status_value = 'DELIVERED'
 
 
+@admin.register(CompletedOrder)
+class CompletedOrderAdmin(BaseOrderStatusAdmin):
+    status_value = 'CONFIRMED'
+
+
 # Reorder models within 'order' app on the admin app page
 _ORDER_MODELS_ORDER = [
     'NewOrder',
     'ProcessingOrder',
     'ShippedOrder',
+    'CompletedOrder',
     'DeliveredOrder',
     'Good',
     'GoodVariant',

@@ -143,3 +143,10 @@ class DeliveredOrder(Order):
         proxy = True
         verbose_name = 'Заказ доставлен'
         verbose_name_plural = 'Доставленные заказы'
+
+
+class CompletedOrder(Order):
+    class Meta:
+        proxy = True
+        verbose_name = 'Завершенный заказ'
+        verbose_name_plural = 'Завершенные заказы'
