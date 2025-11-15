@@ -73,11 +73,17 @@ def update_status(data):
 
         # Создание заказа в СДЭК при успешном платеже
         if PaymentStatus(data['Status'].upper()) == PaymentStatus.CONFIRMED:
-            logging.getLogger('cdek').info('Заказ оплачен, инициируется создание заказа в СДЭК')
+            logger = logging.getLogger('cdek')
+            logger.info('Заказ оплачен, инициируется создание заказа в СДЭК')
             payment_id = data['PaymentId']
-            register_order.delay(payment_id)
-    else:
-        logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
+            try:
+                logger.info(f'Пробуем отправить задачу в Celery, broker={settings.CELERY_BROKER_URL}')
+                res = register_order.delay(payment_id)
+                logger.info(f'Задача отправлена, id={res.id}')
+            except Exception as e:
+                logger.exception(f'Ошибка при отправке задачи в Celery: {e}')
+        else:
+            logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
 
 def create_receipt_items(goods: list[dict], delivery_cost: int) -> list[dict]:
     grouped = defaultdict(int)
