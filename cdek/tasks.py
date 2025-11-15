@@ -42,7 +42,7 @@ def register_order(payment_id):
                 packages=cdek_service.get_packages_for_register_order(goods),
             )
         )
-        cdek_logger.info(f'Получен ответ при регистрации заказа в СДЭК: {resp}')ё
+        cdek_logger.info(f'Получен ответ при регистрации заказа в СДЭК: {resp}')
     except OrderError as e:
         cdek_logger.info(e.detail)
     except Exception as e:
