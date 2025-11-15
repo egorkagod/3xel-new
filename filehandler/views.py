@@ -33,14 +33,16 @@ class UploadFileView(APIView):
             data = ChunkUploadSchema(**raw)
         except ValidationError as e:
             return Response({'error': e.errors()}, status=status.HTTP_400_BAD_REQUEST)
-        
-        dto = file_service.upload_chunk(
-            ChunkUploadServiceDTO(
-                **data.model_dump(),
-                user_id=request.user.id
-            ),
-            chunk=chunk
-        )
+        try:
+            dto = file_service.upload_chunk(
+                ChunkUploadServiceDTO(
+                    **data.model_dump(),
+                    user_id=request.user.id
+                ),
+                chunk=chunk
+            )
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         if dto.status == statuses.ALL_UPLOADED:
             return Response({'message': 'Файл успешно загружен', 'file_id': dto.file_id}, status=status.HTTP_200_OK)
         elif dto.status == statuses.UPLOADED:
