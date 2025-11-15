@@ -88,13 +88,15 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
             return '-'
 
         rows = format_html_join(
-            '<br>',
+            '',
             (
+                '<li>'
                 '<span style="display:inline-block;'
                 'width:14px;height:14px;border-radius:50%;'
                 'border:1px solid #ccc;margin-right:4px;'
                 'background:{};"></span>'
                 '{} {}см ({}) — {} шт'
+                '</li>'
             ),
             (
                 (
@@ -107,7 +109,9 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
                 for item in items if item.good_variant
             ),
         )
-        return rows or '-'
+        if not rows:
+            return '-'
+        return format_html('<ul style="margin:0;padding-left:18px">{}</ul>', rows)
     order_items.short_description = 'Состав заказа'
 
     def cdek_order_link(self, obj):
