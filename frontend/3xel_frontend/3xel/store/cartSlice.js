@@ -12,7 +12,7 @@ const applyDiscounts = (items, repeat) => {
     return items.map((item) => {
         let discount = 0
 
-        if (item.type === 'Подарочный сертификат') {
+        if (item.type === 'digital' || item.type === 'physical') {
             return {...item, discount: 0}
         }
 
