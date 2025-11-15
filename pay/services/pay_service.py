@@ -15,8 +15,6 @@ from pay.models import PaymentStatus
 from cdek.tasks import register_order
 
 
-notification_logger = logging.getLogger('notification')
-
 class InitPayServiceDTO(BaseModel):
     order_id: int
     goods: list
@@ -75,11 +73,11 @@ def update_status(data):
 
         # Создание заказа в СДЭК при успешном платеже
         if PaymentStatus(data['Status'].upper()) == PaymentStatus.CONFIRMED:
+            logging.getLogger('cdek').info('Заказ оплачен, инициируется создание заказа в СДЭК')
             payment_id = data['PaymentId']
             register_order.delay(payment_id)
     else:
-        notification_logger.warning('Invalid notification token: %s', payload)
-
+        logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
 
 def create_receipt_items(goods: list[dict], delivery_cost: int) -> list[dict]:
     grouped = defaultdict(int)

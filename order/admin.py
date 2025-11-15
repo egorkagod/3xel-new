@@ -54,6 +54,7 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     status_value = None  # to be set in subclasses
     list_display = (
         'id',
+        'cdek_order_link',
         'status_display',
         'created_at',
         'amount',
@@ -61,7 +62,7 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
         'user_email',
         'download_video',
     )
-    list_select_related = ('user', 'payment', 'video')
+    list_select_related = ('user', 'payment', 'video', 'cdek')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -72,6 +73,14 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     def status_display(self, obj):
         return obj.get_status_display()
     status_display.short_description = 'Статус заказа'
+
+    def cdek_order_link(self, obj):
+        cdek_order = getattr(obj, 'cdek', None)
+        if not cdek_order:
+            return '-'
+        url = reverse('admin:cdek_cdekorder_change', args=[cdek_order.id])
+        return format_html('<a href="{}">CDEK заказ</a>', url)
+    cdek_order_link.short_description = 'CDEK'
 
     def payment_status(self, obj):
         payment = getattr(obj, 'payment', None)

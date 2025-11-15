@@ -1,4 +1,6 @@
+import logging
 from celery import shared_task
+
 from .services import cdek_service
 from .services.dto import CdekOrderRegisterDTO
 from order.services import good_service
@@ -24,7 +26,7 @@ def register_order(payment_id):
 
     goods: list[dict] = good_service.get_all_goods_info(goods_ids)
 
-    cdek_service.register_order(
+    resp = cdek_service.register_order(
         CdekOrderRegisterDTO(
             order_id=order['id'],
             tariff_code=order['cdek__tariff_code'],
@@ -37,3 +39,5 @@ def register_order(payment_id):
             packages=cdek_service.get_packages_for_register_order(goods),
         )
     )
+
+    logging.getLogger('cdek').info(f'Получен ответ при регистрации заказа в СДЭК: {resp}')
