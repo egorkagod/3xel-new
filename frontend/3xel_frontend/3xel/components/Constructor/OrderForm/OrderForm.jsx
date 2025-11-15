@@ -152,6 +152,7 @@ export default function OrderForm() {
         setValue('surname', surName, { shouldDirty: false })
         setValue('patronymic', patronymic, { shouldDirty: false })
         setValue('email', user?.email || '', { shouldDirty: false })
+        setValue('phone', user?.phone || '', { shouldDirty: false })
     }, [user, setValue])
 
     useEffect(() => {
