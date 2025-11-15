@@ -6,106 +6,95 @@ import place from '/3xel_images/place.jpg'
 import reflections from '/3xel_images/reflections.jpg'
 import steps from '/3xel_images/steps.png'
 import instruction from '/3xel_images/instruction.gif'
-import Point from './Point/Point'
-import well from '/videos/well.mp4'
-import bad from '/videos/bad.mp4'
 
 export default function Instruction() {
     return (
-        <main className={classes.instructions}>
-            <div className={classes.title}>
-                <h1>Инструкция для съёмки видео</h1>
-                <span className={classes.subtitle}>Короткий чек-лист и пошаговая схема, чтобы видео для бюста получилось с первого раза.</span>
+        <main className={classes.instruction}>
+            <div className={classes.pageHeader}>
+                <h1>Инструкция для съемки видео (3xel)</h1>
+                <span className={classes.subTitle}>Быстрый чек-лист</span>
             </div>
-            <section className={classes.recomendations}>
-                <h2>Быстрый чек-лист перед съёмкой</h2>
-                <Point number={1} header='Протрите объективы.' img={clearCam} alt='Чистый объектив камеры'>
-                    Салфеткой или мягкой тканью — меньше бликов и размытия.
-                </Point>
-                <Point number={2} header='Поставьте правильное качество.' img={options} alt='Настройка 4K/60FPS'>
-                    Идеально — <strong>4K 60 к/с</strong>. Если нет, выберите 4K 30/25/24 или 1080p 60/30 к/с.
-                </Point>
-                <Point number={3} header='Без лишних отражений' img={reflections} alt='Пример плохих отражений'>
-                    Не снимайте рядом с глянцевыми полами, витринами и зеркалами.
-                </Point>
-                <Point number={4} header='Сделайте ровный свет.' img={light} alt='Правильное освещение'>
-                    Подсветите с нескольких сторон, не оставляйте половину объекта в тени.
-                </Point>
-                <Point number={5} header='Оставьте запас по краям кадра.' img={place} alt='Достаточно места вокруг объекта'>
-                    Объект целиком в кадре, ничего не «обрезается» сверху и снизу.
-                </Point>
+
+            <section className={classes.instructionSection}>
+                <p className={classes.leftSide}>1. <b>Протрите объективы</b> — меньше бликов и размытия.</p>
+                <img src={clearCam} alt="clear camera photo" loading='lazy' />
             </section>
-            <section className={classes.instruction}>
-                <h2>Как снимать видео (1–2 минуты, без пауз)</h2>
-                <div className={classes.instructionContent}>
-                    <ul style={{ padding: '20px' }}>
+            <section className={classes.instructionSection}>
+                <p className={classes.leftSide}>
+                    2. <b>Разрешение и FPS</b> — идеально <b>4K при 60 к/c.</b><br />
+                    Если нет 4K 60 к/с: <b>30/25/24</b> или <b>1080p при 60 к/с</b> или <b>1080p при 30/25/24.</b>
+                </p>
+                <img src={options} alt="camera options photo" loading='lazy' />
+            </section>
+            <section className={classes.instructionSection}>
+                <p className={classes.leftSide}>
+                    3. <b>Без отражений</b><br />
+                    Избегайте глянцевых полов/стен (мрамор/металл), стеклянных витрин и зеркал.
+                </p>
+                <img src={reflections} alt="reflections photo" loading='lazy' />
+            </section>
+            <section className={classes.instructionSection}>
+                <p className={classes.leftSide}>
+                    4. <b>Равномерный свет</b><br />
+                    Подсветка с нескольких сторон —<br />
+                    не светите только с одной стороны, избегайте жёстких теней.
+
+                </p>
+                <img src={light} alt="light photo" loading='lazy' />
+            </section>
+            <section className={classes.instructionSection}>
+                <p className={classes.leftSide}>
+                    5. <b>Достаточно места</b><br />
+                    Оставьте запас, чтобы объект целиком помещался в кадре и не выпадал из него.
+                </p>
+                <img src={place} alt="placement photo" loading='lazy' />
+            </section>
+            <section className={classes.instructionSection}>
+                <div className={classes.leftSide}>
+                    <h2>Как снимать (без остановок, без пауз, всего 1-2 минуты)</h2>
+                    <ul>
                         <li>
-                            <span className={classes.instructionPoint}>Запишите <strong>одно непрерывное видео</strong> без остановок.</span>
+                            Запишите <b>одно непрерывное видео</b>. Сделайте <b>четыре полных круга</b> вокруг объекта <b>без остановок и без зума</b>.
                         </li>
                         <li>
-                            <span className={classes.instructionPoint}>Сделайте <strong>4 полных круга</strong> вокруг объекта без зума.</span>
-                        </li>
-                        <li>
-                            <span className={classes.instructionPoint}>Держите объект по центру кадра на одинаковом расстоянии.</span>
-                        </li>
-                        <li>
-                            <span className={classes.instructionPoint}>Двигайтесь плавно, без резких рывков и поворотов камеры.</span>
+                            Держите объект по центру кадра и примерно на одинаковом расстоянии; двигайтесь плавно.
                         </li>
                     </ul>
-                    <img src={instruction} alt="Человек обходит объект по кругу" />
                 </div>
+                <img src={instruction} alt="instruction gif" loading='lazy' />
             </section>
-            <section className={classes.fourCircles}>
-                <h2>Четыре круга вокруг объекта</h2>
-                <div className={classes.steps}>
-                    <div className={classes.step}>
-                        <h4>Круг 1 — низкий ракурс</h4>
-                        <span className={classes.text}>
-                            Обходите на максимально низком уровне, чтобы захватить нижние детали.
+            <section className={classes.instructionSection}>
+                <div className={classes.leftSide}>
+                    <p>
+                        <span>Круг 1 — Низкий ракурс</span>
+                        <span>
+                            Обходите на максимально низком уровне,
+                            чтобы захватить нижние детали.
                         </span>
-                    </div>
-                    <div className={classes.step}>
-                        <h4>Круг 2 — на уровне глаз</h4>
-                        <span className={classes.text}>
-                            Поднимите камеру до уровня глаз и сделайте второй круг.
+                    </p>
+                    <p>
+                        <span>Круг 2 — На уровне глаз / прямо</span>
+                        <span>
+                            Поднимите камеру до среднего уровня и
+                            сделайте второй круг.
                         </span>
-                    </div>
-                    <div className={classes.step}>
-                        <h4>Круг 3 — ~30° сверху</h4>
-                        <span className={classes.text}>
-                            Поднимите камеру чуть выше и обойдите объект ещё раз, добирая верхние плоскости.
+                    </p>
+                    <p>
+                        <span>Круг 3 — Примерно под 30° сверху</span>
+                        <span>
+                            Поднимите ракурс до ~30° и обойдите ещё раз,
+                            чтобы покрыть верхние плоскости.
                         </span>
-                    </div>
-                    <div className={classes.step}>
-                        <h4>Круг 4 — высокий ракурс 45–60°</h4>
-                        <span className={classes.text}>
-                            Завершите съёмку почти сверху, чтобы покрыть все оставшиеся зоны.
+                    </p>
+                    <p>
+                        <span>Круг 4 — Высокий ракурс (45–60°)</span>
+                        <span>
+                            Завершите высоким углом (почти сверху),
+                            чтобы добрать все зоны.
                         </span>
-                    </div>
+                    </p>
                 </div>
-                <img src={steps} alt="Схема: четыре круга вокруг бюста" />
-            </section>
-            <section className={classes.examples}>
-                <div className={classes.examplesTitle}>
-                    <h2>Примеры видео</h2>
-                    <span className={classes.subtitle}>Ниже — как должно выглядеть видео для бюста и пример, как снимать не нужно.</span>
-                </div>
-                <div className={classes.videoBlock}>
-                    <div className={classes.leftSide}>
-                        <div className={classes.videoTitle}>
-                            <h4>Хороший пример</h4>
-                            <span className={classes.subtitle}>Ровный свет, без резких движений, 4 круга вокруг человека.</span>
-                        </div>
-                        <video src={well} controls muted></video>
-                    </div>
-                    <div className={classes.rightSide}>
-                        <div className={classes.videoTitle}>
-                            <h4 style={{ color: '#c84646' }}>Плохой пример</h4>
-                            <span className={classes.subtitle}>Темно, сильные тени, резкие движения, человек выходит из кадра.</span>
-                        </div>
-                        <video src={bad} controls muted></video>
-                    </div>
-                </div>
+                <img src={steps} alt="video steps" loading='lazy' />
             </section>
         </main>
     )

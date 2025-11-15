@@ -7,7 +7,7 @@ import classes from './OrderForm.module.scss'
 import Button from '../../Button/Button'
 import { apiFetch } from '../../../utils/apiClient'
 import { uploadFileChunks } from '../../../utils/fileUpload'
-import { setIsRepeat, clearCart } from '../../../store/cartSlice'
+import { setIsRepeat } from '../../../store/cartSlice'
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024
 
@@ -42,7 +42,6 @@ export default function OrderForm() {
                     city: "Москва",
                     postal_code: "109518",
                     address: "ул. 2-й Грайвороновский проезд, д. 42к4",
-                    code: 44,
                 },
                 root: 'cdek-map',
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
@@ -143,12 +142,15 @@ export default function OrderForm() {
     const [isUploading, setIsUploading] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
+    const [firstName, surName, patronymic] = useMemo(() => {
+        return user?.first_name.split(' ') || ['', '', '']
+    }, [user])
+
     useEffect(() => {
-        setValue('name', user?.first_name || '', {shouldDirty: false})
-        setValue('surname', user?.last_name || '', {shouldDirty: false})
-        setValue('patronymic', user?.patronymic || '', {shouldDirty: false})
+        setValue('name', firstName, {shouldDirty: false})
+        setValue('surname', surName, {shouldDirty: false})
+        setValue('patronymic', patronymic, {shouldDirty: false})
         setValue('email', user?.email || '', {shouldDirty: false})
-        setValue('phone', user?.phone || '', {shouldDirty: false})
     }, [user, setValue])
 
     useEffect(() => {
@@ -318,7 +320,6 @@ export default function OrderForm() {
                 patronymic: data.patronymic,
                 phone: data.phone,
                 wishes: data.wishes,
-                promocode: data.promocode,
                 cdek: {
                     tariff_code: selectedTariff.tariff_code,
                     city_code: selectedAddress.city_code ?? null,
@@ -333,9 +334,8 @@ export default function OrderForm() {
 
             if (response?.payment_url) {
                 window.location.href = response.payment_url
-                dispatcher(clearCart())
             } else {
-                setGeneralError('Произошла ошибка при оплате')
+                setGeneralError('Сервер не вернул ссылку на оплату')
             }
         } catch (error) {
             const message = error?.payload?.error || error?.message || 'Не удалось создать заказ'
@@ -412,11 +412,6 @@ export default function OrderForm() {
                         ) : null}
                     </div>
                     <div className={classes.formField}>
-                        <label htmlFor="promocode">Промокод</label>
-                        <input type="text" id='promocode' placeholder='Введите промокод' {...register('promocode')} />
-                        <Button type='button' color='golden'>Применить</Button>
-                    </div>
-                    <div className={classes.formField}>
                         {watch('orderId') ? (
                             <span className={classes.attention}>Обратите внимание! При повторном заказе будет использоваться видео, которое вы прикрепляли в первый раз!</span>
                         ) : (
@@ -486,7 +481,7 @@ export default function OrderForm() {
                         </div>
                         <div className={classes.field}>
                             <input type="checkbox" id='offer' {...register('offer')} required />
-                            <label htmlFor="offer">С <a href="/files/Публичная_оферта_интернет_магазин_изготовления_бюстов_1.pdf" target='_blank'>офертой</a> ознакомился(-ась)</label>
+                            <label htmlFor="offer">С <a href="/files/offer_3xel.pdf" target='_blank'>офертой</a> ознакомился(-ась)</label>
                         </div>
                     </div>
 

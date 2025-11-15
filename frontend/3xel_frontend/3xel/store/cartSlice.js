@@ -12,11 +12,7 @@ const applyDiscounts = (items, repeat) => {
     return items.map((item) => {
         let discount = 0
 
-        if (item.type === 'Подарочный сертификат') {
-            return {...item, discount: 0}
-        }
-
-        if (repeat) {
+        if (item.type !== 'Подарочный сертификат' && repeat) {
             discount = 1000
         } else if (item.type === 'Пластиковый бюст') {
             const plasticIndex = plasticBusts.findIndex(p => p === item)
@@ -49,12 +45,8 @@ const cartSlice = createSlice({
             state.items = applyDiscounts(state.items, action.payload)
             localStorage.setItem('cart', JSON.stringify(state))
         },
-        clearCart: (state) => {
-            state.items = []
-            localStorage.setItem('cart', JSON.stringify(state))
-        }
     },
 });
 
-export const { addToCart, removeFromCart, setIsRepeat, clearCart } = cartSlice.actions
+export const { addToCart, removeFromCart, setIsRepeat } = cartSlice.actions
 export default cartSlice.reducer

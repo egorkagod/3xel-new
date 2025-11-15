@@ -15,14 +15,7 @@ export default function GoodCard({ goods, forConstructor }) {
     const dispatcher = useDispatch()
     const good = goods?.[0]
 
-    // Используем варианты выбранного размера, чтобы не отправлять id варианта от первого размера
-    const [selectedSize, setSelectedSize] = useState(goods?.[0].size || '—')
-    const selectedGood = useMemo(() =>
-        goods?.find(item => item.size === selectedSize),
-        [goods, selectedSize]
-    )
-
-    const variants = useMemo(() => selectedGood?.variants || [], [selectedGood])
+    const variants = useMemo(() => good?.variants || [], [good])
     const initialVariant = variants[0] || {
         id: null,
         color: DEFAULT_COLOR,
@@ -48,6 +41,11 @@ export default function GoodCard({ goods, forConstructor }) {
     }, [variants, initialVariant.images])
 
     const [selectedColor, setSelectedColor] = useState(initialVariant.color || DEFAULT_COLOR)
+    const [selectedSize, setSelectedSize] = useState(goods?.[0].size || '—')
+    const selectedGood = useMemo(() =>
+        goods?.find(item => item.size === selectedSize),
+        [goods, selectedSize]
+    )
 
     const [cdekLength, cdekWidth, cdekHeight] = useMemo(() => {
         if (!selectedGood || !selectedGood.box_sizes) return [null, null, null]
@@ -71,7 +69,7 @@ export default function GoodCard({ goods, forConstructor }) {
     const [userSelected, setUserSelected] = useState(false)
     const selectedVariant = useMemo(
         () =>
-            selectedGood.variants.find(
+            variants.find(
                 (v) => v.color === selectedColor,
             ) || initialVariant,
         [selectedColor, variants, initialVariant, selectedGood]
@@ -82,16 +80,6 @@ export default function GoodCard({ goods, forConstructor }) {
     )
 
     const [popupIsActive, setPopupIsActive] = useState(false)
-
-    // Если при смене размера текущий цвет недоступен, переключаемся на первый доступный
-    useEffect(() => {
-        const hasCurrentColor = variants.some(v => v.color === selectedColor)
-        if (!hasCurrentColor) {
-            const nextColor = variants[0]?.color || DEFAULT_COLOR
-            setSelectedColor(nextColor)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [variants])
 
     useEffect(() => {
         const newVariant = variants.find(v =>
@@ -144,7 +132,7 @@ export default function GoodCard({ goods, forConstructor }) {
             type: selectedVariant.type,
             name: selectedGood.name,
             color: selectedColor,
-            size: selectedGood.size,
+            size: selectedSize,
             colorName: selectedVariant.colorName || 'Цвет',
             cost: selectedGood.cost ?? 0,
             width: cdekWidth,
@@ -170,6 +158,15 @@ export default function GoodCard({ goods, forConstructor }) {
                 ))}
             </div>
             <div className={classes.properties}>
+                <div className={classes.technologies}>
+
+                    {good?.technology?.map(tech => (
+                        <span key={tech} className={classes.technology}>
+                            {tech}
+                        </span>
+                    ))}
+
+                </div>
                 <h4 className={classes.goodName}>
                     {good?.name}
                 </h4>
@@ -198,31 +195,29 @@ export default function GoodCard({ goods, forConstructor }) {
                         </div>
                     </div>
                 ) : (null)}
-                {good?.name === 'Картонный бюст' ? null : (
-                    <div className={classes.colorsBlock}>
-                        {forConstructor ? (
-                            <span>Цвет (PLA Matte)</span>
-                        ) : (null)}
-                        <div className={classes.colors}>
-                            {uniqueColors ? (
-                                uniqueColors.map(color =>
-                                    <span key={color} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '50%', outline: selectedColor === color ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
-                                        <span
-                                            style={{
-                                                background: color, borderRadius: '50%',
-                                                width: '24px', height: '24px',
-                                                border: '1px solid rgba(0,0,0,.12)',
-                                                cursor: 'pointer', display: 'flex',
-                                                justifyContent: 'center', alignItems: 'center'
-                                            }}
-                                            onClick={() => { setSelectedColor(color); setUserSelected(true) }}>
-                                        </span>
+                <div className={classes.colorsBlock}>
+                    {forConstructor ? (
+                        <span>Цвет (PLA Matte)</span>
+                    ) : (null)}
+                    <div className={classes.colors}>
+                        {uniqueColors ? (
+                            uniqueColors.map(color =>
+                                <span key={color} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '50%', outline: selectedColor === color ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }}>
+                                    <span
+                                        style={{
+                                            background: color, borderRadius: '50%',
+                                            width: '24px', height: '24px',
+                                            border: '1px solid rgba(0,0,0,.12)',
+                                            cursor: 'pointer', display: 'flex',
+                                            justifyContent: 'center', alignItems: 'center'
+                                        }}
+                                        onClick={() => { setSelectedColor(color); setUserSelected(true) }}>
                                     </span>
-                                )
-                            ) : null}
-                        </div>
+                                </span>
+                            )
+                        ) : null}
                     </div>
-                )}
+                </div>
                 <div className={classes.images}>
                     {(selectedVariant.images?.length ? selectedVariant.images : uniqueImages).map(image =>
                         <img
@@ -241,7 +236,7 @@ export default function GoodCard({ goods, forConstructor }) {
                         <Button color='golden' onClick={handleAddToCart}>Добавить</Button>
                     ) : (
                         <HashLink style={{ all: 'unset' }} to='/constructor#goods'>
-                            <Button color='golden'>Заказать</Button>
+                            <Button color='golden'>Создать</Button>
                         </HashLink>
                     )}
 

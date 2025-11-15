@@ -1,123 +1,79 @@
-.instructions {
+.instruction {
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 80px 150px;
     width: 100%;
 
-    .subtitle {
-        color: #6b6b6b;
-    }
-
-    .recomendations,
-    .instruction,
-    .examples {
+    .pageHeader {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        border-radius: 24px;
-        padding: 24px;
-        box-shadow: 0 14px 35px rgba(15, 14, 10, 0.06);
-        background: #ffffff;
+        gap: 18px;
 
-        h4 {
-            margin-bottom: 20px;
+        h1 {
+            font-size: 40px;
+        }
+
+        .subTitle {
+            color: #6e6a65;
         }
     }
 
-    .instructionContent {
+    .instructionSection {
+        background: #fff;
+        padding: 18px;
+        border: 1px solid rgba(0, 0, 0, .06);
+        box-shadow: 0 10px 24px #0000000f;
+        border-radius: 18px;
         display: grid;
-        grid-template-columns: 2fr 1fr;
-
-        .instructionPoint {
-            color: #444;
-            font-size: 15px;
-        }
-
-        img {
-            width: 90%;
-        }
-    }
-
-    .fourCircles {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        border-radius: 24px;
-        padding: 24px;
-        box-shadow: 0 14px 35px rgba(15, 14, 10, 0.06);
-        background: #ffffff;
-
-        .steps {
-            display: flex;
-            gap: 10px;
-
-            .text {
-                color: #444;
-                font-size: 15px;
-            }
-        }
-
-        img {
-            width: 40%;
-            align-self: center;
-        }
-    }
-
-    .examples {
-
+        grid-template-columns: 1fr 1fr;
         gap: 20px;
+        width: 100%;
 
-        .videoBlock {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        img {
+            width: 100%;
+        }
 
-            @media (max-width: 1199px) {
-                grid-template-columns: 1fr;
-            }
+        &:last-child {
 
-            .videoTitle {
+            .leftSide {
                 display: flex;
                 flex-direction: column;
-                gap: 4px;
+                gap: 10px;
+                align-self: center;
+                font-size: 24px;
 
-                h4 {
-                    margin: 0;
-                }
-            }
+                p {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
 
-            .leftSide, .rightSide {
-                width: 100%;
-                display: flex;
-                gap: 6px;
-                flex-direction: column;
+                    span {
 
-                video {
-                    height: 400px;
-                    width: 100%;
-                    border-radius: 18px;
-                    border: 1px solid rgba(164, 164, 164, 0.3);
+                        &:first-child {
+                            font-weight: 700;
+                        }
+                    }
                 }
             }
         }
     }
+}
 
-    @media (max-width: 1199px) {
-        padding: 80px 20px;
+@media (max-width: 1199px) {
+    .instruction {
+        padding: 20px;
 
-        .instructionContent {
+        .instructionSection {
             grid-template-columns: 1fr;
-        }
 
-        .fourCircles {
-            .steps {
-                flex-direction: column;
+            &:last-child {
+
+                .leftSide {
+                    font-size: 20px;
+                }
             }
 
-            img {
-                width: 70%;
-            }
         }
     }
 }
