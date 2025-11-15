@@ -76,12 +76,7 @@ def update_status(data):
             logger = logging.getLogger('cdek')
             logger.info('Заказ оплачен, инициируется создание заказа в СДЭК')
             payment_id = data['PaymentId']
-            try:
-                logger.info(f'Пробуем отправить задачу в Celery, broker={settings.CELERY_BROKER_URL}')
-                res = register_order.delay(payment_id)
-                logger.info(f'Задача отправлена, id={res.id}')
-            except Exception as e:
-                logger.exception(f'Ошибка при отправке задачи в Celery: {e}')
+            register_order.delay(payment_id)
         else:
             logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
 
