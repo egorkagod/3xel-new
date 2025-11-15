@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from django.conf import settings
 from django.urls import reverse
 from pathlib import Path
@@ -81,10 +81,33 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     status_display.short_description = 'Статус заказа'
 
     def order_items(self, obj):
-        items = getattr(obj, 'items', None).all() if hasattr(obj, 'items') else []
+        if not hasattr(obj, 'items'):
+            return '-'
+        items = list(obj.items.all())
         if not items:
             return '-'
-        return ', '.join(f'{item.quantity} x {item.good_variant}' for item in items)
+
+        rows = format_html_join(
+            '<br>',
+            (
+                '<span style="display:inline-block;'
+                'width:14px;height:14px;border-radius:50%;'
+                'border:1px solid #ccc;margin-right:4px;'
+                'background:{};"></span>'
+                '{} {}см ({}) — {} шт'
+            ),
+            (
+                (
+                    getattr(item.good_variant, 'color', '#ffffff') or '#ffffff',
+                    getattr(getattr(item.good_variant, 'good', None), 'name', '') or '',
+                    getattr(getattr(item.good_variant, 'good', None), 'size', '') or '',
+                    getattr(item.good_variant, 'colorName', '') or '',
+                    item.quantity,
+                )
+                for item in items if item.good_variant
+            ),
+        )
+        return rows or '-'
     order_items.short_description = 'Состав заказа'
 
     def cdek_order_link(self, obj):
@@ -98,13 +121,24 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     def payment_status(self, obj):
         payment = getattr(obj, 'payment', None)
         if payment:
-            return payment.get_status_display()
+            try:
+                url = reverse('admin:pay_payment_change', args=[payment.pk])
+                return format_html('<a href="{}">{}</a>', url, payment.get_status_display())
+            except Exception:
+                return payment.get_status_display()
         return '-'
     payment_status.short_description = 'Статус платежа'
 
     def user_email(self, obj):
         user = getattr(obj, 'user', None)
-        return getattr(user, 'email', '-') or '-'
+        email = getattr(user, 'email', None) if user else None
+        if user and email:
+            try:
+                url = reverse('admin:root_user_change', args=[user.pk])
+                return format_html('<a href="{}">{}</a>', url, email)
+            except Exception:
+                return email
+        return '-'
     user_email.short_description = 'Почта'
 
     def download_video(self, obj):
@@ -125,12 +159,12 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
                     # Относительный путь — дополняем MEDIA_URL
                     url_path = f"{settings.MEDIA_URL}{p.as_posix()}"
                 abs_url = f"{str(settings.SITE_DOMEN).rstrip('/')}/{url_path.lstrip('/')}"
-                return format_html('<a href="{}" download>Скачать видео</a>', abs_url)
+                return format_html('<a href="{}" download>Скачать</a>', abs_url)
             except Exception:
                 # В крайнем случае возвращаем как есть
-                return format_html('<a href="{}{}" download>Скачать видео</a>', settings.SITE_DOMEN, path)
+                return format_html('<a href="{}{}" download>Скачать</a>', settings.SITE_DOMEN, path)
         return '-'
-    download_video.short_description = 'Скачать'
+    download_video.short_description = 'Видео'
 
 
 @admin.register(NewOrder)
