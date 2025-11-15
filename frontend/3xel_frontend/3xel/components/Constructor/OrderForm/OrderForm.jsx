@@ -148,10 +148,10 @@ export default function OrderForm() {
     }, [user])
 
     useEffect(() => {
-        setValue('name', firstName, {shouldDirty: false})
-        setValue('surname', surName, {shouldDirty: false})
-        setValue('patronymic', patronymic, {shouldDirty: false})
-        setValue('email', user?.email || '', {shouldDirty: false})
+        setValue('name', firstName, { shouldDirty: false })
+        setValue('surname', surName, { shouldDirty: false })
+        setValue('patronymic', patronymic, { shouldDirty: false })
+        setValue('email', user?.email || '', { shouldDirty: false })
     }, [user, setValue])
 
     useEffect(() => {
@@ -400,21 +400,6 @@ export default function OrderForm() {
                         ) : null}
                     </div>
                     <div className={classes.formField}>
-                        <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '400px' }}></div>
-                        {selectedAddress ? (
-                            <>
-                                <span>Выбранный адрес доставки: {selectedMode ? (
-                                    selectedMode == 'office' ? 'Пункт выдачи —' : null
-                                ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
-                                <span className={classes.attention}>Срок доставки указан без учета срока изготовления изделия!</span>
-                            </>
-
-                        ) : null}
-                        {errors.address ? (
-                            <span className={classes.errorText}>{errors.address.message}</span>
-                        ) : null}
-                    </div>
-                    <div className={classes.formField}>
                         <label htmlFor="promocode">Промокод</label>
                         <input type="text" id='promocode' placeholder='Введите промокод' {...register('promocode')} />
                         <Button type='button' color='golden'>Применить</Button>
@@ -454,6 +439,21 @@ export default function OrderForm() {
                         ) : null}
                         {uploadError ? (
                             <span className={classes.errorText}>{uploadError}</span>
+                        ) : null}
+                    </div>
+                    <div className={classes.formField}>
+                        <div id="cdek-map" ref={cdekRef} className={classes.cdek}></div>
+                        {selectedAddress ? (
+                            <>
+                                <span>Выбранный адрес доставки: {selectedMode ? (
+                                    selectedMode == 'office' ? 'Пункт выдачи —' : null
+                                ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
+                                <span className={classes.attention}>Срок доставки указан без учета срока изготовления изделия!</span>
+                            </>
+
+                        ) : null}
+                        {errors.address ? (
+                            <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
                     </div>
                     <div className={classes.formField}>
@@ -498,7 +498,7 @@ export default function OrderForm() {
                 <div className={classes.resultBlock}>
                     <div className={classes.resultCost}>
                         <strong>Итого:</strong>
-                        <span className={classes.result}>{Math.ceil(resultCost - resultDiscount + ((selectedTariff?.delivery_sum  ?? 0) * 1.1))} ₽ (Включая доставку: {(selectedTariff?.delivery_sum ?? 0)} ₽ + 10% НДС)</span>
+                        <span className={classes.result}>{Math.ceil(resultCost - resultDiscount + ((selectedTariff?.delivery_sum ?? 0) * 1.1))} ₽ (Включая доставку: {(selectedTariff?.delivery_sum ?? 0)} ₽ + 10% НДС)</span>
                     </div>
                     <span className={classes.goodsCost}>
                         {resultDiscount === 0 ? (
