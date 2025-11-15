@@ -119,11 +119,15 @@ export default function OrderForm() {
         () => orders.filter(order => order.status === 'Завершен'),
         [orders],
     )
-    const resultCost = useMemo(
+    const goodsCost = useMemo(
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
     const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0), [cart])
+
+    const resultCost = useMemo(() => Math.ceil(goodsCost - resultDiscount + ((selectedTariff?.delivery_sum ?? 0) * 1.1)), 
+    [goodsCost, resultDiscount, selectedTariff]
+)
 
     const isAuthenticated = Boolean(user)
 
@@ -495,7 +499,7 @@ export default function OrderForm() {
                 <div className={classes.resultBlock}>
                     <div className={classes.resultCost}>
                         <strong>Итого:</strong>
-                        <span className={classes.result}>{Math.ceil(resultCost - resultDiscount + ((selectedTariff?.delivery_sum ?? 0) * 1.1))} ₽ (Включая доставку: {(selectedTariff?.delivery_sum ?? 0)} ₽ + 10% НДС)</span>
+                        <span className={classes.result}>{} ₽ (Включая доставку: {(selectedTariff?.delivery_sum ?? 0)} ₽ + 10% НДС)</span>
                     </div>
                     <span className={classes.goodsCost}>
                         {resultDiscount === 0 ? (
