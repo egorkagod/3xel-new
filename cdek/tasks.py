@@ -10,6 +10,7 @@ from order.exceptions import NotFoundOrderByPayment
 
 @shared_task
 def register_order(payment_id):
+    logging.getLogger('cdek').info('Начинаю регистрацию заказа в СДЭК')
     order = (
         Order.objects
             .select_related("cdek")
