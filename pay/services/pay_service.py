@@ -77,8 +77,8 @@ def update_status(data):
             logger.info('Заказ оплачен, инициируется создание заказа в СДЭК')
             payment_id = data['PaymentId']
             register_order.delay(payment_id)
-        else:
-            logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
+    else:
+        logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
 
 def create_receipt_items(goods: list[dict], delivery_cost: int) -> list[dict]:
     grouped = defaultdict(int)
