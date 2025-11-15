@@ -111,7 +111,7 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
         )
         if not rows:
             return '-'
-        return format_html('<ul style="margin:0;padding-left:18px">{}</ul>', rows)
+        return format_html('<ol style="margin:0;padding-left:18px">{}</ol>', rows)
     order_items.short_description = 'Состав заказа'
 
     def cdek_order_link(self, obj):
