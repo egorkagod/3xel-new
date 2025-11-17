@@ -20,15 +20,7 @@ class OrderCreateSchema(BaseModel):
     patronymic: str
     phone: str
     wishes: str = ''
-    cdek: CdekInfoSchema
-
-    @field_validator('promocode', mode='before')
-    @classmethod
-    def empty_promocode_to_none(cls, v):
-        # Фронт часто шлёт пустую строку, а не null
-        if v in ('', None):
-            return None
-        return v
+    cdek: CdekInfoSchema | None = None
 
     @model_validator(mode='after')
     def check_gotten_id(self):
