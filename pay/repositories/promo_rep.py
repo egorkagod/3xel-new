@@ -22,7 +22,6 @@ def create(dto: PromoCreateRepoDTO):
                 type=dto.type,
                 promo=promo,
                 is_used=False,
-                is_sold=True,
             )
         except IntegrityError:
             continue

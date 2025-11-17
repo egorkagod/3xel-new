@@ -101,7 +101,6 @@ class PromocodeAdmin(admin.ModelAdmin):
                     'denomination': denomination,
                     # При импорте все промокоды считаются проданными,
                     # но ещё не использованными.
-                    'is_sold': True,
                     'is_used': False,
                 },
             )
