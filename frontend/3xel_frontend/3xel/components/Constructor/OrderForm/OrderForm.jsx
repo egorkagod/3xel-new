@@ -83,9 +83,6 @@ export default function OrderForm() {
                     door: [137, 233],
                     pickup: [368, 378],
                 },
-                onCalculate() {
-                    setIsCalculating(false)
-                },
                 onChoose(mode, tariff, address) {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
@@ -218,9 +215,11 @@ export default function OrderForm() {
             return
         }
 
-        if (!file.type.startsWith('video/')) {
+        if (
+            !(file.type.startsWith('video/') || file.name.toLowerCase().endsWith('.mov'))
+        ) {
             setSelectedFile(null)
-            setError('file', { type: 'manual', message: 'Поддерживаются только видеофайлы' })
+            setError('file', { type: 'manual', message: 'Поддерживаются только видеофайлы (mp4, mov)' })
             event.target.value = ''
             return
         }
@@ -300,9 +299,12 @@ export default function OrderForm() {
             return
         }
 
-        if (!selectedTariff) {
+        if (!selectedTariff && showCdek) {
             setGeneralError('Выберите адрес и тариф доставки')
             return
+        } else {
+            setSelectedTariff(null)
+            setSelectedAddress(null)
         }
 
         if (orderId) {
@@ -360,13 +362,13 @@ export default function OrderForm() {
                 patronymic: data.patronymic,
                 phone: data.phone,
                 wishes: data.wishes,
-                promocode: data.promocode,
-                cdek: {
+                promocode: data.promocode === '' ? null : data.promocode,
+                cdek: showCdek ? {
                     tariff_code: selectedTariff.tariff_code,
                     city_code: selectedAddress.city_code ?? null,
                     city: selectedAddress.city,
                     address: selectedMode === 'office' ? selectedAddress.address : selectedAddress.name,
-                }
+                } : null
             }
             const response = await apiFetch('/api-order/order/', {
                 method: 'POST',
@@ -456,7 +458,7 @@ export default function OrderForm() {
                                         <input
                                             type="file"
                                             id='video-file'
-                                            accept='video/*'
+                                            accept="video/*,video/quicktime,.mov"
                                             {...fileRegister}
                                         />
                                     </label>
@@ -485,20 +487,20 @@ export default function OrderForm() {
                         ) : null}
                     </div>
                     <div className={classes.formField} style={{ display: showCdek ? 'flex' : 'none' }}>
-                            <div id="cdek-map" ref={cdekRef} className={classes.cdek}></div>
-                            {selectedAddress ? (
-                                <>
-                                    <span>Выбранный адрес доставки: {selectedMode ? (
-                                        selectedMode == 'office' ? 'Пункт выдачи —' : null
-                                    ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
-                                    <span className={classes.attention}>Срок доставки указан без учета срока изготовления изделия!</span>
-                                </>
+                        <div id="cdek-map" ref={cdekRef} className={classes.cdek}></div>
+                        {selectedAddress ? (
+                            <>
+                                <span>Выбранный адрес доставки: {selectedMode ? (
+                                    selectedMode == 'office' ? 'Пункт выдачи —' : null
+                                ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
+                                <span className={classes.attention}>Срок доставки указан без учета срока изготовления изделия!</span>
+                            </>
 
-                            ) : null}
-                            {errors.address ? (
-                                <span className={classes.errorText}>{errors.address.message}</span>
-                            ) : null}
-                        </div>
+                        ) : null}
+                        {errors.address ? (
+                            <span className={classes.errorText}>{errors.address.message}</span>
+                        ) : null}
+                    </div>
                     <div className={classes.formField}>
                         <label>Повторный заказ</label>
                         <div className={classes.select} id='select'>
