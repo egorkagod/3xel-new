@@ -110,16 +110,19 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
         )
 
     # Инициализация платежа в Tbank
-    payment_url = pay_service.init(
-        pay_service.InitPayServiceDTO(
-            order_id=order_id,
-            goods=goods,
-            certificates=certificates,
-            delivery_cost=delivery_cost,
-            amount=total_amount,
-            email=email,
+    if total_amount > 0:
+        payment_url = pay_service.init(
+            pay_service.InitPayServiceDTO(
+                order_id=order_id,
+                goods=goods,
+                certificates=certificates,
+                delivery_cost=delivery_cost,
+                amount=total_amount,
+                email=email,
+            )
         )
-    )
+    else:
+        payment_url = 'https://3xel.ru/profile'
 
     # Возврат платежной ссылки
     return payment_url
