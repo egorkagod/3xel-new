@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const initialState = JSON.parse(localStorage.getItem('cart')) || { items: [], isRepeat: false }
+const initialState = JSON.parse(localStorage.getItem('cart')) || { items: [], isRepeat: false, promoDiscount: 0 }
 
-const applyDiscounts = (items, repeat) => {
+const applyDiscounts = (items, repeat, ) => {
     if (items.length === 0) return items
 
     const plasticBusts = items.filter(item => item.type === 'Пластиковый бюст')
@@ -52,9 +52,12 @@ const cartSlice = createSlice({
         clearCart: (state) => {
             state.items = []
             localStorage.setItem('cart', JSON.stringify(state))
+        },
+        setPromo: (state, action) => {
+            state.promoDiscount = action.payload
         }
     },
 });
 
-export const { addToCart, removeFromCart, setIsRepeat, clearCart } = cartSlice.actions
+export const { addToCart, removeFromCart, setIsRepeat, clearCart, setPromo } = cartSlice.actions
 export default cartSlice.reducer

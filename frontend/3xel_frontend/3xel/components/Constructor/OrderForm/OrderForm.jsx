@@ -7,7 +7,7 @@ import classes from './OrderForm.module.scss'
 import Button from '../../Button/Button'
 import { apiFetch } from '../../../utils/apiClient'
 import { uploadFileChunks } from '../../../utils/fileUpload'
-import { setIsRepeat, clearCart } from '../../../store/cartSlice'
+import { setIsRepeat, clearCart, setPromo } from '../../../store/cartSlice'
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024
 
@@ -22,7 +22,6 @@ export default function OrderForm() {
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [selectedTariff, setSelectedTariff] = useState(null)
     const [selectedMode, setSelectedMode] = useState(null)
-    const [promoDiscount, setPromoDiscount] = useState(null)
     const [enteredPromo, setEnteredPromo] = useState('')
     const [promoId, setPromoId] = useState(null)
     const [promoError, setPromoError] = useState(null)
@@ -30,6 +29,7 @@ export default function OrderForm() {
     const cart = useSelector(state => state.cart.items)
     const user = useSelector(state => state.user.data)
     const orders = useSelector(state => state.orders.items)
+    const promoDiscount = useSelector(state => state.cart.promoDiscount)
 
     useEffect(() => {
 
@@ -148,7 +148,7 @@ export default function OrderForm() {
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
-    const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0) + promoDiscount ?? 0, [cart])
+    const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0) + promoDiscount ?? 0, [cart, promoDiscount])
 
     const resultCost = useMemo(() => {
         if (goodsCost + selectedTariff?.delivery_sum - resultDiscount < 0) {
@@ -251,7 +251,7 @@ export default function OrderForm() {
                 body: { promocode: data }
             })
 
-            setPromoDiscount(response.denomination)
+            dispatcher(setPromo(response.denomination))
             setPromoId(response.id)
         } catch(error) {
             setPromoError(error.message || 'Не удалось применить промокод')
