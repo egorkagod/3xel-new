@@ -312,30 +312,32 @@ export default function OrderForm() {
             setError('file', null)
         } else {
 
-            if (!fileId && !data.fileLink) {
-                if (!selectedFile) {
-                    setError('file', { type: 'manual', message: 'Загрузите видеофайл' })
-                    setGeneralError('Прикрепите видеофайл, чтобы продолжить.')
-                    return
-                }
+            if (showFileUploader) {
+                if (!fileId && !data.fileLink) {
+                    if (!selectedFile) {
+                        setError('file', { type: 'manual', message: 'Загрузите видеофайл' })
+                        setGeneralError('Прикрепите видеофайл, чтобы продолжить.')
+                        return
+                    }
 
-                setIsUploading(true)
-                try {
-                    const newFileId = await uploadFileChunks(selectedFile, {
-                        onProgress: setUploadProgress,
-                    })
-                    setUploadedFileId(newFileId)
-                    fileId = newFileId
-                    setUploadProgress(100)
-                    clearErrors('file')
-                    setUploadError(null)
-                } catch (error) {
-                    const message = error.message || 'Не удалось загрузить видеофайл'
-                    setUploadError(message)
-                    setGeneralError(message)
-                    return
-                } finally {
-                    setIsUploading(false)
+                    setIsUploading(true)
+                    try {
+                        const newFileId = await uploadFileChunks(selectedFile, {
+                            onProgress: setUploadProgress,
+                        })
+                        setUploadedFileId(newFileId)
+                        fileId = newFileId
+                        setUploadProgress(100)
+                        clearErrors('file')
+                        setUploadError(null)
+                    } catch (error) {
+                        const message = error.message || 'Не удалось загрузить видеофайл'
+                        setUploadError(message)
+                        setGeneralError(message)
+                        return
+                    } finally {
+                        setIsUploading(false)
+                    }
                 }
             }
         }
