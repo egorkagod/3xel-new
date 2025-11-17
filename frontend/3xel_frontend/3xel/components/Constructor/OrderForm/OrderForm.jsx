@@ -149,7 +149,7 @@ export default function OrderForm() {
         [cart],
     )
     const resultDiscount = useMemo(() => {
-        const cartDiscount = cart.items.reduce((acc, item) => acc + item.discount, 0)
+        const cartDiscount = cart.items?.reduce((acc, item) => acc + item.discount, 0)
         return cartDiscount + (promoDiscount ?? 0)
     }, [cart, promoDiscount])
 
