@@ -41,12 +41,12 @@ def create(dto: OrderCreateServiceDTO) -> int:
     
     order_folder = Path(settings.BASE_DIR) / 'media' / 'orders' / f'{created_order.id}'
     order_folder.mkdir(parents=True, exist_ok=True)
-    new_video_path = str(order_folder / 'video.mp4')
 
     if dto.previous_order_id:
         previous_order = Order.objects.filter(pk=dto.previous_order_id).first()
         if not previous_order or not previous_order.video:
             raise OrderCreationError('Не найден предыдущий заказ или его видео')
+        new_video_path = str(order_folder / f'video.{previous_order.video.format}')
         os.link(previous_order.video.path, new_video_path)
         video = File.objects.create(
             user_id=dto.user_id,
@@ -56,6 +56,7 @@ def create(dto: OrderCreateServiceDTO) -> int:
         video = File.objects.filter(pk=dto.video_id).first()
         if not video:
             raise OrderCreationError('Не найдено загруженное видео')
+        new_video_path = str(order_folder / f'video.{video.format}')
         shutil.move(video.path, new_video_path)
         video.path = new_video_path
         video.save(update_fields=['path'])

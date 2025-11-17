@@ -33,6 +33,7 @@ def upload_chunk(dto: ChunkUploadServiceDTO, chunk) -> ChunkUploadResponseServic
         file = File.objects.create(
             user_id=dto.user_id,
             path=str(upload_path),
+            format=dto.format,
         )
         status = statuses.ALL_UPLOADED
     
