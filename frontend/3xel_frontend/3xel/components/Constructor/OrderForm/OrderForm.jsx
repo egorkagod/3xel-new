@@ -470,6 +470,8 @@ export default function OrderForm() {
                         <Button type='button' color='golden' onClick={() => onPromo(enteredPromo)}>Применить</Button>
                         {promoError ? (
                             <span className={classes.attention}>{promoError}</span>
+                        ) : promoDiscount ? (
+                            <span>Ваша скидка: {promoDiscount} ₽</span>
                         ) : null}
                     </div>
                     <div className={classes.formField}>
