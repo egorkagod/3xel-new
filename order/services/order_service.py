@@ -30,7 +30,6 @@ def create(dto: OrderCreateServiceDTO) -> int:
             goods=dto.goods,
             certificates=dto.certificates,
             promocode=dto.promocode,
-            video_id=None,
             comment=dto.comment,
             amount=dto.amount,
         )

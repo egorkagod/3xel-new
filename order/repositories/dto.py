@@ -12,7 +12,6 @@ class OrderCreateRepoDTO(BaseModel):
     promocode: uuid.UUID | None
     goods: list | None
     certificates: list | None
-    video_id: int | None
     comment: str | None
     amount: int
     
