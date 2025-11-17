@@ -148,18 +148,18 @@ export default function OrderForm() {
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
-    const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0) + promoDiscount ?? 0, [cart, promoDiscount])
+    const resultDiscount = useMemo(() => {
+        const cartDiscount = cart.items.reduce((acc, item) => acc + item.discount, 0)
+        return cartDiscount + (promoDiscount ?? 0)
+    }, [cart, promoDiscount])
 
     const resultCost = useMemo(() => {
-        if (goodsCost + selectedTariff?.delivery_sum - resultDiscount < 0) {
-            return 0
-        } else {
-            return Math.ceil(goodsCost - resultDiscount + ((selectedTariff?.delivery_sum ?? 0) * 1.1))
-        }
-    },
-        [goodsCost, resultDiscount, selectedTariff]
-    )
+        const delivery = (selectedTariff?.delivery_sum ?? 0) * 1.1
+        const rawTotal = goodsCost - resultDiscount + delivery
 
+        return rawTotal < 0 ? 0 : Math.ceil(rawTotal)
+    }, [goodsCost, resultDiscount, selectedTariff])
+    
     const isAuthenticated = Boolean(user)
 
     const options = useMemo(
@@ -247,13 +247,14 @@ export default function OrderForm() {
     const onPromo = async (data) => {
         try {
             const response = await apiFetch('/api-pay/promo_check/', {
-                method: 'POST', 
+                method: 'POST',
                 body: { promocode: data }
             })
 
             dispatcher(setPromo(response.denomination))
             setPromoId(response.id)
-        } catch(error) {
+        } catch (error) {
+            dispatcher(setPromo(0))
             setPromoError(error.message || 'Не удалось применить промокод')
         }
     }
@@ -324,9 +325,6 @@ export default function OrderForm() {
         if (!selectedTariff && showCdek) {
             setGeneralError('Выберите адрес и тариф доставки')
             return
-        } else {
-            setSelectedTariff(null)
-            setSelectedAddress(null)
         }
 
         if (orderId) {
@@ -466,7 +464,7 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="promocode">Промокод</label>
-                        <input type="text" id='promocode' placeholder='Введите промокод'  onChange={(e) => setEnteredPromo(e.target.value)} />
+                        <input type="text" id='promocode' placeholder='Введите промокод' onChange={(e) => setEnteredPromo(e.target.value)} />
                         <Button type='button' color='golden' onClick={() => onPromo(enteredPromo)}>Применить</Button>
                         {promoError ? (
                             <span className={classes.attention}>{promoError}</span>
