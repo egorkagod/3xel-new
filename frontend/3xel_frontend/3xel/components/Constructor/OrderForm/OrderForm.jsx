@@ -378,8 +378,8 @@ export default function OrderForm() {
                 certificates: cart
                     .filter(item => item.type === 'physical' || item.type === 'digital')
                     .map(item => ({ type: item.type, denomination: item.denomination })),
-                video_id: fileId,
-                order_id: orderId,
+                video_id: fileId ? fileId : null,
+                order_id: orderId ? orderId : null,
                 name: data.name,
                 surname: data.surname,
                 patronymic: data.patronymic,
