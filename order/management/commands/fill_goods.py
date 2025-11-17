@@ -11,12 +11,13 @@ from order.models import Good, GoodVariant, GoodVariantImage
 
 IMAGE_DIR = Path(settings.MEDIA_ROOT) / 'catalog' / 'images'
 PLASTIC_DATA = (
-    {'size': 12, 'cost': 3450, 'box_sizes': '12-12-11', 'weight': 1200},
-    {'size': 16, 'cost': 4500, 'box_sizes': '19-18-17', 'weight': 1200},
-    {'size': 20, 'cost': 5200, 'box_sizes': '23-24-21', 'weight': 1200},
+    {'size': 10, 'price': 3500, 'box_sizes': '12-12-11', 'weight': 1200},
+    {'size': 12, 'price': 4500, 'box_sizes': '14-15-13', 'weight': 1200},
+    {'size': 16, 'price': 7400, 'box_sizes': '19-18-17', 'weight': 1200},
+    {'size': 20, 'price': 11800, 'box_sizes': '23-24-21', 'weight': 1200},
 )
 CARDBOARD_DATA = {
-    'size': 18, 'cost': 3500, 'slug': 'natural_cardboard', 'box_sizes': '35-20-7', 'weight': 1200
+    'size': 18, 'price': 4500, 'slug': 'natural_cardboard', 'box_sizes': '35-20-7', 'weight': 1200
 }
 
 COLOR_MAP = {
@@ -95,7 +96,7 @@ class Command(BaseCommand):
                 defaults={
                     'description': f'Пластиковый бюст размером {plastic["size"]} см. Большая карта цветов.',
                     'technology': ['PLA Matte/PETG-CF', 'Премиум-поверхность'],
-                    'cost': plastic['cost'],
+                    'price': plastic['price'],
                     'box_sizes': plastic['box_sizes'],
                     'weight': plastic['weight']
                 },
@@ -131,7 +132,7 @@ class Command(BaseCommand):
             defaults={
                 'description': 'Один размер — 18 см. Цвет — натуральный картон.',
                 'technology': ['HDF/картон', 'Конструктор'],
-                'cost': CARDBOARD_DATA['cost'],
+                'price': CARDBOARD_DATA['price'],
                 'box_sizes': CARDBOARD_DATA['box_sizes'],
                 'weight': CARDBOARD_DATA['weight'],
             },

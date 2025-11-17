@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from root.repositories import email_rep
 from root.exceptions import InvalidCode, EmailMismatchError, FailedToSendCode, CodeResendTooSoonError
 
+
+User = get_user_model()
 
 def send_random_code(email: str, session: dict, is_registered: bool):
     if is_registered and not User.objects.filter(username=email).first():

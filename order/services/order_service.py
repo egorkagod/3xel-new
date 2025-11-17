@@ -1,122 +1,75 @@
+from pathlib import Path
+import shutil
+import os
+
+from django.conf import settings
 from order.repositories import order_rep
-from order.exceptions import InvalidGoodsError, OrderCreationError
-from order.dto.order import CreateOrderServiceDTO, CreateOrderItemRepoDTO, CreateOrderRepoDTO
-from order.models import GoodVariant, Order
+from order.repositories.dto import OrderCreateRepoDTO
+from order.exceptions import OrderCreationError
+from order.services.dto import OrderCreateServiceDTO
+from order.models import Order
+from filehandler.models import File
+from pay.models import Promocode
 
 
-def get(user_id, order_id: int):
-    order = order_rep.get(user_id, order_id)
+def get(order_id: int, user_id: int | None = None):
+    if user_id is None:
+        order = Order.objects.filter(pk=order_id).first()
+    else:
+        order = Order.objects.filter(pk=order_id, user_id=user_id).first()
     return order
 
 def get_all(user_id):
-    orders = order_rep.get_all(user_id)
-    return orders
+    orders = Order.objects.filter(user__id=user_id).all()
+    return list(orders)
 
 
-def create(data: CreateOrderServiceDTO):
-    video_id = None
-
-    if not data.previous_order_id:
-        goods = get_goods_with_sale(data.goods)
-        amount = _get_goods_amount(goods)
-        if not amount:
-            OrderCreationError(detail='Ошибка при подсчете суммы заказа')
-    else:
-        goods = get_goods_with_sale(data.goods)
-        amount = _get_goods_amount(goods)
-        if not amount:
-            raise OrderCreationError(detail='Ошибка при подсчете суммы заказа')
-
-        order = Order.objects.filter(id=data.previous_order_id).first()
-        try:
-            video_id = order.video_id
-        except:
-            raise OrderCreationError(detail='Не нашли видео с предыдущего заказа')
-
-    # Группировка товаров для получения их количества
-    grouped = {}
-    for gid in data.goods:
-        grouped[gid] = grouped.get(gid, 0) + 1
-    items = [CreateOrderItemRepoDTO(good_variant_id=gid, quantity=qty) for gid, qty in grouped.items()]
-
-    repo_dto = CreateOrderRepoDTO(
-        user_id=data.user_id,
-        items=items,
-        video_id=video_id or data.video_id,
-        amount=amount,
-        comment=data.comment,
-        phone=data.phone,
+def create(dto: OrderCreateServiceDTO) -> int:
+    created_order = order_rep.create(
+        OrderCreateRepoDTO(
+            user_id=dto.user_id,
+            goods=dto.goods,
+            certificates=dto.certificates,
+            promocode=dto.promocode,
+            comment=dto.comment,
+            amount=dto.amount,
+        )
     )
 
-    order_id = order_rep.create(repo_dto)
-    if not order_id:
-        raise OrderCreationError()
+    if not created_order:
+        raise OrderCreationError('Не удалось создать заказ в бд')
     
-    return order_id
-   
+    order_folder = Path(settings.BASE_DIR) / 'media' / 'orders' / f'{created_order.id}'
+    order_folder.mkdir(parents=True, exist_ok=True)
+    new_video_path = str(order_folder / 'video.mp4')
 
-def get_goods_with_sale(goods: list[int], is_repeated=False) -> list:
-    '''Эта функция возвращает товары с итоговой ценой, внутри реализована скидочная система'''
-
-    if not goods:
-        raise InvalidGoodsError('Список товаров пуст.')
-    total_goods = []
-
-    # id -> {good_name, cost}
-    unique_ids = list(set(goods))
-    goods_map = {
-        obj['id']: {'good__name': obj['good__name'], 'cost': obj['good__cost']}
-        for obj in GoodVariant.objects.filter(id__in=unique_ids)
-        .select_related("good")
-        .values("id", "good__name", "good__cost")
-    }
-    if len(goods_map) != len(unique_ids):
-        missing = set(goods) - set(goods_map.keys())
-        if missing:
-            raise InvalidGoodsError('Присутствуют недопустимые товары.')
-
-    goods_objects = []
-    for gid in goods:
-        base = goods_map.get(gid)
-        if not base:
-            raise InvalidGoodsError('Недопустимый товар.')
-        goods_objects.append({'good__name': base['good__name'], 'cost': base['cost']})
-
-    if len(goods_objects) == 1:
-        good = goods_objects[0]
-        if is_repeated:
-            good['cost'] -= 1000
-        total_goods.append(good)
+    if dto.previous_order_id:
+        previous_order = Order.objects.filter(pk=dto.previous_order_id).first()
+        if not previous_order or not previous_order.video:
+            raise OrderCreationError('Не найден предыдущий заказ или его видео')
+        os.link(previous_order.video.path, new_video_path)
+        video = File.objects.create(
+            user_id=dto.user_id,
+            path=new_video_path
+        )
     else:
-        plastic_busts = 0
-        carton_busts = 0
+        video = File.objects.filter(pk=dto.video_id).first()
+        if not video:
+            raise OrderCreationError('Не найдено загруженное видео')
+        shutil.move(video.path, new_video_path)
+        video.path = new_video_path
+        video.save(update_fields=['path'])
 
-        if is_repeated:
-            for obj in goods_objects:
-                obj['cost'] -= 1000
-                total_goods.append(obj)
-            return total_goods
+    created_order.video = video
+    update_fields = ['video']
 
-        for obj in goods_objects:
-            if obj['good__name'] == "Картонный бюст":
-                carton_busts += 1
-            else:
-                plastic_busts += 1
+    if dto.promocode:
+        created_order.promocode_id = dto.promocode
+        update_fields.append('promocode')
 
-        plastic_sales = max(plastic_busts - 1, 0)
-        carton_sales = min(carton_busts, plastic_busts)
-        for obj in goods_objects:
-            if obj['good__name'] == "Картонный бюст" and carton_sales > 0:
-                obj['cost'] -= 1000
-                carton_sales -= 1
-            elif obj['good__name'] == "Пластиковый бюст" and plastic_sales > 0:
-                obj['cost'] -= 500
-                plastic_sales -= 1
-            total_goods.append(obj)
-    return total_goods
+    created_order.save(update_fields=update_fields)
 
-def _get_goods_amount(goods: list, key='cost') -> int:
-    sum = 0
-    for good in goods:
-        sum += good[key]
-    return sum
+    if dto.promocode:
+        Promocode.objects.filter(pk=dto.promocode).update(is_used=True)
+
+    return created_order.id

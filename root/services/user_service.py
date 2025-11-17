@@ -1,5 +1,6 @@
 from root.repositories import user_rep
 from root.exceptions import UserExists, UserCreationFailed
+from .dto import UserChangeDataDTO
 
 
 def create(**kwargs):
@@ -16,3 +17,13 @@ def get_email(user_id):
     if user:
         return user.email
     return None
+
+
+def change_data(dto: UserChangeDataDTO):
+    user = user_rep.get(user_id=dto.user_id)
+    if user:
+        user.first_name = dto.name
+        user.last_name = dto.surname
+        user.patronymic = dto.patronymic
+        user.phone = dto.phone
+        user.save(update_fields=['first_name', 'last_name', 'patronymic', 'phone'])

@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from pydantic import BaseModel, model_validator
 
 from .models import Good, GoodVariant, Order, OrderItem
 
@@ -9,11 +8,11 @@ class GoodVariantModelSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     type = serializers.CharField(source='good.name', read_only=True)
     size = serializers.IntegerField(source='good.size', read_only=True)
-    cost = serializers.IntegerField(source='good.cost', read_only=True)
+    price = serializers.IntegerField(source='good.price', read_only=True)
 
     class Meta:
         model = GoodVariant
-        fields = ['id', 'color', 'colorName', 'images', 'type', 'size', 'cost']
+        fields = ['id', 'color', 'colorName', 'images', 'type', 'size', 'price']
 
     def get_images(self, obj):
         request = self.context.get('request')
@@ -33,6 +32,7 @@ class GoodVariantModelSerializer(serializers.ModelSerializer):
 # Good
 
 class GoodModelSerializer(serializers.ModelSerializer):
+    cost = serializers.IntegerField(source='price')
     variants = GoodVariantModelSerializer(many=True, read_only=True)
 
     class Meta:
@@ -50,29 +50,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 # Order
 
-class CdekInfoView(BaseModel):
-    city_code: int | None = None
-    city: str
-    address: str
-    tariff_code: int
-    
 
-class OrderCreateView(BaseModel):
-    goods: list[int]
-    video_id: int | None = None
-    order_id: int | None = None
-    name: str
-    surname: str
-    patronymic: str
-    phone: str
-    wishes: str = ''
-    cdek: CdekInfoView
-
-    @model_validator(mode='after')
-    def check_gotten_id(self):
-        if (self.video_id is None) == (self.order_id is None):
-            raise ValueError('Должно быть указано либо video_id, либо order_id, но не оба и не ни одно')
-        return self
 
 
 class OrderViewSerializer(serializers.Serializer):

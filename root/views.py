@@ -95,7 +95,7 @@ class RegisterView(APIView):
         except EmailMismatchError:
             return Response({'error': 'Неверный email'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
-            return Response({'error': 'Произошла внутренняя ошибка'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Произошла ошибка при проверке кода'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         password = serializer.validated_data['password']
         name = serializer.validated_data['name']
@@ -112,7 +112,7 @@ class RegisterView(APIView):
         except UserCreationFailed:
             return Response({'error': 'Не удалось создать пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception:
-            return Response({'error': 'Произошла внутренняя ошибка'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': 'Произошла внутренняя ошибка при создании пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({'message': 'Регистрация прошла успешно'}, status=status.HTTP_200_OK)
 
@@ -173,20 +173,17 @@ class UserView(APIView):
         },
     )
     def get(self, request):
-        # Более безопасная реализация, избегаем лишних запросов в БД
-        try:
-            if not getattr(request.user, 'is_authenticated', False):
-                root_logger.info('User GET unauthorized')
-                return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-            user = request.user
-            payload = UserModelSerializer(user).data
-            root_logger.info('User GET ok: user=%s', getattr(user, 'id', None))
-            return Response(payload, status=status.HTTP_200_OK)
-        except Exception:
-            root_logger.exception('User GET failed')
-            return Response({'error': 'Не удалось получить данные пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Пользователь не авторизован'})
+        else:
+            try:
+                user = request.user
+                payload = UserModelSerializer(user).data
+                return Response(payload, status=status.HTTP_200_OK)
+            except Exception:
+                return Response({'error': 'Не удалось получить данные пользователя'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+
     @extend_schema(
         operation_id='reset_password_with_code',
         summary='Смена пароля по email-коду',
@@ -221,15 +218,4 @@ class UserView(APIView):
         user_rep.change_password(email=email, password=password)
 
         return Response({'message': 'Пароль обновлён, если пользователь найден'}, status=status.HTTP_200_OK)
-
-    @extend_schema(
-        operation_id='change_user_name',
-        summary='Смена имени отключена',
-        request=ChangeNameSerializer,
-        responses={
-            status.HTTP_403_FORBIDDEN: OpenApiResponse(ErrorResponseSerializer, description='Изменение имени отключено'),
-        },
-    )
-    def patch(self, request):
-        return Response({'error': 'Изменение имени отключено'}, status=status.HTTP_403_FORBIDDEN)
     

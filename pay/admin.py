@@ -23,7 +23,7 @@ class PromocodeImportForm(forms.Form):
 
 @admin.register(Promocode)
 class PromocodeAdmin(admin.ModelAdmin):
-    fields = ['denomination', 'promo', 'is_used', 'is_sold']
+    fields = ['denomination', 'promo', 'is_used']
     change_list_template = 'admin/pay/promocode/change_list.html'
 
     def get_urls(self):
@@ -86,7 +86,6 @@ class PromocodeAdmin(admin.ModelAdmin):
                 continue
             code = str(row[0]).strip()
             denom_raw = (row[1] if len(row) > 1 else '').__str__().strip()
-            sold_raw = (row[2] if len(row) > 2 else '').__str__().strip()
             if not code:
                 skipped += 1
                 continue
@@ -95,12 +94,16 @@ class PromocodeAdmin(admin.ModelAdmin):
             except ValueError:
                 skipped += 1
                 continue
-            truthy = {'1','true','yes','y','да','истина','sold','продан','продано','t'}
-            is_sold = sold_raw.lower() in truthy if sold_raw else False
 
             obj, is_created = Promocode.objects.update_or_create(
                 promo=code,
-                defaults={'denomination': denomination, 'is_sold': is_sold},
+                defaults={
+                    'denomination': denomination,
+                    # При импорте все промокоды считаются проданными,
+                    # но ещё не использованными.
+                    'is_sold': True,
+                    'is_used': False,
+                },
             )
             if is_created:
                 created += 1

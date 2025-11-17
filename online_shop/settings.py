@@ -47,6 +47,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Application definition
 
+AUTH_USER_MODEL = "root.User"
+
 INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
     'filehandler',
     'order',
     'pay',
+    'cdek',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +130,12 @@ CACHES = {
         'LOCATION': 'default_cache'
     }
 }
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # адрес брокера Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'  # хранилище результатов (опционально)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 
 
 # Password validation
@@ -222,18 +231,24 @@ LOGGING = {
             'filename': BASE_DIR / 'logging' / 'order.log',
             'formatter': 'verbose',
         },
-        'root_app': {
+        'root': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logging' / 'root.log',
             'formatter': 'verbose',
         },
-        'filehandler_app': {
+        'filehandler': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'logging' / 'filehandler.log',
             'formatter': 'verbose',
         },
+        'cdek': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logging' / 'cdek.log',
+            'formatter': 'verbose',
+        }
     },
     'loggers': {
         'django': {
@@ -246,21 +261,25 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        # Application loggers
         'order': {
             'handlers': ['order'],
             'level': 'INFO',
             'propagate': True,
         },
         'root': {
-            'handlers': ['root_app'],
+            'handlers': ['root'],
             'level': 'INFO',
             'propagate': True,
         },
         'filehandler': {
-            'handlers': ['filehandler_app'],
+            'handlers': ['filehandler'],
             'level': 'INFO',
             'propagate': True,
         },
+        'cdek': {
+            'handlers': ['cdek'],
+            'level': 'INFO',
+            'propagate': 'INFO',
+        }
     },
 }

@@ -1,52 +1,50 @@
+from pydantic import ValidationError
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from drf_spectacular.utils import extend_schema, OpenApiResponse
-
-from online_shop.schema import ErrorResponseSerializer
 
 from . import statuses
-
-from .repositories import file_rep
-from .serializers import ChunkViewSerializer, FileUploadResponseSerializer
+from .api_schema import ChunkUploadSchema
+from .services import file_service
+from .services.dto import ChunkUploadServiceDTO
 
 
 class UploadFileView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
-    @extend_schema(
-        operation_id='upload_file_chunk',
-        summary='Загрузка файла по частям',
-        description='Принимает очередной чанк файла и собирает итоговый файл после получения всех частей.',
-        request=ChunkViewSerializer,
-        responses={
-            status.HTTP_200_OK: OpenApiResponse(
-                response=FileUploadResponseSerializer,
-                description='Чанк принят. После загрузки всех частей возвращается `file_id`.'
-            ),
-            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
-                response=ErrorResponseSerializer,
-                description='Ошибка при сохранении чанка.'
-            ),
-        },
-    )
-    def post(self, request):
-        serializer = ChunkViewSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
 
-        filename = serializer.validated_data['fileId']
-        chunk = serializer.validated_data['chunk'].read()
-        chunk_number = serializer.validated_data['chunkIndex']
-        total_chunks = serializer.validated_data['totalChunks']
-        format = serializer.validated_data['format']
-        
-        user_id = request.user.id
-        file_id, result = file_rep.upload_chunk(user_id, filename, format, chunk, chunk_number, total_chunks)
-        if result == statuses.ALL_UPLOADED:
-            return Response({'message': 'Файл успешно загружен', 'file_id': file_id}, status=status.HTTP_200_OK)
-        elif result == statuses.UPLOADED:
+    def post(self, request):
+        try:
+            chunk = request.FILES.get('chunk')
+            if not chunk:
+                return Response({'error': 'Не передан файл chunk'}, status=status.HTTP_400_BAD_REQUEST)
+
+            raw = {
+                'chunk_number': request.data.get('chunkIndex'),
+                'total_chunks': request.data.get('totalChunks'),
+                'filename': request.data.get('fileId'),
+                'format': request.data.get('format'),
+            }
+
+            data = ChunkUploadSchema(**raw)
+        except ValidationError as e:
+            # Берём человекочитаемые сообщения об ошибках
+            messages = [err.get('msg') for err in e.errors()]
+            message = '; '.join(m for m in messages if m) or 'Некорректные данные запроса'
+            return Response({'error': message}, status=status.HTTP_400_BAD_REQUEST)
+        dto = file_service.upload_chunk(
+            ChunkUploadServiceDTO(
+                **data.model_dump(),
+                user_id=request.user.id
+            ),
+            chunk=chunk
+        )
+        if dto.status == statuses.ALL_UPLOADED:
+            return Response({'message': 'Файл успешно загружен', 'file_id': dto.file_id}, status=status.HTTP_200_OK)
+        elif dto.status == statuses.UPLOADED:
             return Response({'message': 'Фрагмент загружен'}, status=status.HTTP_200_OK)
         return Response({'message': 'Не удалось загрузить файл'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
