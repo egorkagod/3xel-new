@@ -78,8 +78,6 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('cdek', models.OneToOneField(default=None, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='order', to='cdek.cdekorder')),
-                ('payment', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='pay.payment')),
-                ('promocode', models.OneToOneField(default=None, null=True, on_delete=django.db.models.deletion.PROTECT, to='pay.promocode')),
             ],
             options={
                 'verbose_name': 'Заказ',

@@ -33,11 +33,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='order',
-            name='promocode',
-            field=models.OneToOneField(blank=True, default=None, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='used_order', to='pay.promocode'),
-        ),
-        migrations.AlterField(
-            model_name='order',
             name='video',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='order', to='filehandler.file'),
         ),

@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('order', '0004_completedorder_alter_order_cdek_and_more'),
+        ('order', '0001_initial'),
     ]
 
     operations = [
