@@ -1,6 +1,7 @@
 from order.models import Order, OrderItem, GoodVariant
 from order.repositories.dto import OrderCreateRepoDTO
 from pay.repositories import promo_rep
+from pay.models import PromocodeType
 
 
 def create(dto: OrderCreateRepoDTO):
@@ -30,7 +31,7 @@ def create(dto: OrderCreateRepoDTO):
                 promo_rep.PromoCreateRepoDTO(
                     order_id=order.id,
                     denomination=cert['denomination'],
-                    type=cert['type'],
+                    type=cert['type'].upper(),
                 )
             )
             
