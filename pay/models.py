@@ -56,8 +56,7 @@ class Promocode(models.Model):
     def __str__(self):
         return self.promo
     
-    id = models.UUIDField(
-        primary_key=True,
+    id_new = models.UUIDField(
         default=uuid.uuid4,
         editable=False
     )
