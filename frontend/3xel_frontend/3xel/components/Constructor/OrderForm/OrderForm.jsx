@@ -23,6 +23,9 @@ export default function OrderForm() {
     const [selectedTariff, setSelectedTariff] = useState(null)
     const [selectedMode, setSelectedMode] = useState(null)
     const [promoDiscount, setPromoDiscount] = useState(null)
+    const [enteredPromo, setEnteredPromo] = useState('')
+    const [promoId, setPromoId] = useState(null)
+    const [promoError, setPromoError] = useState(null)
 
     const cart = useSelector(state => state.cart.items)
     const user = useSelector(state => state.user.data)
@@ -145,9 +148,15 @@ export default function OrderForm() {
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
-    const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0), [cart])
+    const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0) + promoDiscount ?? 0, [cart])
 
-    const resultCost = useMemo(() => Math.ceil(goodsCost - resultDiscount + ((selectedTariff?.delivery_sum ?? 0) * 1.1)),
+    const resultCost = useMemo(() => {
+        if (goodsCost + selectedTariff?.delivery_sum - resultDiscount < 0) {
+            return 0
+        } else {
+            return Math.ceil(goodsCost - resultDiscount + ((selectedTariff?.delivery_sum ?? 0) * 1.1))
+        }
+    },
         [goodsCost, resultDiscount, selectedTariff]
     )
 
@@ -235,20 +244,26 @@ export default function OrderForm() {
         setSelectedFile(file)
     }
 
-    // const onPromo = async (data) => {
-    //     try {
-    //         const response = await apiFetch()
-    //     } catch {
-    //         null
-    //     }
-    // }
+    const onPromo = async (data) => {
+        try {
+            const response = await apiFetch('/api-pay/promo_check/', {
+                method: 'POST', 
+                body: { promocode: data }
+            })
+
+            setPromoDiscount(response.denomination)
+            setPromoId(response.id)
+        } catch(error) {
+            setPromoError(error.message || 'Не удалось применить промокод')
+        }
+    }
 
     useEffect(() => {
         if (!showCdek) {
             setSelectedTariff(null)
             setSelectedAddress(null)
         }
-    })
+    }, [showCdek])
 
     const onSubmit = async (data) => {
         setGeneralError(null)
@@ -371,7 +386,7 @@ export default function OrderForm() {
                 patronymic: data.patronymic,
                 phone: data.phone,
                 wishes: data.wishes,
-                promocode: data.promocode === '' ? null : data.promocode,
+                promocode: promoId,
                 cdek: showCdek ? {
                     tariff_code: selectedTariff.tariff_code,
                     city_code: selectedAddress.city_code ?? null,
@@ -451,8 +466,11 @@ export default function OrderForm() {
                     </div>
                     <div className={classes.formField}>
                         <label htmlFor="promocode">Промокод</label>
-                        <input type="text" id='promocode' placeholder='Введите промокод' {...register('promocode')} />
-                        <Button type='button' color='golden'>Применить</Button>
+                        <input type="text" id='promocode' placeholder='Введите промокод'  onChange={(e) => setEnteredPromo(e.target.value)} />
+                        <Button type='button' color='golden' onClick={() => onPromo(enteredPromo)}>Применить</Button>
+                        {promoError ? (
+                            <span className={classes.attention}>{promoError}</span>
+                        ) : null}
                     </div>
                     <div className={classes.formField}>
                         {watch('orderId') ? (
