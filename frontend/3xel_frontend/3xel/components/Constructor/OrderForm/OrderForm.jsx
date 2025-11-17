@@ -148,9 +148,10 @@ export default function OrderForm() {
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
+
     const resultDiscount = useMemo(() => {
-        const cartDiscount = cart.items?.reduce((acc, item) => acc + item.discount, 0)
-        return cartDiscount + (promoDiscount ?? 0)
+        const cartDiscount = cart.reduce((acc, item) => acc + (item.discount || 0), 0)
+        return cartDiscount + (promoDiscount || 0)
     }, [cart, promoDiscount])
 
     const resultCost = useMemo(() => {
@@ -159,7 +160,7 @@ export default function OrderForm() {
 
         return rawTotal < 0 ? 0 : Math.ceil(rawTotal)
     }, [goodsCost, resultDiscount, selectedTariff])
-    
+
     const isAuthenticated = Boolean(user)
 
     const options = useMemo(
