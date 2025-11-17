@@ -52,7 +52,7 @@ def create(dto: OrderCreateServiceDTO) -> int:
             user_id=dto.user_id,
             path=new_video_path
         )
-    else:
+    elif dto.video_id:
         video = File.objects.filter(pk=dto.video_id).first()
         if not video:
             raise OrderCreationError('Не найдено загруженное видео')
@@ -61,8 +61,10 @@ def create(dto: OrderCreateServiceDTO) -> int:
         video.path = new_video_path
         video.save(update_fields=['path'])
 
-    created_order.video = video
-    update_fields = ['video']
+    update_fields = []
+    if dto.previous_order_id or dto.video_id:
+        created_order.video = video
+        update_fields.append('video')
 
     if dto.promocode:
         created_order.promocode_id = dto.promocode
