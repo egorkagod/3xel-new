@@ -243,6 +243,13 @@ export default function OrderForm() {
     //     }
     // }
 
+    useEffect(() => {
+        if (!showCdek) {
+            setSelectedTariff(null)
+            setSelectedAddress(null)
+        }
+    })
+
     const onSubmit = async (data) => {
         setGeneralError(null)
         const orderId = data.orderId?.value
