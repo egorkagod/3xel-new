@@ -19,6 +19,7 @@ export default function OrderForm() {
 
     const [showFileUploader, setShowFileUploader] = useState(true)
     const [showCdek, setShowCdek] = useState(true)
+    const [showRepeat, setShowRepeat] = useState(true)
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [selectedTariff, setSelectedTariff] = useState(null)
     const [selectedMode, setSelectedMode] = useState(null)
@@ -36,15 +37,19 @@ export default function OrderForm() {
         if (!cart.length) {
             setShowCdek(true)
             setShowFileUploader(true)
+            setShowRepeat(true)
             return
         }
 
         const types = cart.map(item => item.type)
+
         if (types.findIndex(type => type === 'Пластиковый бюст') >= 0 || types.findIndex(type => type === 'Картонный бюст') >= 0) {
             setShowFileUploader(true)
             setShowCdek(true)
+            setShowRepeat(true)
         } else {
             setShowFileUploader(false)
+            setShowRepeat(false)
             if (types.findIndex(type => type === 'physical') >= 0) {
                 setShowCdek(true)
             } else {
@@ -91,8 +96,6 @@ export default function OrderForm() {
                     setSelectedTariff(tariff)
                     setSelectedMode(mode)
                     setIsCalculating(true)
-                    console.log(tariff)
-                    console.log(address)
                 }
             })
         }
@@ -201,6 +204,12 @@ export default function OrderForm() {
             }
         }
     }, [locationState, options, setValue])
+
+    useEffect(() => {
+        if (!showRepeat) {
+            setValue('orderId', '')
+        }
+    }, [showRepeat])
 
     const selectedOrderId = watch('orderId')
 
@@ -529,28 +538,30 @@ export default function OrderForm() {
                             <span className={classes.errorText}>{errors.address.message}</span>
                         ) : null}
                     </div>
-                    <div className={classes.formField}>
-                        <label>Повторный заказ</label>
-                        <div className={classes.select} id='select'>
-                            <Controller
-                                name='orderId'
-                                control={control}
-                                render={({ field }) => (
-                                    <Select
-                                        placeholder='Выберите номер прошлого заказа'
-                                        options={options}
-                                        {...field}
-                                        value={field.value}
-                                        onChange={(selected) => {
-                                            field.onChange(selected)
-                                        }}
-                                        isClearable
-                                    ></Select>
-                                )}
-                            />
+                    {showRepeat ? (
+                        <div className={classes.formField}>
+                            <label>Повторный заказ</label>
+                            <div className={classes.select} id='select'>
+                                <Controller
+                                    name='orderId'
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select
+                                            placeholder='Выберите номер прошлого заказа'
+                                            options={options}
+                                            {...field}
+                                            value={field.value}
+                                            onChange={(selected) => {
+                                                field.onChange(selected)
+                                            }}
+                                            isClearable
+                                        ></Select>
+                                    )}
+                                />
 
+                            </div>
                         </div>
-                    </div>
+                    ) : null}
                     <div className={classes.formField}>
                         <label htmlFor='wishes'>Комментарий</label>
                         <textarea name="Wishes" id="wishes" rows={5} placeholder='Введите ваши пожелания' {...register('wishes')}></textarea>
