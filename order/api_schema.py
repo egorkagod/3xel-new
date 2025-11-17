@@ -1,5 +1,5 @@
 import uuid
-from pydantic import BaseModel, model_validator, Field
+from pydantic import BaseModel, model_validator, Field, field_validator
 
 
 class CdekInfoSchema(BaseModel):
@@ -21,6 +21,14 @@ class OrderCreateSchema(BaseModel):
     phone: str
     wishes: str = ''
     cdek: CdekInfoSchema
+
+    @field_validator('promocode', mode='before')
+    @classmethod
+    def empty_promocode_to_none(cls, v):
+        # Фронт часто шлёт пустую строку, а не null
+        if v in ('', None):
+            return None
+        return v
 
     @model_validator(mode='after')
     def check_gotten_id(self):

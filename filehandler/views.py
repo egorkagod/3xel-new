@@ -32,7 +32,16 @@ class UploadFileView(APIView):
 
             data = ChunkUploadSchema(**raw)
         except ValidationError as e:
-            return Response({'error': e.errors()}, status=status.HTTP_400_BAD_REQUEST)
+            # Преобразуем pydantic-ошибку в сериализуемый вид
+            errors = [
+                {
+                    'loc': err.get('loc'),
+                    'msg': err.get('msg'),
+                    'type': err.get('type'),
+                }
+                for err in e.errors()
+            ]
+            return Response({'error': errors}, status=status.HTTP_400_BAD_REQUEST)
         dto = file_service.upload_chunk(
             ChunkUploadServiceDTO(
                 **data.model_dump(),
