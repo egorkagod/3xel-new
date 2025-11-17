@@ -1,5 +1,5 @@
 import uuid
-from pydantic import BaseModel, model_validator, Field, field_validator
+from pydantic import BaseModel, model_validator, Field
 
 
 class CdekInfoSchema(BaseModel):

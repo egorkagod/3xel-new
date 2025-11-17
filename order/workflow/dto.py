@@ -21,4 +21,4 @@ class OrderCreateWorkflowDTO(BaseModel):
     patronymic: str
     phone: str
     wishes: str
-    cdek: CdekInfoDTO
+    cdek: CdekInfoDTO | None

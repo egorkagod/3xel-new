@@ -55,17 +55,19 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
         goods.extend(physical_certs)
 
     # Подсчет итоговой стоимости
-    delivery_cost = cdek_service.get_delivery_price(
-        CdekDeliveryGetPriceDTO(
-            tariff_code=dto.cdek.tariff_code,
-            city_code=dto.cdek.city_code,
-            city=dto.cdek.city,
-            address=dto.cdek.address,
-            packages=cdek_service.get_packages_for_delivery_cost(goods),
+    delivery_cost = 0
+    if dto.cdek:
+        delivery_cost = cdek_service.get_delivery_price(
+            CdekDeliveryGetPriceDTO(
+                tariff_code=dto.cdek.tariff_code,
+                city_code=dto.cdek.city_code,
+                city=dto.cdek.city,
+                address=dto.cdek.address,
+                packages=cdek_service.get_packages_for_delivery_cost(goods),
+            )
         )
-    )
-    if delivery_cost is None:
-        raise OrderCreationError('Ошибка при получении цены доставки')
+        if delivery_cost is None:
+            raise OrderCreationError('Ошибка при получении цены доставки')
     delivery_cost = math.ceil(delivery_cost * 1.1)
     promocode_amount = promo_service.confirm(dto.promocode)
     total_amount = goods_amount + certs_amount + delivery_cost - promocode_amount
@@ -96,7 +98,7 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
         raise OrderCreationError('Не удалось получить email пользователя')
 
     # Сохранение в бд информации для СДЭК (создание CdekOrder)
-    if physical_certs or goods:
+    if (physical_certs or goods) and dto.cdek:
         cdek_service.create_order(
             CdekOrderCreateDTO(
                 order_id=order_id,
