@@ -13,6 +13,7 @@ from order.models import Order
 from pay.repositories import pay_rep
 from pay.models import PaymentStatus
 from cdek.tasks import register_order
+from pay.tasks import send_digital_certs
 
 
 class InitPayServiceDTO(BaseModel):
@@ -78,6 +79,7 @@ def update_status(data):
             logger.info('Заказ оплачен, инициируется создание заказа в СДЭК')
             payment_id = data['PaymentId']
             register_order.delay(payment_id)
+            send_digital_certs.delay(payment_id)
     else:
         logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
 
