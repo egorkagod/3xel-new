@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const initialState = JSON.parse(localStorage.getItem('cart')) || { items: [], isRepeat: false, promoDiscount: 0 }
+const saved = JSON.parse(localStorage.getItem('cart'))
+
+const initialState = {
+    items: saved?.items ?? [],
+    isRepeat: false,
+    promoDiscount: 0,
+}
 
 const applyDiscounts = (items, repeat, ) => {
     if (items.length === 0) return items
