@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('cdek', '0001_initial'),
-        ('pay', '0001_initial'),
     ]
 
     operations = [

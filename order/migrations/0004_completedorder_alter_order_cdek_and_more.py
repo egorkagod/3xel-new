@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
         ('cdek', '0001_initial'),
         ('filehandler', '0002_remove_file_name'),
         ('order', '0003_remove_order_phone_alter_order_comment_and_more'),
-        ('pay', '0001_initial'),
     ]
 
     operations = [
