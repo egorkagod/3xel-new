@@ -42,5 +42,8 @@ class PromocodeCheckView(APIView):
         promocode = request.data.get('promocode')
         if not promocode:
             return Response({'error': 'Должно быть передано поле promocode'}, status=status.HTTP_400_BAD_REQUEST)
-        id, denomination = promo_service.check(promocode)
+        result = promo_service.check(promocode)
+        if not result:
+            return Response({'message': 'Промокод не найден или был использован'}, status=status.HTTP_400_BAD_REQUEST)
+        id, denomination = result
         return Response({'id': id, 'denomination': denomination}, status=status.HTTP_200_OK)
