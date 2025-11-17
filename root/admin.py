@@ -26,3 +26,27 @@ class OrderInline(admin.StackedInline):
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     inlines = [OrderInline]
+    list_display = (
+        'id',
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'patronymic',
+        'phone',
+        'birth_date',
+        'is_staff',
+        'is_active',
+    )
+    fieldsets = UserAdmin.fieldsets + (
+        (
+            'Дополнительная информация',
+            {
+                'fields': (
+                    'patronymic',
+                    'phone',
+                    'birth_date',
+                )
+            },
+        ),
+    )

@@ -44,8 +44,10 @@
                 border-radius: 8px;
                 width: 28px;
                 height: 28px;
-                background: linear-gradient(135deg, #fdf7ef, #eadfce 60%, #d2bca1);
-                box-shadow: inset 0 0 10px rgba(0, 0, 0, .04);
+                background-image: url('../../assets/favicon.png');
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
             }
 
             span {

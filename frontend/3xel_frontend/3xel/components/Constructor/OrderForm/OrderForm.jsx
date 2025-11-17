@@ -7,7 +7,7 @@ import classes from './OrderForm.module.scss'
 import Button from '../../Button/Button'
 import { apiFetch } from '../../../utils/apiClient'
 import { uploadFileChunks } from '../../../utils/fileUpload'
-import { setIsRepeat } from '../../../store/cartSlice'
+import { setIsRepeat, clearCart } from '../../../store/cartSlice'
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024
 
@@ -17,14 +17,39 @@ export default function OrderForm() {
     const dispatcher = useDispatch()
     const cdekRef = useRef(null)
 
+    const [showFileUploader, setShowFileUploader] = useState(true)
+    const [showCdek, setShowCdek] = useState(true)
     const [selectedAddress, setSelectedAddress] = useState(null)
     const [selectedTariff, setSelectedTariff] = useState(null)
     const [selectedMode, setSelectedMode] = useState(null)
-    const [isCalculating, setIsCalculating] = useState(false)
+    const [promoDiscount, setPromoDiscount] = useState(null)
 
     const cart = useSelector(state => state.cart.items)
     const user = useSelector(state => state.user.data)
     const orders = useSelector(state => state.orders.items)
+
+    useEffect(() => {
+
+        if (!cart.length) {
+            setShowCdek(true)
+            setShowFileUploader(true)
+            return
+        }
+
+        const types = cart.map(item => item.type)
+        if (types.findIndex(type => type === 'Пластиковый бюст') >= 0 || types.findIndex(type => type === 'Картонный бюст') >= 0) {
+            setShowFileUploader(true)
+            setShowCdek(true)
+        } else {
+            setShowFileUploader(false)
+            if (types.findIndex(type => type === 'physical') >= 0) {
+                setShowCdek(true)
+            } else {
+                setShowCdek(false)
+            }
+        }
+
+    }, [cart])
 
     const widgetRef = useRef(null)
     const cdekGoods = useMemo(() =>
@@ -42,6 +67,7 @@ export default function OrderForm() {
                     city: "Москва",
                     postal_code: "109518",
                     address: "ул. 2-й Грайвороновский проезд, д. 42к4",
+                    code: 44,
                 },
                 root: 'cdek-map',
                 apiKey: "6510b8f8-7dc7-4cd4-a94e-1765017a6ded",
@@ -118,11 +144,15 @@ export default function OrderForm() {
         () => orders.filter(order => order.status === 'Завершен'),
         [orders],
     )
-    const resultCost = useMemo(
+    const goodsCost = useMemo(
         () => cart.reduce((acc, item) => acc + item.cost, 0),
         [cart],
     )
     const resultDiscount = useMemo(() => cart.reduce((acc, item) => acc + item.discount, 0), [cart])
+
+    const resultCost = useMemo(() => Math.ceil(goodsCost - resultDiscount + ((selectedTariff?.delivery_sum ?? 0) * 1.1)),
+        [goodsCost, resultDiscount, selectedTariff]
+    )
 
     const isAuthenticated = Boolean(user)
 
@@ -142,15 +172,12 @@ export default function OrderForm() {
     const [isUploading, setIsUploading] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const [firstName, surName, patronymic] = useMemo(() => {
-        return user?.first_name.split(' ') || ['', '', '']
-    }, [user])
-
     useEffect(() => {
-        setValue('name', firstName, {shouldDirty: false})
-        setValue('surname', surName, {shouldDirty: false})
-        setValue('patronymic', patronymic, {shouldDirty: false})
-        setValue('email', user?.email || '', {shouldDirty: false})
+        setValue('name', user?.first_name, { shouldDirty: false })
+        setValue('surname', user?.last_name, { shouldDirty: false })
+        setValue('patronymic', user?.patronymic, { shouldDirty: false })
+        setValue('email', user?.email || '', { shouldDirty: false })
+        setValue('phone', user?.phone || '', { shouldDirty: false })
     }, [user, setValue])
 
     useEffect(() => {
@@ -208,6 +235,14 @@ export default function OrderForm() {
         clearErrors('file')
         setSelectedFile(file)
     }
+
+    // const onPromo = async (data) => {
+    //     try {
+    //         const response = await apiFetch()
+    //     } catch {
+    //         null
+    //     }
+    // }
 
     const onSubmit = async (data) => {
         setGeneralError(null)
@@ -312,7 +347,12 @@ export default function OrderForm() {
         setIsSubmitting(true)
         try {
             const payload = {
-                goods: cart.map(item => item.id),
+                goods: cart
+                    .filter(item => item.type === 'Пластиковый бюст' || item.type === 'Картонный бюст')
+                    .map(item => item.id),
+                certificates: cart
+                    .filter(item => item.type === 'physical' || item.type === 'digital')
+                    .map(item => ({ type: item.type, denomination: item.denomination })),
                 video_id: fileId,
                 order_id: orderId,
                 name: data.name,
@@ -320,6 +360,7 @@ export default function OrderForm() {
                 patronymic: data.patronymic,
                 phone: data.phone,
                 wishes: data.wishes,
+                promocode: data.promocode,
                 cdek: {
                     tariff_code: selectedTariff.tariff_code,
                     city_code: selectedAddress.city_code ?? null,
@@ -334,8 +375,9 @@ export default function OrderForm() {
 
             if (response?.payment_url) {
                 window.location.href = response.payment_url
+                dispatcher(clearCart())
             } else {
-                setGeneralError('Сервер не вернул ссылку на оплату')
+                setGeneralError('Произошла ошибка при оплате')
             }
         } catch (error) {
             const message = error?.payload?.error || error?.message || 'Не удалось создать заказ'
@@ -361,7 +403,7 @@ export default function OrderForm() {
             <form className={classes.orderFormBlock} onSubmit={handleSubmit(onSubmit)}>
                 <div className={classes.orderForm}>
                     <div className={classes.formField}>
-                        <label htmlFor="surname">Фамилия</label>
+                        <label htmlFor="surname">Фамилия *</label>
                         <input type="text" id='surname' placeholder='Введите фамилию' {...register('surname')} />
                         {errors.surname ? (
                             <span className={classes.errorText}>{errors.surname.message}</span>
@@ -369,65 +411,59 @@ export default function OrderForm() {
 
                     </div>
                     <div className={classes.formField}>
-                        <label htmlFor="name">Имя</label>
+                        <label htmlFor="name">Имя *</label>
                         <input type="text" id='name' placeholder='Введите имя' {...register('name')} />
                         {errors.name ? (
                             <span className={classes.errorText}>{errors.name.message}</span>
                         ) : null}
                     </div>
                     <div className={classes.formField}>
-                        <label htmlFor="patronymic">Отчество</label>
+                        <label htmlFor="patronymic">Отчество *</label>
                         <input type="text" id='patronymic' placeholder='Введите отчество' {...register('patronymic')} />
                         {errors.patronymic ? (
                             <span className={classes.errorText}>{errors.patronymic.message}</span>
                         ) : null}
                     </div>
                     <div className={classes.formField}>
-                        <label htmlFor="phone">Телефон</label>
+                        <label htmlFor="phone">Телефон *</label>
                         <input type="tel" id='phone' placeholder='+7 (___) ___-__-__' {...register('phone')} />
                         {errors.phone ? (
                             <span className={classes.errorText}>{errors.phone.message}</span>
                         ) : null}
                     </div>
                     <div className={classes.formField} style={{ alignSelf: 'start' }}>
-                        <label htmlFor="email">E-mail</label>
+                        <label htmlFor="email">E-mail *</label>
                         <input type="email" id='email' placeholder='Введите email' {...register('email')} />
                         {errors.email ? (
                             <span className={classes.errorText}>{errors.email.message}</span>
                         ) : null}
                     </div>
                     <div className={classes.formField}>
-                        <div id="cdek-map" ref={cdekRef} style={{ width: '100%', height: '400px' }}></div>
-                        {selectedAddress ? (
-                            <>
-                                <span>Выбранный адрес доставки: {selectedMode ? (
-                                    selectedMode == 'office' ? 'Пункт выдачи —' : null
-                                ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
-                                <span className={classes.attention}>Срок доставки указан без учета срока изготовления изделия!</span>
-                            </>
-
-                        ) : null}
-                        {errors.address ? (
-                            <span className={classes.errorText}>{errors.address.message}</span>
-                        ) : null}
+                        <label htmlFor="promocode">Промокод</label>
+                        <input type="text" id='promocode' placeholder='Введите промокод' {...register('promocode')} />
+                        <Button type='button' color='golden'>Применить</Button>
                     </div>
                     <div className={classes.formField}>
                         {watch('orderId') ? (
                             <span className={classes.attention}>Обратите внимание! При повторном заказе будет использоваться видео, которое вы прикрепляли в первый раз!</span>
                         ) : (
-                            <>
-                                <label htmlFor="file">Загрузка видео (ссылка или файл)</label>
-                                <input type="text" id='fileLink' placeholder='Ссылка на Google Drive / Yandex Disk' {...register('fileLink')} />
-                                <label className={classes.fileUploader}>
-                                    <span>Перетащите или выберите видеофайл</span>
-                                    <input
-                                        type="file"
-                                        id='video-file'
-                                        accept='video/*'
-                                        {...fileRegister}
-                                    />
-                                </label>
-                            </>
+                            showFileUploader ? (
+                                <>
+                                    <label htmlFor="file">Загрузка видео (ссылка или файл) *</label>
+                                    <input type="text" id='fileLink' placeholder='Ссылка на Google Drive / Yandex Disk' {...register('fileLink')} />
+                                    <label className={classes.fileUploader}>
+                                        <span>Перетащите или выберите видеофайл</span>
+                                        <input
+                                            type="file"
+                                            id='video-file'
+                                            accept='video/*'
+                                            {...fileRegister}
+                                        />
+                                    </label>
+                                </>
+                            ) : (
+                                null
+                            )
                         )}
                         {selectedFile ? (
                             <div className={classes.uploadStatus}>
@@ -448,6 +484,21 @@ export default function OrderForm() {
                             <span className={classes.errorText}>{uploadError}</span>
                         ) : null}
                     </div>
+                    <div className={classes.formField} style={{ display: showCdek ? 'flex' : 'none' }}>
+                            <div id="cdek-map" ref={cdekRef} className={classes.cdek}></div>
+                            {selectedAddress ? (
+                                <>
+                                    <span>Выбранный адрес доставки: {selectedMode ? (
+                                        selectedMode == 'office' ? 'Пункт выдачи —' : null
+                                    ) : null} <b>{selectedMode === 'office' ? selectedAddress.name : selectedAddress.formatted}</b></span>
+                                    <span className={classes.attention}>Срок доставки указан без учета срока изготовления изделия!</span>
+                                </>
+
+                            ) : null}
+                            {errors.address ? (
+                                <span className={classes.errorText}>{errors.address.message}</span>
+                            ) : null}
+                        </div>
                     <div className={classes.formField}>
                         <label>Повторный заказ</label>
                         <div className={classes.select} id='select'>
@@ -477,11 +528,11 @@ export default function OrderForm() {
                     <div className={classes.checkboxFields}>
                         <div className={classes.field}>
                             <input type="checkbox" id='instruction' {...register('instruction')} required />
-                            <label htmlFor="instruction">С инструкцией по съемке видео ознакомился(-ась) — <Link to='/instruction' style={{ cursor: 'pointer' }}>как снять видео</Link></label>
+                            <label htmlFor="instruction">С инструкцией по съемке видео ознакомился(-ась) * — <Link to='/instruction' style={{ cursor: 'pointer' }}>как снять видео</Link></label>
                         </div>
                         <div className={classes.field}>
                             <input type="checkbox" id='offer' {...register('offer')} required />
-                            <label htmlFor="offer">С <a href="/files/offer_3xel.pdf" target='_blank'>офертой</a> ознакомился(-ась)</label>
+                            <label htmlFor="offer">С <a href="/files/Публичная_оферта_интернет_магазин_изготовления_бюстов_1.pdf" target='_blank'>офертой</a> ознакомился(-ась) *</label>
                         </div>
                     </div>
 
@@ -490,16 +541,16 @@ export default function OrderForm() {
                 <div className={classes.resultBlock}>
                     <div className={classes.resultCost}>
                         <strong>Итого:</strong>
-                        <span className={classes.result}>{resultCost - resultDiscount + ((selectedTariff?.delivery_sum  ?? 0) * 1.1)} ₽ (Включая доставку: {(selectedTariff?.delivery_sum ?? 0)} ₽ + 10% НДС)</span>
+                        <span className={classes.result}>{resultCost} ₽ (Включая доставку: {(selectedTariff?.delivery_sum ?? 0)} ₽ + 10% НДС)</span>
                     </div>
                     <span className={classes.goodsCost}>
                         {resultDiscount === 0 ? (
                             <>
-                                Товары: {resultCost} ₽ (скидка 0 ₽)
+                                Товары: {goodsCost} ₽ (скидка 0 ₽)
                             </>
                         ) : (
                             <>
-                                Товары: <s>{resultCost} ₽</s> → <b>{resultCost - resultDiscount} ₽</b> (скидка {resultDiscount} ₽)
+                                Товары: <s>{goodsCost} ₽</s> → <b>{goodsCost - resultDiscount} ₽</b> (скидка {resultDiscount} ₽)
                             </>
                         )}
                     </span>
@@ -514,6 +565,8 @@ export default function OrderForm() {
                         {payButtonLabel}
                     </Button>
                 </div>
+
+                <span style={{ fontSize: '12px', color: '#83828bff' }}>* - обязательное поле</span>
             </form>
         </section>
     )

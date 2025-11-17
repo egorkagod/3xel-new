@@ -15,16 +15,35 @@
         box-shadow: 0 10px 24px rgba(0, 0, 0, .06);
         border: 1px solid rgba(0, 0, 0, .06);
 
+        h2 {
+            margin-bottom: 8px;
+        }
+
         ul {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
 
+        .types {
+            list-style-type: none;
+            padding: 0;
+
+            .type {
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+            }
+        }
+
         span {
             display: block;
             color: #6e6a65;
-            font-size: 13px;
+            font-size: 18px;
+        }
+
+        .info {
+            font-size: 14px;
             margin-top: 20px;
         }
     }

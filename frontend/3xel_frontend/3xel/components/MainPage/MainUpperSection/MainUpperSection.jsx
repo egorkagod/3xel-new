@@ -3,6 +3,7 @@ import image1 from '../../../assets/carusel_image1.png'
 import image2 from '../../../assets/carusel_image2.png'
 import image3 from '../../../assets/carusel_image3.png'
 import image4 from '../../../assets/carusel_image4.png'
+import image5 from '../../../assets/carusel_image5.png'
 import Button from '../../Button/Button'
 import classNames from 'classnames'
 import { useEffect, useState } from 'react'
@@ -16,6 +17,7 @@ export default function MainUpperSection() {
         image2,
         image3,
         image4,
+        image5,
     ]
 
     const [currentSlide, setCurrentSlide] = useState(0)
@@ -34,16 +36,16 @@ export default function MainUpperSection() {
                 {slides.map(slide => <img src={slide} className={classNames(classes.slide, { [classes.active]: slide === slides[currentSlide] })} alt='Картинка клиента с бюстом' loading='lazy' />)}
             </div>
             <div className={classes.rightSide}>
-                <span className={classes.supText}>Подарок, который помнят</span>
                 <span className={classes.sectionHeader}>
-                    Создаём персональные бюсты и дарим эмоции близким
+                    Персональный бюст по вашему видео
                 </span>
                 <span className={classes.subText}>
-                    Картонный конструктор, пластиковый премиум и подарочные сертификаты с включённой доставкой.
+                    Превращаем короткое видео в реалистичный бюст из пластика или картона.
+                    Индивидуальная 3D-модель, ручная доводка и подробные инструкции по сборке. Памятный подарок, которого нет ни у кого.
                 </span>
                 <div className={classes.buttonsContainer}>
                     <Link style={{ all: 'unset' }} to='/constructor'>
-                        <Button color='golden'>Открыть конструктор</Button>
+                        <Button color='golden'>Заказать свой бюст</Button>
                     </Link>
                     <HashLink style={{ all: 'unset' }} smooth to='/#certificates'>
                         <Button color='white'>Купить сертификат</Button>

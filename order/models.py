@@ -110,7 +110,11 @@ class Order(models.Model):
 
     @property
     def formatted_created_at(self):
-        return self.created_at.strftime("%d.%m.%Y %H:%M") 
+        from django.utils import timezone
+        value = self.created_at
+        if timezone.is_aware(value):
+            value = timezone.localtime(value)
+        return value.strftime("%d.%m.%Y %H:%M")
 
     def __str__(self):
         return f'{self.status_description} | {self.formatted_created_at}'

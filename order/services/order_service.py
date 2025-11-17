@@ -9,6 +9,7 @@ from order.exceptions import OrderCreationError
 from order.services.dto import OrderCreateServiceDTO
 from order.models import Order
 from filehandler.models import File
+from pay.models import Promocode
 
 
 def get(order_id: int, user_id: int | None = None):
@@ -60,5 +61,15 @@ def create(dto: OrderCreateServiceDTO) -> int:
         video.save(update_fields=['path'])
 
     created_order.video = video
-    created_order.save(update_fields=['video'])
+    update_fields = ['video']
+
+    if dto.promocode:
+        created_order.promocode_id = dto.promocode
+        update_fields.append('promocode')
+
+    created_order.save(update_fields=update_fields)
+
+    if dto.promocode:
+        Promocode.objects.filter(pk=dto.promocode).update(is_used=True)
+
     return created_order.id
