@@ -42,13 +42,13 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
     certificates = physical_certs + digital_certs
 
     # Получаем информацию о товарах и сертификатах
+    certs_amount = _get_certs_amount(certificates)
+    
     goods = []
     goods_amount = 0
-    certs_amount = 0
     if dto.goods:
         goods: list[dict] = good_service.get_all_goods_info(dto.goods, is_repeated=dto.previous_order_id is not None)
         goods_amount = good_service.get_goods_amount(goods)
-        certs_amount = _get_certs_amount(certificates)
 
     # Формируем физические товары
     if goods or physical_certs:
