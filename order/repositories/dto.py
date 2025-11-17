@@ -1,3 +1,4 @@
+import uuid
 from pydantic import BaseModel
 
 
@@ -8,7 +9,9 @@ class CreateOrderItemRepoDTO(BaseModel):
 
 class OrderCreateRepoDTO(BaseModel):
     user_id: int
-    goods: list
+    promocode: uuid.UUID | None
+    goods: list | None
+    certificates: list | None
     video_id: int | None
     comment: str | None
     amount: int

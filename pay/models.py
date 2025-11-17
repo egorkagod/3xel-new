@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 from online_shop.utils import EnumWithDescriptions
@@ -42,6 +43,11 @@ class Payment(models.Model):
         return f'{self.status_description} | {self.amount}руб'
     
 
+class PromocodeType(EnumWithDescriptions):
+    DIGITAL = 'DIGITAL', 'цифровой'
+    PHYSICAL = 'PHYSICAL', 'физический'
+
+
 class Promocode(models.Model):
     class Meta:
         verbose_name = 'Промокод'
@@ -49,8 +55,19 @@ class Promocode(models.Model):
 
     def __str__(self):
         return self.promo
-
+    
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
     denomination = models.IntegerField()
+    order = models.ForeignKey('order.Order', on_delete=models.PROTECT, null=True, blank=True, related_name='certificates')
+    type = models.CharField(
+        max_length=32,
+        choices=PromocodeType.choices(),
+        default=PromocodeType.DIGITAL.value,
+    )    
     promo = models.CharField(max_length=40, unique=True)
     is_used = models.BooleanField(default=False)
     is_sold = models.BooleanField(default=False)

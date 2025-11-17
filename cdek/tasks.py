@@ -22,6 +22,10 @@ def register_order(payment_id):
         if not order:
             raise NotFoundOrderByPayment()
         order = order[0]
+        
+        # Если СДЭКА нет, то и регистрировать его не надо(в случае что заказ цифровой)
+        if order['cdek__user_fullname'] is None:
+            return
 
         goods_ids = []
         for good in OrderItem.objects.filter(order_id=order['id']).values('good_variant', 'quantity'):

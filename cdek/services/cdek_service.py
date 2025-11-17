@@ -119,7 +119,10 @@ def register_order(dto: CdekOrderRegisterDTO):
     return resp
 
 
-def get_delivery_price(dto: CdekDeliveryGetPriceDTO):
+def get_delivery_price(dto: CdekDeliveryGetPriceDTO) -> int | None:
+    if not dto.packages:
+        return 0
+    
     url = f'{CDEK_URL}/v2/calculator/tariff'
     headers = {
         'Content-Type': 'application/json',
@@ -143,7 +146,7 @@ def get_delivery_price(dto: CdekDeliveryGetPriceDTO):
     if response.status_code != 200:
         raise CdekBadRequest(response.text)
     resp = response.json()
-    return resp.get('delivery_sum')
+    return resp.get('delivery_sum', None)
 
 
 def create_order(dto: CdekOrderCreateDTO):

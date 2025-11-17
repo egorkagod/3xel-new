@@ -28,6 +28,8 @@ def create(dto: OrderCreateServiceDTO) -> int:
         OrderCreateRepoDTO(
             user_id=dto.user_id,
             goods=dto.goods,
+            certificates=dto.certificates,
+            promocode=dto.promocode,
             video_id=None,
             comment=dto.comment,
             amount=dto.amount,

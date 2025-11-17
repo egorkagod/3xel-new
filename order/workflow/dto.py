@@ -1,3 +1,4 @@
+import uuid
 from pydantic import BaseModel
 
 
@@ -10,7 +11,9 @@ class CdekInfoDTO(BaseModel):
 
 class OrderCreateWorkflowDTO(BaseModel):
     user_id: int
-    goods: list[int]
+    certificates: list[dict] | None
+    goods: list[int] | None
+    promocode: uuid.UUID | None
     video_id: int | None
     previous_order_id: int | None
     name: str

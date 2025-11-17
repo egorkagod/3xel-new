@@ -95,8 +95,8 @@ class Order(models.Model):
         default=OrderStatus.NEW.value,
     )    
     comment = models.TextField(max_length=1000, default='', blank=True, null=True)
-    cdek = models.OneToOneField('cdek.CdekOrder', on_delete=models.PROTECT, related_name='order', null=True, default=None)
-    promocode = models.OneToOneField(Promocode, on_delete=models.PROTECT, blank=True, null=True, default=None)
+    cdek = models.OneToOneField('cdek.CdekOrder', on_delete=models.PROTECT, related_name='order', null=True, blank=True, default=None)
+    promocode = models.OneToOneField(Promocode, on_delete=models.PROTECT, blank=True, null=True, default=None, related_name='used_order')
     video = models.ForeignKey(File, on_delete=models.PROTECT, null=True, blank=True, related_name='order')
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)

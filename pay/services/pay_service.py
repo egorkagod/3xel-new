@@ -17,7 +17,8 @@ from cdek.tasks import register_order
 
 class InitPayServiceDTO(BaseModel):
     order_id: int
-    goods: list
+    goods: list | None
+    certificates: list | None
     amount: int
     delivery_cost: int
     email: str
@@ -27,8 +28,8 @@ def init(data: InitPayServiceDTO):
     headers = {
         'Content-Type': 'application/json',
     }
-    # Build Receipt.Items from provided goods with applied discounts
-    receipt_items = create_receipt_items(data.goods, data.delivery_cost)
+    
+    receipt_items = create_receipt_items(data.goods, data.certificates, data.delivery_cost)
     payload = {
         'TerminalKey': env_settings.TERMINAL_KEY,
         'Amount': data.amount * 100,
@@ -80,30 +81,39 @@ def update_status(data):
     else:
         logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
 
-def create_receipt_items(goods: list[dict], delivery_cost: int) -> list[dict]:
+def create_receipt_items(goods: list[dict] | None, certificates:list[dict] | None, delivery_cost: int) -> list[dict]:
     grouped = defaultdict(int)
-    
-    for good in goods:
-        key = (good['name'], good['discounted_price'])
-        grouped[key] += 1
-
     items = []
-    for (name, price), quantity in grouped.items():
-        items.append({
-            'Name': name,
-            'Price': price * 100,
-            'Quantity': quantity,
-            'Amount': price * 100 * quantity,
-            'Tax': 'vat5',
-        })
+    if goods:
+        for good in goods:
+            key = (good['name'], good['discounted_price'])
+            grouped[key] += 1
 
-    items.append({
-        'Name': 'Доставка',
-        'Price': delivery_cost * 100,
-        'Quantity': 1,
-        'Amount': delivery_cost * 100,
-        'Tax': 'none',
-    })
+        for (name, price), quantity in grouped.items():
+            items.append({
+                'Name': name,
+                'Price': price * 100,
+                'Quantity': quantity,
+                'Amount': price * 100 * quantity,
+                'Tax': 'vat5',
+            })
+
+        items.append({
+            'Name': 'Доставка',
+            'Price': delivery_cost * 100,
+            'Quantity': 1,
+            'Amount': delivery_cost * 100,
+            'Tax': 'none',
+        })
+    if certificates:
+        for cert in certificates:
+            items.append({
+                'Name': 'Сертификат',
+                'Price': cert['denomination'] * 100,
+                'Quantity': 1,
+                'Amount': cert['denomination'] * 100,
+                'Tax': 'vat5'
+            })
 
     return items
 
