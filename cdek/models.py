@@ -2,6 +2,10 @@ from django.db import models
 
 
 class CdekOrder(models.Model):
+    class Meta:
+            verbose_name = 'Заказ в СДЭК'
+            verbose_name_plural = 'Заказы в СДЭК'
+
     email = models.CharField(max_length=100)
     user_fullname = models.CharField(max_length=200)
     tariff_code = models.IntegerField()
