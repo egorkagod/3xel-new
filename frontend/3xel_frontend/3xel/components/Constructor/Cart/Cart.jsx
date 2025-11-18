@@ -23,7 +23,8 @@ export default function Cart() {
                                     <span className={classes.itemDescription}>{item.name} — {item.cost} ₽</span>
                                     <Button color='white' onClick={() => dispatcher(removeFromCart(index))}>Удалить</Button>
                                 </div>
-                            ) : (
+                            ) : (null)}
+                            {item.type.split(' ')[1] === 'бюст' ? (
                                 <div className={classes.addedBust}>
                                     <div className={classes.itemDescription} key={index}>
                                         <span style={{ display: 'flex', gap: '20px' }}>{item.name} — {item.size} см, цвет: <span style={{ display: 'block', borderRadius: '50%', width: '24px', height: '24px', background: item.color, border: '1px solid black' }}></span> </span>
@@ -35,11 +36,11 @@ export default function Cart() {
                                     </div>
                                     <div className={classes.buttonsBlock}>
                                         <Button color='white' onClick={() => dispatcher(removeFromCart(index))}>Удалить</Button>
-                                        {item.discount === 0 ? 
-                                        <HashLink style={{ all: 'unset' }} to='/constructor#goods'><Button color='golden'>Добавить товары со скидкой</Button></HashLink> : null}
+                                        {item.discount === 0 ?
+                                            <HashLink style={{ all: 'unset' }} to='/constructor#goods'><Button color='golden'>Добавить товары со скидкой</Button></HashLink> : null}
                                     </div>
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                     )
                 ) : (
