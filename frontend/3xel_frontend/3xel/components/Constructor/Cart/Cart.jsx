@@ -3,6 +3,7 @@ import classes from './Cart.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCart } from '../../../store/cartSlice'
 import { HashLink } from 'react-router-hash-link'
+import { useEffect } from 'react'
 
 export default function Cart() {
 
