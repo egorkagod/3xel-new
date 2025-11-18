@@ -9,8 +9,7 @@ export default function Catalogue() {
     const goods = useSelector((state) => state.goods.busts)
     const status = useSelector((state) => state.goods.status)
     const error = useSelector((state) => state.goods.error)
-    console.log(goods)
-
+    
     const renderGoods = () => {
         if (status === 'loading') {
             return <span className={classes.stateMessage}>Загружаем каталог...</span>

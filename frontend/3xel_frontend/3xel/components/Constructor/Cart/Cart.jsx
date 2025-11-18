@@ -9,9 +9,7 @@ export default function Cart() {
 
     const cart = useSelector(state => state.cart.items)
     const dispatcher = useDispatch()
-    useEffect(() => {
-        console.log(cart.items)
-    }, [cart])
+    console.log(cart)
 
     return (
         <section className={classes.cartSection}>
