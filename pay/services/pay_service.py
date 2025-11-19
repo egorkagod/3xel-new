@@ -20,6 +20,7 @@ class InitPayServiceDTO(BaseModel):
     order_id: int
     goods: list | None
     certificates: list | None
+    promocode_amount: int
     amount: int
     delivery_cost: int
     email: str
@@ -30,7 +31,12 @@ def init(data: InitPayServiceDTO):
         'Content-Type': 'application/json',
     }
     
-    receipt_items = create_receipt_items(data.goods, data.certificates, data.delivery_cost)
+    receipt_items = create_receipt_items(
+        data.goods,
+        data.certificates,
+        data.delivery_cost,
+        data.promocode_amount,
+    )
     payload = {
         'TerminalKey': env_settings.TERMINAL_KEY,
         'Amount': data.amount * 100,
@@ -83,23 +89,63 @@ def update_status(data):
     else:
         logging.getLogger('pay').warning('Получен неверный токен при попытке обновить статус платежа')
 
-def create_receipt_items(goods: list[dict] | None, certificates:list[dict] | None, delivery_cost: int) -> list[dict]:
-    grouped = defaultdict(int)
-    items = []
+def create_receipt_items(
+    goods: list[dict] | None,
+    certificates: list[dict] | None,
+    delivery_cost: int,
+    promocode_amount: int,
+) -> list[dict]:
+    items: list[dict] = []
+    unit_items: list[dict] = []
+
     if goods:
         for good in goods:
-            key = (good['name'], good['discounted_price'])
-            grouped[key] += 1
-
-        for (name, price), quantity in grouped.items():
-            items.append({
-                'Name': name,
-                'Price': price * 100,
-                'Quantity': quantity,
-                'Amount': price * 100 * quantity,
+            unit_items.append({
+                'Name': good['name'],
+                'Price': good['discounted_price'] * 100,
+                'Quantity': 1,
+                'Amount': good['discounted_price'] * 100,
                 'Tax': 'vat5',
             })
 
+    if certificates:
+        for cert in certificates:
+            unit_items.append({
+                'Name': 'Сертификат',
+                'Price': cert['denomination'] * 100,
+                'Quantity': 1,
+                'Amount': cert['denomination'] * 100,
+                'Tax': 'vat5',
+            })
+
+    discount_kopecks = max(0, promocode_amount) * 100
+    goods_and_certs_total = sum(item['Amount'] for item in unit_items)
+    discount_kopecks = min(discount_kopecks, goods_and_certs_total)
+
+    for item in unit_items:
+        if discount_kopecks <= 0:
+            break
+        per_item_discount = min(item['Price'], discount_kopecks)
+        item['Price'] -= per_item_discount
+        item['Amount'] -= per_item_discount
+        discount_kopecks -= per_item_discount
+
+    # Группируем позиции с одинаковыми Name/Price/Tax обратно в одну строку
+    grouped: dict[tuple[str, int, str], int] = defaultdict(int)
+    for item in unit_items:
+        key = (item['Name'], item['Price'], item['Tax'])
+        grouped[key] += 1
+
+    for (name, price, tax), quantity in grouped.items():
+        items.append({
+            'Name': name,
+            'Price': price,
+            'Quantity': quantity,
+            'Amount': price * quantity,
+            'Tax': tax,
+        })
+
+    if delivery_cost:
         items.append({
             'Name': 'Доставка',
             'Price': delivery_cost * 100,
@@ -107,15 +153,6 @@ def create_receipt_items(goods: list[dict] | None, certificates:list[dict] | Non
             'Amount': delivery_cost * 100,
             'Tax': 'none',
         })
-    if certificates:
-        for cert in certificates:
-            items.append({
-                'Name': 'Сертификат',
-                'Price': cert['denomination'] * 100,
-                'Quantity': 1,
-                'Amount': cert['denomination'] * 100,
-                'Tax': 'vat5'
-            })
 
     return items
 

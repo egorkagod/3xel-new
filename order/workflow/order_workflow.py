@@ -121,6 +121,7 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
                 delivery_cost=delivery_cost,
                 amount=total_amount,
                 email=email,
+                promocode_amount=promocode_amount,
             )
         )
     else:
