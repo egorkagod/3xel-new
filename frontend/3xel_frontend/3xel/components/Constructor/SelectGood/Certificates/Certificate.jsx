@@ -34,7 +34,7 @@ export default function Certificate({ certificate, id, isPrototype }) {
         '/images/certificates/2.png',
     ]
 
-    const [activeImage, setActiveImage] = useState(certificate1)
+    const [activeImage, setActiveImage] = useState(images[0])
 
     return (
         <div className={classes.certificate} id={id}>
