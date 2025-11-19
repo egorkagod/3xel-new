@@ -22,7 +22,7 @@ export default function Certificate({ certificate, id, isPrototype }) {
             denomination: selectedDenomination,
             cost: selectedDenomination,
             type: certificate.type,
-            length: certificate.boxLength ? certificate.length : null,
+            boxLength: certificate.boxLength ? certificate.length : null,
             width: certificate.width ? certificate.width : null,
             height: certificate.height ? certificate.height : null,
             weight: certificate.weight ? certificate.weight : null
