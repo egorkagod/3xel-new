@@ -78,6 +78,10 @@ const initialState = {
       name: 'Подарочный сертификат на персональный бюст',
       type: 'physical',
       denominations: [4000, 5000, 7500, 7900, 8500, 11400, 12300, 15800],
+      boxLength: 17,
+      width: 12,
+      height: 1,
+      weight: 100,
     },
     {
       id: 2,

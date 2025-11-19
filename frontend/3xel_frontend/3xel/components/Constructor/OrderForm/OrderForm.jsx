@@ -60,10 +60,10 @@ export default function OrderForm() {
     }, [cart])
 
     const widgetRef = useRef(null)
-    const cdekGoods = useMemo(() =>
-        cart.map(item => ({ width: Number(item.width), height: Number(item.height), length: Number(item.boxLength), weight: Number(item.weight) })),
-        [cart]
-    )
+    const cdekGoods = useMemo(() => {
+        const filteredGoods = cart.filter(item => item.type !== 'digital')
+        return filteredGoods.map(item => ({ width: Number(item.width), height: Number(item.height), length: Number(item.boxLength), weight: Number(item.weight) }))
+    }, [cart])
 
     useEffect(() => {
 

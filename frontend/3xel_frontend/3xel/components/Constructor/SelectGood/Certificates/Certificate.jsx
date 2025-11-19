@@ -16,7 +16,17 @@ export default function Certificate({ certificate, id, isPrototype }) {
     const [popupIsActive, setPopupIsActive] = useState(false)
 
     const handleAddTocart = () => {
-        dispatcher(addToCart({ id: certificate.id, name: certificate.name, denomination: selectedDenomination, cost: selectedDenomination, type: certificate.type }))
+        dispatcher(addToCart({
+            id: certificate.id,
+            name: certificate.name,
+            denomination: selectedDenomination,
+            cost: selectedDenomination,
+            type: certificate.type,
+            length: certificate.boxLength ? certificate.length : null,
+            width: certificate.width ? certificate.width : null,
+            height: certificate.height ? certificate.height : null,
+            weight: certificate.weight ? certificate.weight : null
+        }))
         setPopupIsActive(true)
         setTimeout(() => setPopupIsActive(false), 3000)
     }
