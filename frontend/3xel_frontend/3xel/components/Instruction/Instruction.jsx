@@ -1,11 +1,4 @@
 import classes from './Instruction.module.scss'
-import clearCam from '/3xel_images/clear_cam.png'
-import light from '/3xel_images/light.jpg'
-import options from '/3xel_images/options.jpg'
-import place from '/3xel_images/place.jpg'
-import reflections from '/3xel_images/reflections.jpg'
-import steps from '/3xel_images/steps.png'
-import instruction from '/3xel_images/instruction.gif'
 import Point from './Point/Point'
 import well from '/videos/well.mp4'
 import bad from '/videos/bad.mp4'
@@ -19,19 +12,19 @@ export default function Instruction() {
             </div>
             <section className={classes.recomendations}>
                 <h2>Быстрый чек-лист перед съёмкой</h2>
-                <Point number={1} header='Протрите объективы.' img={clearCam} alt='Чистый объектив камеры'>
+                <Point number={1} header='Протрите объективы.' img='/images/instruction/clear_cam.png' alt='Чистый объектив камеры'>
                     Салфеткой или мягкой тканью — меньше бликов и размытия.
                 </Point>
-                <Point number={2} header='Поставьте правильное качество.' img={options} alt='Настройка 4K/60FPS'>
+                <Point number={2} header='Поставьте правильное качество.' img='/images/instruction/options.jpg' alt='Настройка 4K/60FPS'>
                     Идеально — <strong>4K 60 к/с</strong>. Если нет, выберите 4K 30/25/24 или 1080p 60/30 к/с.
                 </Point>
-                <Point number={3} header='Без лишних отражений' img={reflections} alt='Пример плохих отражений'>
+                <Point number={3} header='Без лишних отражений' img='/images/instruction/reflections.jpg' alt='Пример плохих отражений'>
                     Не снимайте рядом с глянцевыми полами, витринами и зеркалами.
                 </Point>
-                <Point number={4} header='Сделайте ровный свет.' img={light} alt='Правильное освещение'>
+                <Point number={4} header='Сделайте ровный свет.' img='/images/instruction/light.jpg' alt='Правильное освещение'>
                     Подсветите с нескольких сторон, не оставляйте половину объекта в тени.
                 </Point>
-                <Point number={5} header='Оставьте запас по краям кадра.' img={place} alt='Достаточно места вокруг объекта'>
+                <Point number={5} header='Оставьте запас по краям кадра.' img='/images/instruction/place.jpg' alt='Достаточно места вокруг объекта'>
                     Объект целиком в кадре, ничего не «обрезается» сверху и снизу.
                 </Point>
             </section>
@@ -52,7 +45,7 @@ export default function Instruction() {
                             <span className={classes.instructionPoint}>Двигайтесь плавно, без резких рывков и поворотов камеры.</span>
                         </li>
                     </ul>
-                    <img src={instruction} alt="Человек обходит объект по кругу" />
+                    <img src='/images/instruction/instruction.gif' alt="Человек обходит объект по кругу" />
                 </div>
             </section>
             <section className={classes.fourCircles}>
@@ -83,7 +76,7 @@ export default function Instruction() {
                         </span>
                     </div>
                 </div>
-                <img src={steps} alt="Схема: четыре круга вокруг бюста" />
+                <img src='/images/instruction/steps.jpg' alt="Схема: четыре круга вокруг бюста" />
             </section>
             <section className={classes.examples}>
                 <div className={classes.examplesTitle}>

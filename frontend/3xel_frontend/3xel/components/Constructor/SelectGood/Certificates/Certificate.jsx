@@ -2,11 +2,9 @@ import classes from './Certificate.module.scss'
 import Button from '../../../Button/Button'
 import PopUp from '../../../PopUp/PopUp'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { addToCart } from '../../../../store/cartSlice'
 import { useDispatch } from 'react-redux'
-import certificate1 from '/3xel_images/certificate1.png'
-import certificate2 from '/3xel_images/certificate2.png'
 import { HashLink } from 'react-router-hash-link'
 
 export default function Certificate({ certificate, id, isPrototype }) {
@@ -32,8 +30,8 @@ export default function Certificate({ certificate, id, isPrototype }) {
     }
 
     const images = [
-        certificate1,
-        certificate2,
+        '/images/certificates/1.png',
+        '/images/certificates/2.png',
     ]
 
     const [activeImage, setActiveImage] = useState(certificate1)
