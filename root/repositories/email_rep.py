@@ -1,4 +1,5 @@
 import random
+import logging
 
 from pathlib import Path
 
@@ -48,13 +49,17 @@ def send_with_attachment(recipient_list, attachments: list[dict]):
     email.send()
 
 def send_random_code(recipient_list):
-    code = _gen_random_code()
-    subject = '3xel'
-    text = f'Ваш код подтверждения: {code}'
-    send(subject=subject,
-        text = text,
-        recipient_list=recipient_list
-    )
+    try:
+        code = _gen_random_code()
+        subject = '3xel'
+        text = f'Ваш код подтверждения: {code}'
+        send(subject=subject,
+            text = text,
+            recipient_list=recipient_list
+        )
+    except Exception as e:
+        logging.getLogger('root').warning('Ошибка при отправке кода: ', str)
+        code = None
     return code
 
 def _gen_random_code():
