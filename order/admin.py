@@ -217,8 +217,9 @@ _ORDER_INDEX = {name: i for i, name in enumerate(_ORDER_MODELS_ORDER)}
 _orig_get_app_list = admin.site.get_app_list
 
 
-def _get_app_list_ordered(request):
-    app_list = list(_orig_get_app_list(request))
+def _get_app_list_ordered(request, app_label=None):
+    # Вызываем оригинальный метод с теми же аргументами
+    app_list = list(_orig_get_app_list(request, app_label=app_label))
     for app in app_list:
         if app.get('app_label') == 'order':
             models = app.get('models') or []
