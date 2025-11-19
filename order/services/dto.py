@@ -7,7 +7,8 @@ class OrderCreateServiceDTO(BaseModel):
     goods: list | None
     certificates: list | None
     promocode: uuid.UUID | None
-    video_id: int | None
+    # Может быть как id файла, так и ссылка
+    video_id: str | None
     previous_order_id: int | None
     comment: str | None
     amount: int

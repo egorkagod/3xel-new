@@ -146,6 +146,11 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     user_email.short_description = 'Почта'
 
     def download_video(self, obj):
+        # Если явно сохранена ссылка на видео — используем её как есть
+        video_url = getattr(obj, 'video_url', None)
+        if video_url:
+            return format_html('<a href="{}" download>Скачать</a>', video_url)
+
         file = getattr(obj, 'video', None)
         path = getattr(file, 'path', None)
         if path:

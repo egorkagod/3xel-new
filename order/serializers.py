@@ -54,11 +54,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderViewSerializer(serializers.Serializer):
-    goods = serializers.ListField(
-        child=serializers.IntegerField(min_value=1),
-        allow_empty=False,
-    )
-    video_id = serializers.IntegerField(required=False, default=None)
+    goods = serializers.ListField(child=serializers.IntegerField(min_value=1), allow_empty=False)
+    # Может прийти либо id файла, либо ссылка
+    video_id = serializers.CharField(required=False, allow_blank=True, default=None)
     order_id = serializers.IntegerField(required=False, default=None)
     name = serializers.CharField()
     surname = serializers.CharField()

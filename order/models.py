@@ -98,6 +98,8 @@ class Order(models.Model):
     cdek = models.OneToOneField('cdek.CdekOrder', on_delete=models.PROTECT, related_name='order', null=True, blank=True, default=None)
     promocode = models.OneToOneField(Promocode, on_delete=models.PROTECT, blank=True, null=True, default=None, related_name='used_order')
     video = models.ForeignKey(File, on_delete=models.PROTECT, null=True, blank=True, related_name='order')
+    # Прямая ссылка на видео, когда файл не хранится в File
+    video_url = models.CharField(max_length=500, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
