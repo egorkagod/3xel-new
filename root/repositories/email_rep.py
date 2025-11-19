@@ -58,7 +58,7 @@ def send_random_code(recipient_list):
             recipient_list=recipient_list
         )
     except Exception as e:
-        logging.getLogger('root').warning('Ошибка при отправке кода: ', str(e))
+        logging.getLogger('root').warning('Ошибка при отправке кода: ' + str(e))
         code = None
     return code
 
