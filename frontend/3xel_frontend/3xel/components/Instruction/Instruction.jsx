@@ -76,7 +76,7 @@ export default function Instruction() {
                         </span>
                     </div>
                 </div>
-                <img src='/images/instruction/steps.jpg' alt="Схема: четыре круга вокруг бюста" />
+                <img src='/images/instruction/steps.png' alt="Схема: четыре круга вокруг бюста" />
             </section>
             <section className={classes.examples}>
                 <div className={classes.examplesTitle}>
