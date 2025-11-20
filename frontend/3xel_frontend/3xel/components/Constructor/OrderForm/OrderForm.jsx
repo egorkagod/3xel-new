@@ -357,6 +357,7 @@ export default function OrderForm() {
                         })
                         setUploadedFileId(newFileId)
                         fileId = newFileId
+                        console.log(fileId)
                         setUploadProgress(100)
                         clearErrors('file')
                         setUploadError(null)
