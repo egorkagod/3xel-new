@@ -15,7 +15,7 @@ class OrderCreateWorkflowDTO(BaseModel):
     goods: list[int] | None
     promocode: uuid.UUID | None
     # Может быть как id файла, так и ссылка
-    video_id: str | None
+    video_id: int | str | None
     previous_order_id: int | None
     name: str
     surname: str
