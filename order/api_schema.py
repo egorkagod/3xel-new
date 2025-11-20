@@ -13,7 +13,7 @@ class OrderCreateSchema(BaseModel):
     goods: list[int] = list()
     certificates: list[dict] = list()
     # Может быть либо числовым id файла, либо ссылкой
-    video_id: str | None = None
+    video_id: int | str | None = None
     previous_order_id: int | None = Field(None, alias='order_id')
     promocode: uuid.UUID | None = None
     name: str
