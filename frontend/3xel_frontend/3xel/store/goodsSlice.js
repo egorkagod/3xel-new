@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { apiFetch } from '../utils/apiClient'
-import digitalCertificate from '../public/3xel_images/certificate.jpg'
 
 const DEFAULT_COLOR = '#d8b98a'
 
