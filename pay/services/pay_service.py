@@ -117,33 +117,17 @@ def create_receipt_items(
                 'Amount': cert['denomination'] * 100,
                 'Tax': 'vat5',
             })
+    
+    if promocode_amount:
+        for item in unit_items:
+            if item['Price'] <= promocode_amount:
+                promocode_amount -= item['Price']
+            elif promocode_amount == 0:
+                items.append(item)
+            else:
+                item['Price'] -= promocode_amount
+                items.append(item)
 
-    discount_kopecks = max(0, promocode_amount) * 100
-    goods_and_certs_total = sum(item['Amount'] for item in unit_items)
-    discount_kopecks = min(discount_kopecks, goods_and_certs_total)
-
-    for item in unit_items:
-        if discount_kopecks <= 0:
-            break
-        per_item_discount = min(item['Price'], discount_kopecks)
-        item['Price'] -= per_item_discount
-        item['Amount'] -= per_item_discount
-        discount_kopecks -= per_item_discount
-
-    # Группируем позиции с одинаковыми Name/Price/Tax обратно в одну строку
-    grouped: dict[tuple[str, int, str], int] = defaultdict(int)
-    for item in unit_items:
-        key = (item['Name'], item['Price'], item['Tax'])
-        grouped[key] += 1
-
-    for (name, price, tax), quantity in grouped.items():
-        items.append({
-            'Name': name,
-            'Price': price,
-            'Quantity': quantity,
-            'Amount': price * quantity,
-            'Tax': tax,
-        })
 
     if delivery_cost:
         items.append({

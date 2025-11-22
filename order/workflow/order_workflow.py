@@ -34,10 +34,10 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
         cert_weight = 0.1
         for cert in dto.certificates:
             if cert['type'] == 'physical':
-                cert = {'type': 'physical', 'name': 'Физический сертификат', 'box_sizes': certs_box_sizes, 'weight': cert_weight, 'denomination': cert['denomination'], 'discounted_price': cert['denomination']}
+                cert = {'type': 'physical', 'name': 'Физический сертификат', 'box_sizes': certs_box_sizes, 'weight': cert_weight, 'denomination': cert['denomination']}
                 physical_certs.append(cert)
             else:
-                cert = {'type': 'digital', 'name': 'Цифровой сертификат', 'denomination': cert['denomination'], 'discounted_price': cert['denomination']}
+                cert = {'type': 'digital', 'name': 'Цифровой сертификат', 'denomination': cert['denomination']}
                 digital_certs.append(cert)
     certificates = physical_certs + digital_certs
 
