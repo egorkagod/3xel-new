@@ -111,22 +111,37 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
                     ),
                 )
 
-        # Сертификаты, привязанные к заказу
+        # Сертификаты, привязанные к заказу (каждый отдельным пунктом и ссылкой)
         certificates_manager = getattr(obj, 'certificates', None)
-        codes = []
         if certificates_manager is not None:
             try:
-                for cert in certificates_manager.all():
-                    code = getattr(cert, 'promo', None)
-                    if code:
-                        codes.append(code)
+                cert_rows = format_html_join(
+                    '',
+                    '<li><a href="{}">{}</a></li>',
+                    (
+                        (
+                            reverse('admin:pay_promocode_change', args=[cert.pk]),
+                            getattr(cert, 'promo', '') or '',
+                        )
+                        for cert in certificates_manager.all()
+                        if getattr(cert, 'promo', None)
+                    ),
+                )
             except Exception:
-                pass
-        if codes:
-            cert_rows = format_html(
-                '<li>Сертификаты: {}</li>',
-                ', '.join(codes),
-            )
+                # Фоллбек без ссылок, если reverse или запрос упал
+                codes = []
+                try:
+                    for cert in certificates_manager.all():
+                        code = getattr(cert, 'promo', None)
+                        if code:
+                            codes.append(code)
+                except Exception:
+                    codes = []
+                if codes:
+                    cert_rows = format_html(
+                        '<li>Сертификаты: {}</li>',
+                        ', '.join(codes),
+                    )
 
         if not goods_rows and not cert_rows:
             return '-'

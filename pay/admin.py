@@ -23,8 +23,16 @@ class PromocodeImportForm(forms.Form):
 
 @admin.register(Promocode)
 class PromocodeAdmin(admin.ModelAdmin):
-    fields = ['denomination', 'promo', 'is_used']
+    fields = ['denomination', 'promo', 'type', 'is_used']
+    list_display = ('promo', 'denomination', 'type_display', 'is_used')
     change_list_template = 'admin/pay/promocode/change_list.html'
+
+    def type_display(self, obj):
+        try:
+            return obj.get_type_display()
+        except Exception:
+            return getattr(obj, 'type', '')
+    type_display.short_description = 'Тип сертификата'
 
     def get_urls(self):
         urls = super().get_urls()
