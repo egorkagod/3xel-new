@@ -95,7 +95,6 @@ export default function OrderForm() {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
                     setSelectedMode(mode)
-                    setIsCalculating(true)
                 }
             })
         }
@@ -357,7 +356,6 @@ export default function OrderForm() {
                         })
                         setUploadedFileId(newFileId)
                         fileId = newFileId
-                        console.log(fileId)
                         setUploadProgress(100)
                         clearErrors('file')
                         setUploadError(null)
