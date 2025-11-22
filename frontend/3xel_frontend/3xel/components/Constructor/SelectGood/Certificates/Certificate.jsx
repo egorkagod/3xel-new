@@ -36,7 +36,7 @@ export default function Certificate({ certificate, id, isPrototype }) {
             <PopUp isActive={popupIsActive}>Товар добавлен в конструктор</PopUp>
             <div className={classes.imageContainer}>
                 {
-                    certificate?.images?.map(image => <img src={image} className={classNames(classes.image, { [classes.active]: image === activeImage })} alt='Картинка сертификата' />)
+                    certificate?.images?.map(image => <img  style={{ width: certificate.type === 'physical' ? '100%' : '50%' }} src={image} className={classNames(classes.image, { [classes.active]: image === activeImage })} alt='Картинка сертификата' />)
                 }
             </div>
             <div className={classes.certificateInfoBlock}>
