@@ -34,7 +34,7 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
         cert_weight = 0.1
         for cert in dto.certificates:
             if cert['type'] == 'physical':
-                cert = {'type': 'physical', 'name': 'Физический сертификат', 'box_sizes': certs_box_sizes, 'weight': cert_weight, 'denomination': cert['denomination']}
+                cert = {'type': 'physical', 'name': 'Физический сертификат', 'box_sizes': certs_box_sizes, 'weight': cert_weight, 'denomination': cert['denomination'], 'discounted_price': }
                 physical_certs.append(cert)
             else:
                 cert = {'type': 'digital', 'name': 'Цифровой сертификат', 'denomination': cert['denomination']}
@@ -50,10 +50,6 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
         goods: list[dict] = good_service.get_all_goods_info(dto.goods, is_repeated=dto.previous_order_id is not None)
         goods_amount = good_service.get_goods_amount(goods)
 
-    # Формируем физические товары
-    if goods or physical_certs:
-        goods.extend(physical_certs)
-
     # Подсчет итоговой стоимости
     delivery_cost = 0
     if dto.cdek:
@@ -63,7 +59,7 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
                 city_code=dto.cdek.city_code,
                 city=dto.cdek.city,
                 address=dto.cdek.address,
-                packages=cdek_service.get_packages_for_delivery_cost(goods),
+                packages=cdek_service.get_packages_for_delivery_cost(goods + physical_certs),
             )
         )
         if delivery_cost is None:
