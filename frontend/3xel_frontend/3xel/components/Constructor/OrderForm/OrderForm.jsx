@@ -98,8 +98,6 @@ export default function OrderForm() {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
                     setSelectedMode(mode)
-                    console.log(tariff)
-                    console.log(address)
                 }
             })
         }
@@ -405,6 +403,7 @@ export default function OrderForm() {
                     city_code: selectedAddress.city_code ?? null,
                     city: selectedAddress.city,
                     address: selectedMode === 'office' ? selectedAddress.address : selectedAddress.name,
+                    pvz_code: selectedMode === 'office' ? selectedAddress.code : null,
                 } : null
             }
             const response = await apiFetch('/api-order/order/', {
