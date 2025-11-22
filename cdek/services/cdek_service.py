@@ -116,7 +116,6 @@ def register_order(dto: CdekOrderRegisterDTO):
             'tariff_code': dto.tariff_code,
             'shipment_point': env_settings.CDEK_PVZ_CODE,
             'to_location':{
-                'code':  dto.city_code,
                 'city': dto.city,
                 'address': dto.address,
             },
