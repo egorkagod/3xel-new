@@ -127,7 +127,7 @@ def register_order(dto: CdekOrderRegisterDTO):
     if response.status_code != 202:
         raise CdekBadRequest(f'Ошибка при регистрации заказа в сдэке: {response.text}')
     resp = response.json()
-    return resp.get('message')
+    return resp
 
 
 def get_delivery_price(dto: CdekDeliveryGetPriceDTO) -> int | None:
