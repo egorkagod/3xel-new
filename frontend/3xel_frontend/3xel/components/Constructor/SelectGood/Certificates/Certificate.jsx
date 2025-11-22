@@ -68,11 +68,13 @@ export default function Certificate({ certificate, id, isPrototype }) {
                     ) : (
                         <div className={classes.buttonsBlock}>
                             <Button color='golden' onClick={handleAddTocart}>Добавить</Button>
-                            <Button color='white' >
-                                <a href="https://www.wildberries.ru/catalog/622369541/detail.aspx?targetUrl=GP" target='_blank' style={{ all: 'unset' }}>
-                                    Заказать на Wildberries
-                                </a>
-                            </Button>
+                            {certificate.type === 'physical' ? (
+                                <Button color='white' >
+                                    <a href="https://www.wildberries.ru/catalog/622369541/detail.aspx?targetUrl=GP" target='_blank' style={{ all: 'unset' }}>
+                                        Заказать на Wildberries
+                                    </a>
+                                </Button>
+                            ) : null}
                         </div>
                     )}
                 </div>
