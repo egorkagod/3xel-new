@@ -1,9 +1,9 @@
 import requests
+import logging  
 import hashlib
 import logging
 from pydantic import BaseModel
 import json
-from collections import defaultdict
 
 from django.urls import reverse
 from django.conf import settings
@@ -37,6 +37,7 @@ def init(data: InitPayServiceDTO):
         data.delivery_cost,
         data.promocode_amount,
     )
+    logging.getLogger('pay').info(f'{receipt_items}')
     payload = {
         'TerminalKey': env_settings.TERMINAL_KEY,
         'Amount': data.amount * 100,
