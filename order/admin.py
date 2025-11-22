@@ -81,36 +81,62 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
     status_display.short_description = 'Статус заказа'
 
     def order_items(self, obj):
-        if not hasattr(obj, 'items'):
-            return '-'
-        items = list(obj.items.all())
-        if not items:
+        goods_rows = ''
+        cert_rows = ''
+
+        # Товары в заказе
+        if hasattr(obj, 'items'):
+            items = list(obj.items.all())
+            if items:
+                goods_rows = format_html_join(
+                    '',
+                    (
+                        '<li>'
+                        '<span style="display:inline-block;'
+                        'width:14px;height:14px;border-radius:50%;'
+                        'border:1px solid #ccc;margin-right:4px;'
+                        'background:{};"></span>'
+                        '{} {}см ({}) — {} шт'
+                        '</li>'
+                    ),
+                    (
+                        (
+                            getattr(item.good_variant, 'color', '#ffffff') or '#ffffff',
+                            getattr(getattr(item.good_variant, 'good', None), 'name', '') or '',
+                            getattr(getattr(item.good_variant, 'good', None), 'size', '') or '',
+                            getattr(item.good_variant, 'colorName', '') or '',
+                            item.quantity,
+                        )
+                        for item in items if item.good_variant
+                    ),
+                )
+
+        # Сертификаты, привязанные к заказу
+        certificates_manager = getattr(obj, 'certificates', None)
+        codes = []
+        if certificates_manager is not None:
+            try:
+                for cert in certificates_manager.all():
+                    code = getattr(cert, 'promo', None)
+                    if code:
+                        codes.append(code)
+            except Exception:
+                pass
+        if codes:
+            cert_rows = format_html(
+                '<li>Сертификаты: {}</li>',
+                ', '.join(codes),
+            )
+
+        if not goods_rows and not cert_rows:
             return '-'
 
-        rows = format_html_join(
+        rows = format_html(
             '',
-            (
-                '<li>'
-                '<span style="display:inline-block;'
-                'width:14px;height:14px;border-radius:50%;'
-                'border:1px solid #ccc;margin-right:4px;'
-                'background:{};"></span>'
-                '{} {}см ({}) — {} шт'
-                '</li>'
-            ),
-            (
-                (
-                    getattr(item.good_variant, 'color', '#ffffff') or '#ffffff',
-                    getattr(getattr(item.good_variant, 'good', None), 'name', '') or '',
-                    getattr(getattr(item.good_variant, 'good', None), 'size', '') or '',
-                    getattr(item.good_variant, 'colorName', '') or '',
-                    item.quantity,
-                )
-                for item in items if item.good_variant
-            ),
+            '{}{}',
+            goods_rows,
+            cert_rows,
         )
-        if not rows:
-            return '-'
         return format_html('<ol style="margin:0;padding-left:18px">{}</ol>', rows)
     order_items.short_description = 'Состав заказа'
 
