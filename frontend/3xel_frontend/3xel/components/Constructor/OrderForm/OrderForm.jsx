@@ -95,6 +95,7 @@ export default function OrderForm() {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)
                     setSelectedMode(mode)
+                    console.log(tariff)
                 }
             })
         }
