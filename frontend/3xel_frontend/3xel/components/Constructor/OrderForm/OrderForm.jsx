@@ -82,7 +82,6 @@ export default function OrderForm() {
                 defaultLocation: "Москва",
                 servicePath: 'https://3xel.ru/service.php',
                 canChoose: true,
-                debug: true,
                 lang: "rus",
                 currency: "RUB",
                 fixBounds: "country",
@@ -492,7 +491,7 @@ export default function OrderForm() {
                                     <label htmlFor="file">Загрузка видео (ссылка или файл) *</label>
                                     <input type="text" id='fileLink' placeholder='Ссылка на Google Drive / Yandex Disk' {...register('fileLink')} />
                                     <label className={classes.fileUploader}>
-                                        <span>Перетащите или выберите видеофайл</span>
+                                        <span>Выберите видеофайл</span>
                                         <input
                                             type="file"
                                             id='video-file'
