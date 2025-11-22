@@ -13,7 +13,7 @@ export default function CertificatesSection() {
                 Изготовление, упаковка и доставка включены.
             </SectionHeader>
             <div className={classes.certificatesContainer}>
-                <Certificate isPrototype={true} certificate={certificates?.[0]}></Certificate>
+                {certificates.map(certificate => <Certificate key={certificate.id} isPrototype={true} certificate={certificate}></Certificate>)}
             </div>
         </section>
     )

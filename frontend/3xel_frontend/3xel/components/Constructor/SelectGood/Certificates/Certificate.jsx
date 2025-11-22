@@ -29,14 +29,14 @@ export default function Certificate({ certificate, id, isPrototype }) {
         setTimeout(() => setPopupIsActive(false), 3000)
     }
 
-    const [activeImage, setActiveImage] = useState(images[0])
+    const [activeImage, setActiveImage] = useState(certificate.images[0])
 
     return (
         <div className={classes.certificate} id={id}>
             <PopUp isActive={popupIsActive}>Товар добавлен в конструктор</PopUp>
             <div className={classes.imageContainer}>
                 {
-                    certificate.map(image => <img src={image} className={classNames(classes.image, { [classes.active]: image === activeImage })} alt='Картинка сертификата' />)
+                    certificate?.images?.map(image => <img src={image} className={classNames(classes.image, { [classes.active]: image === activeImage })} alt='Картинка сертификата' />)
                 }
             </div>
             <div className={classes.certificateInfoBlock}>
@@ -58,7 +58,7 @@ export default function Certificate({ certificate, id, isPrototype }) {
                         null
                     ) : (
                         <div className={classes.imagesBlock}>
-                            {certificate.images.map(image => <img src={image} alt='картинка сертификата' onClick={() => setActiveImage(image)} style={{ outline: image === activeImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }} />)}
+                            {certificate?.images?.map(image => <img src={image} alt='картинка сертификата' onClick={() => setActiveImage(image)} style={{ outline: image === activeImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }} />)}
                         </div>
                     )}
                     {isPrototype ? (
