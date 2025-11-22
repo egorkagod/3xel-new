@@ -6,6 +6,7 @@ from rest_framework import status, generics
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from pydantic import ValidationError
+from django.db.models import Prefetch
 
 from online_shop.schema import ErrorResponseSerializer
 from .serializers import (
@@ -13,7 +14,7 @@ from .serializers import (
     OrderPreviewSerializer,
     OrderModelSerializer,
 )
-from .models import Good
+from .models import Good, GoodVariant
 from .api_schema import OrderCreateSchema
 from order.workflow.dto import OrderCreateWorkflowDTO
 from order.workflow import order_workflow
@@ -31,17 +32,30 @@ order_logger = logging.getLogger('order')
     },
 )
 class CatalogView(generics.ListAPIView):
-    queryset = Good.objects.prefetch_related('variants__images').all()
     serializer_class = GoodModelSerializer
+
+    queryset = Good.objects.order_by("id").prefetch_related(
+        Prefetch(
+            "variants",
+            queryset=GoodVariant.objects.order_by("id").prefetch_related("images")
+        )
+    )
 
     def list(self, request, *args, **kwargs):
         try:
             response = super().list(request, *args, **kwargs)
-            order_logger.info('Catalogue GET ok: status=%s user=%s', response.status_code, getattr(request.user, 'id', None))
+            order_logger.info(
+                'Catalogue GET ok: status=%s user=%s',
+                response.status_code,
+                getattr(request.user, 'id', None)
+            )
             return response
         except Exception:
             order_logger.exception('Catalogue GET failed')
-            return Response({'error': 'Не удалось получить каталог'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {'error': 'Не удалось получить каталог'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class GoodView(APIView):
