@@ -23,7 +23,7 @@ export default function Catalogue() {
             return <span className={classes.stateMessage}>Каталог пока пуст.</span>
         }
 
-        const resultGoods = goods.reduce((acc, cur) => {
+        const busts = goods.reduce((acc, cur) => {
             const newKey = cur.name
             if (!acc[newKey]) {
                 acc[newKey] = []
@@ -33,7 +33,12 @@ export default function Catalogue() {
             return acc
         }, {})
 
-        return Object.entries(resultGoods).map(([name, items]) => (
+        const resultBusts = []
+        resultBusts.push(Object.entries(busts)[0])
+        const filtered = resultBusts.filter(item => item[0] !== 'Картонный бюст')
+        const result = resultBusts.concat(filtered)
+
+        return Object.entries(result).map(([name, items]) => (
             <GoodCard key={name} goods={items}></GoodCard>
         ))
     }
