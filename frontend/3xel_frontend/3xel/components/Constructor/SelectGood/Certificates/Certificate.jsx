@@ -2,7 +2,7 @@ import classes from './Certificate.module.scss'
 import Button from '../../../Button/Button'
 import PopUp from '../../../PopUp/PopUp'
 import classNames from 'classnames'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { addToCart } from '../../../../store/cartSlice'
 import { useDispatch } from 'react-redux'
 import { HashLink } from 'react-router-hash-link'
@@ -29,44 +29,22 @@ export default function Certificate({ certificate, id, isPrototype }) {
         setTimeout(() => setPopupIsActive(false), 3000)
     }
 
-    const images = [
-        '/images/certificates/1.png',
-        '/images/certificates/2.png',
-    ]
-
     const [activeImage, setActiveImage] = useState(images[0])
 
     return (
         <div className={classes.certificate} id={id}>
             <PopUp isActive={popupIsActive}>Товар добавлен в конструктор</PopUp>
-            <div className={classes.instructionContainer}>
-                {certificate.type === 'digital' ? (
-                    <p>
-                        Как воспользоваться электронным сертификатом: <br />
-                        <br />
-                        — Добавьте в корзину изделия, которые хотите приобрести <br />
-                        — Введите и примените промокод, который мы выслали вам на почту <br />
-                        — Совершите заказ, прикрепив видео для создания вашего уникального бюста <br />
-                    </p>
-                ) : (
-                    images.map(image => <img src={image} alt='certificate photo' className={classNames(classes.image, { [classes.active]: image === activeImage })} />)
-                )}
+            <div className={classes.imageContainer}>
+                {
+                    certificate.map(image => <img src={image} className={classNames(classes.image, { [classes.active]: image === activeImage })} alt='Картинка сертификата' />)
+                }
             </div>
             <div className={classes.certificateInfoBlock}>
-                <div className={classes.denominationsList}>
-                    {certificate.denominations.map((denomination, index) => <span key={index}>{denomination} ₽</span>)}
-                </div>
                 <div className={classes.certificateInfo}>
-                    {isPrototype ? (
-                        <span className={classes.certificateType}>Подарочный сертификат</span>
-                    ) : null}
                     <h4>{certificate.name}</h4>
                     {isPrototype ? (
                         <span className={classes.certificateDescription}>
-                            Если хотите сделать сюрприз, но не знаете, какое видео или формат выбрать — дарите сертификат. <br />
-                            — Электронный или печатный формат <br />
-                            — Получатель сам загружает видео и выбирает тип бюста <br />
-                            — Отлично подходит для дней рождения, юбилеев и корпоративных подарков
+                            {certificate.description}
                         </span>
                     ) : (
                         <div className={classes.selectDenomination}>
@@ -80,7 +58,7 @@ export default function Certificate({ certificate, id, isPrototype }) {
                         null
                     ) : (
                         <div className={classes.imagesBlock}>
-                            {images.map(image => <img src={image} alt='certificate photo' onClick={() => setActiveImage(image)} style={{ outline: image === activeImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }} />)}
+                            {certificate.images.map(image => <img src={image} alt='картинка сертификата' onClick={() => setActiveImage(image)} style={{ outline: image === activeImage ? '4px solid rgba(216, 185, 138, 0.65)' : 'none' }} />)}
                         </div>
                     )}
                     {isPrototype ? (

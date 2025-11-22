@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { apiFetch } from '../utils/apiClient'
+import digitalCertificate from '/certificate.jpg'
 
 const DEFAULT_COLOR = '#d8b98a'
 
@@ -82,12 +83,21 @@ const initialState = {
       width: 12,
       height: 1,
       weight: 100,
+      images: [
+        '/images/certificates/1.png',
+        '/images/certificates/2.png',
+      ],
+      description: 'Карточный сертификат — это осязаемый знак внимания. Его приятно держать в руках, дарить лично и открывать как маленький секрет. Получатель сам определит, какое видео станет основой для бюста и какой вариант исполнения ему ближе. Такой подарок запоминается надолго.',
     },
     {
       id: 2,
       name: 'Электронный подарочный сертификат',
       type: 'digital',
       denominations: [4000, 5000, 7500, 7900, 8500, 11400, 12300, 15800],
+      images: [
+        digitalCertificate,
+      ],
+      description: 'Цифровой сертификат экономит время и расширяет возможности: отправьте его онлайн, и получатель тут же приступит к созданию персонального бюста. Выбор видео, настройка параметров — всё в одном клике. Практичный вариант для современных реалий.',
     }
   ]
 }

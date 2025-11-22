@@ -40,12 +40,11 @@ export default function MainUpperSection() {
                     Персональный бюст по вашему видео
                 </span>
                 <span className={classes.subText}>
-                    Превращаем короткое видео в реалистичный бюст из пластика или картона.
-                    Индивидуальная 3D-модель, ручная доводка и подробные инструкции по сборке. Памятный подарок, которого нет ни у кого.
+                    Создаём уникальный памятный сувенир: превращаем ваше короткое видео в реалистичный бюст. Изделие изготавливается из пластика или картона по индивидуальной 3D‑модели с тщательной ручной доработкой. Мы позаботились о том, чтобы сборка была лёгкой: в комплекте — понятная инструкция шаг за шагом.
                 </span>
                 <div className={classes.buttonsContainer}>
                     <Link style={{ all: 'unset' }} to='/constructor'>
-                        <Button color='golden'>Заказать свой бюст</Button>
+                        <Button color='golden'>Заказать бюст</Button>
                     </Link>
                     <HashLink style={{ all: 'unset' }} smooth to='/#certificates'>
                         <Button color='white'>Купить сертификат</Button>
