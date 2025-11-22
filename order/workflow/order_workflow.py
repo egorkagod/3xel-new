@@ -108,6 +108,7 @@ def create(dto: OrderCreateWorkflowDTO) -> str | bool:
                 city_code=dto.cdek.city_code,
                 city=dto.cdek.city,
                 address=dto.cdek.address,
+                pvz_code=dto.cdek.pvz_code,
             )
         )
 

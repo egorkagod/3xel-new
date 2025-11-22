@@ -99,19 +99,30 @@ def register_order(dto: CdekOrderRegisterDTO):
             {'number': dto.phone}
         ],
     }
-    payload = {
-        'type': 1,
-        'number': dto.order_id,
-        'tariff_code': dto.tariff_code,
-        'shipment_point': env_settings.CDEK_PVZ_CODE,
-        'to_location':{
-            'code':  dto.city_code,
-            'city': dto.city,
-            'address': dto.address,
-        },
-        'recipient': recipient,
-        'packages': dto.packages,
-    }
+    if dto.pvz_code:
+        payload = {
+            'type': 1,
+            'number': dto.order_id,
+            'tariff_code': dto.tariff_code,
+            'shipment_point': env_settings.CDEK_PVZ_CODE,
+            'delivery_point': dto.pvz_code,
+            'recipient': recipient,
+            'packages': dto.packages,
+        }
+    else:
+        payload = {
+            'type': 1,
+            'number': dto.order_id,
+            'tariff_code': dto.tariff_code,
+            'shipment_point': env_settings.CDEK_PVZ_CODE,
+            'to_location':{
+                'code':  dto.city_code,
+                'city': dto.city,
+                'address': dto.address,
+            },
+            'recipient': recipient,
+            'packages': dto.packages,
+        }
     response = requests.post(url, headers=headers, json=payload)
     if response.status_code != 202:
         raise CdekBadRequest(f'Ошибка при регистрации заказа в сдэке: {response.text}')
@@ -157,6 +168,7 @@ def create_order(dto: CdekOrderCreateDTO):
         city_code=dto.city_code,
         city=dto.city,
         address=dto.address,
+        pvz_code=dto.pvz_code,
     )
 
     order_obj = order_service.get(dto.order_id)

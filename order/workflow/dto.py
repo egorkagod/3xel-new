@@ -7,6 +7,7 @@ class CdekInfoDTO(BaseModel):
     city: str
     address: str
     tariff_code: int
+    pvz_code: str | None
     
 
 class OrderCreateWorkflowDTO(BaseModel):

@@ -17,7 +17,7 @@ def register_order(payment_id):
             Order.objects
                 .select_related("cdek")
                 .filter(payment_id=payment_id)
-                .values("id", "cdek__email", "cdek__user_fullname", "cdek__tariff_code", "cdek__city_code", "cdek__city", "cdek__address", "user__phone")
+                .values("id", "cdek__email", "cdek__user_fullname", "cdek__tariff_code", "cdek__city_code", "cdek__city", "cdek__address", "cdek__pvz_code", "user__phone")
         )
         if not order:
             raise NotFoundOrderByPayment()
@@ -42,6 +42,7 @@ def register_order(payment_id):
                 city_code=order['cdek__city_code'],
                 city=order['cdek__city'],
                 address=order['cdek__address'],
+                pvz_code=order['cdek__pvz_code'],
                 phone=order['user__phone'],
                 packages=cdek_service.get_packages_for_register_order(goods),
             )

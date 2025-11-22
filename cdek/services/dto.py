@@ -9,6 +9,7 @@ class CdekOrderRegisterDTO(BaseModel):
     phone: str
     city_code: int | None
     city: str
+    pvz_code: str | None
     address: str
     packages: list
 
@@ -29,3 +30,4 @@ class CdekOrderCreateDTO(BaseModel):
     city_code: int | None
     city: str
     address: str
+    pvz_code: str | None
