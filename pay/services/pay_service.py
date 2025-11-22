@@ -37,7 +37,7 @@ def init(data: InitPayServiceDTO):
         data.delivery_cost,
         data.promocode_amount,
     )
-    logging.getLogger('pay').info(f'{receipt_items}')
+    logging.getLogger('pay').info(f'Промокод: {data.promocode_amount} Общая стоимость: {data.amount} Товары: {receipt_items}')
     payload = {
         'TerminalKey': env_settings.TERMINAL_KEY,
         'Amount': data.amount * 100,
