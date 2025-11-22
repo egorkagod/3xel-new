@@ -8,11 +8,11 @@ import { Link } from 'react-router-dom'
 export default function MainUpperSection() {
 
     const slides = [
-        '/images/carusel/1.png',
-        '/images/carusel/2.png',
-        '/images/carusel/3.png',
-        '/images/carusel/4.png',
-        '/images/carusel/5.png',
+        '/media/images/carusel/1.png',
+        '/media/images/carusel/2.png',
+        '/media/images/carusel/3.png',
+        '/media/images/carusel/4.png',
+        '/media/images/carusel/5.png',
     ]
 
     const [currentSlide, setCurrentSlide] = useState(0)
