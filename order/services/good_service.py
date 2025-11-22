@@ -19,7 +19,7 @@ def get_all_goods_info(goods: list[int], is_repeated=False) -> list[dict]:
     '''Эта функция возвращает товары с итоговой ценой и информацией, внутри реализована скидочная система'''
 
     if not goods:
-        raise InvalidGoodsError('Список товаров пуст.')
+        return []
 
     # Формируем структуру
     unique_ids = set(goods)

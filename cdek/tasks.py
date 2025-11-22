@@ -6,6 +6,7 @@ from .services.dto import CdekOrderRegisterDTO
 from order.services import good_service
 from order.models import Order, OrderItem
 from order.exceptions import NotFoundOrderByPayment, OrderError
+from pay.models import PromocodeType
 
 
 @shared_task
@@ -27,11 +28,33 @@ def register_order(payment_id):
         if order['cdek__user_fullname'] is None:
             return
 
-        goods_ids = []
+        goods_ids: list[int] = []
         for good in OrderItem.objects.filter(order_id=order['id']).values('good_variant', 'quantity'):
             goods_ids.extend([good['good_variant']] * good['quantity'])
 
         goods: list[dict] = good_service.get_all_goods_info(goods_ids)
+
+        # Добавляем в отправление физические сертификаты (если есть)
+        order_obj = (
+            Order.objects.filter(pk=order['id'])
+            .prefetch_related('certificates')
+            .first()
+        )
+        if order_obj:
+            physical_certs = order_obj.certificates.filter(type=PromocodeType.PHYSICAL.value)
+            certs_box_sizes = [17, 12, 1]
+            cert_weight = 100  # условный вес сертификата, граммы
+            for cert in physical_certs:
+                goods.append(
+                    {
+                        'id': f'cert-{cert.pk}',
+                        'name': 'Физический сертификат',
+                        'size': 0,
+                        'box_sizes': certs_box_sizes,
+                        'weight': cert_weight,
+                    }
+                )
+        
 
         resp = cdek_service.register_order(
             CdekOrderRegisterDTO(
