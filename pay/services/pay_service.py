@@ -126,13 +126,14 @@ def create_receipt_items(
         for item in unit_items:
             if promocode_amount == 0:
                 items.append(item)
-            
-            if item['Price'] <= promocode_amount:
-                promocode_amount -= item['Price']
             else:
-                item['Price'] -= promocode_amount
-                promocode_amount = 0
-                items.append(item)
+                if item['Price'] <= promocode_amount:
+                    promocode_amount -= item['Price']
+                else:
+                    item['Price'] -= promocode_amount
+                    item['Amount'] = item['Price'] * item['Quantity']
+                    promocode_amount = 0
+                    items.append(item)
     else:
         items = unit_items
 
