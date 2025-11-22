@@ -119,6 +119,8 @@ def create_receipt_items(
                 'Tax': 'vat5',
             })
     
+    logging.getLogger('pay').info(f'Промокод: {promocode_amount} Товары без скидки промокода: {unit_items}')
+
     if promocode_amount:
         promocode_amount *= 100
         for item in unit_items:
