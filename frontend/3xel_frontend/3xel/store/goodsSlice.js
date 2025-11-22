@@ -62,7 +62,7 @@ export const fetchGoods = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const goods = await apiFetch('/api-order/catalogue/')
-      return goods.reverse()
+      return goods
     } catch (error) {
       return rejectWithValue(
         error?.message || error?.payload?.error || 'Не удалось получить каталог',
