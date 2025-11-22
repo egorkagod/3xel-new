@@ -6,13 +6,11 @@ class CdekInfoSchema(BaseModel):
     city_code: int | None = None
     city: str
     address: str
-    tariff_code: int
-    
+    tariff_code: int    
 
 class OrderCreateSchema(BaseModel):
     goods: list[int] = list()
     certificates: list[dict] = list()
-    # Может быть либо числовым id файла, либо ссылкой
     video_id: int | str | None = None
     previous_order_id: int | None = Field(None, alias='order_id')
     promocode: uuid.UUID | None = None
