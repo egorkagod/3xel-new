@@ -7,6 +7,8 @@ class CdekInfoSchema(BaseModel):
     city: str
     address: str
     tariff_code: int    
+    pvz_code: int | None
+    
 
 class OrderCreateSchema(BaseModel):
     goods: list[int] = list()
