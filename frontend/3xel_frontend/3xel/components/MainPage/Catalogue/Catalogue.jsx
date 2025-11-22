@@ -34,7 +34,7 @@ export default function Catalogue() {
         }, {})
 
         const resultBusts = []
-        resultBusts.push(Object.entries(busts)[0])
+        resultBusts.push(Object.entries(busts)[1])
         const filtered = resultBusts.filter(item => item[0] !== 'Картонный бюст')
         const result = resultBusts.concat(filtered)
 
