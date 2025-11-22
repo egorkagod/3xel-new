@@ -128,7 +128,8 @@ def create_receipt_items(
             else:
                 item['Price'] -= promocode_amount
                 items.append(item)
-
+    else:
+        items = unit_items
 
     if delivery_cost:
         items.append({
