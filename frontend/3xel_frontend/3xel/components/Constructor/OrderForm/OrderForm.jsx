@@ -91,9 +91,6 @@ export default function OrderForm() {
                     door: [137, 233],
                     pickup: [368, 378],
                 },
-                onCalculate(tariff) {
-                    // console.log(tariff)
-                },
                 onChoose(mode, tariff, address) {
                     setSelectedAddress(address)
                     setSelectedTariff(tariff)

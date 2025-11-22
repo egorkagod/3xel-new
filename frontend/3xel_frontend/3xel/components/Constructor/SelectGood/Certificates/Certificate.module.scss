@@ -23,9 +23,10 @@
         }
 
         .image {
-            width: 100%;
-            border-radius: 12px 12px 0 0;
-            object-fit: cover;
+            width: 95%;
+            height: auto;
+            border-radius: 12px;
+            object-fit: contain;
             visibility: hidden;
             opacity: 0;
             transition: all 1s ease;

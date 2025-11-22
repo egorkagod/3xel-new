@@ -194,7 +194,7 @@ export default function GoodCard({ goods, forConstructor }) {
                 {good?.name === 'Картонный бюст' ? null : (
                     <div className={classes.colorsBlock}>
                         {forConstructor ? (
-                            <span>Цвет (PLA Matte)</span>
+                            <span>Цвет</span>
                         ) : (null)}
                         <div className={classes.colors}>
                             {uniqueColors ? (
