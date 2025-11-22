@@ -120,6 +120,7 @@ def create_receipt_items(
             })
     
     if promocode_amount:
+        promocode_amount *= 100
         for item in unit_items:
             if item['Price'] <= promocode_amount:
                 promocode_amount -= item['Price']
