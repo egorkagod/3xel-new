@@ -9,6 +9,7 @@ export default function Catalogue() {
     const goods = useSelector((state) => state.goods.busts)
     const status = useSelector((state) => state.goods.status)
     const error = useSelector((state) => state.goods.error)
+    const reverseGoods = goods.reverse()
     
     const renderGoods = () => {
         if (status === 'loading') {
@@ -23,7 +24,7 @@ export default function Catalogue() {
             return <span className={classes.stateMessage}>Каталог пока пуст.</span>
         }
 
-        const resultGoods = goods.reduce((acc, cur) => {
+        const resultGoods = reverseGoods.reduce((acc, cur) => {
             const newKey = cur.name
             if (!acc[newKey]) {
                 acc[newKey] = []

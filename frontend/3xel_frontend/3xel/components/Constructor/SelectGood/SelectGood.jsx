@@ -8,6 +8,7 @@ export default function SelectGood() {
     const certificates = useSelector((state) => state.goods.certificates)
     const goodsStatus = useSelector((state) => state.goods.status)
     const goodsError = useSelector((state) => state.goods.error)
+    const reverseGoods = goods.reverse()
     
     const renderGoods = () => {
         if (goodsStatus === 'loading') {
@@ -22,7 +23,7 @@ export default function SelectGood() {
             return <span className={classes.stateMessage}>Каталог пока пуст.</span>
         }
 
-        const resultGoods = goods.reduce((acc, cur) => {
+        const resultGoods = reverseGoods.reduce((acc, cur) => {
             const newKey = cur.name
             if (!acc[newKey]) {
                 acc[newKey] = []
