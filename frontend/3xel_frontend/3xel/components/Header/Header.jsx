@@ -1,5 +1,5 @@
 import classes from './Header.module.scss'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import classNames from 'classnames'
 import Button from '../Button/Button'
 import { Link, useLocation } from 'react-router-dom'
@@ -12,6 +12,10 @@ export default function Header() {
     const user = useSelector((state) => state.user.data)
     const location = useLocation()
 
+    const handleClick = () => {
+        window.scrollTo(0, 0)
+    }
+
     return (
         <header className={classes.header}>
             <div className={classNames(classes.burgerMenu, { [classes.active]: isActive })} onClick={() => setIsActive(prev => !prev)}>
@@ -19,7 +23,7 @@ export default function Header() {
             </div>
             <nav className={classes.navigationContainer}>
                 <Link style={{ all: 'unset' }} to='/'>
-                    <div className={classes.brand}>
+                    <div className={classes.brand} onClick={handleClick}>
                         <div className={classes.logo}></div>
                         <span>3XEL</span>
                     </div>
