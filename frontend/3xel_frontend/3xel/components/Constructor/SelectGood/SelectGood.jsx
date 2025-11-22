@@ -8,7 +8,7 @@ export default function SelectGood() {
     const certificates = useSelector((state) => state.goods.certificates)
     const goodsStatus = useSelector((state) => state.goods.status)
     const goodsError = useSelector((state) => state.goods.error)
-    const reverseGoods = goods.reverse()
+    const reverseGoods = [...goods].reverse()
     
     const renderGoods = () => {
         if (goodsStatus === 'loading') {

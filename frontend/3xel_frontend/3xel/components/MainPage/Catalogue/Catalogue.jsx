@@ -9,7 +9,7 @@ export default function Catalogue() {
     const goods = useSelector((state) => state.goods.busts)
     const status = useSelector((state) => state.goods.status)
     const error = useSelector((state) => state.goods.error)
-    const reverseGoods = goods.reverse()
+    const reverseGoods = [...goods].reverse()
     
     const renderGoods = () => {
         if (status === 'loading') {
