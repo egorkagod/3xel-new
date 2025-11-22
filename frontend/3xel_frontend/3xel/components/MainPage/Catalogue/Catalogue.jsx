@@ -33,7 +33,7 @@ export default function Catalogue() {
             return acc
         }, {})
 
-        return Object.entries(resultGoods).reverse().map(([name, items]) => (
+        return Object.entries(resultGoods).map(([name, items]) => (
             <GoodCard key={name} goods={items}></GoodCard>
         ))
     }
