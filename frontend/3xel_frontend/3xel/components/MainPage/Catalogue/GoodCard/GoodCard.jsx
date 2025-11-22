@@ -165,7 +165,26 @@ export default function GoodCard({ goods, forConstructor }) {
                     null
                 ) : (
                     <div className={classes.description}>
-                        {good?.description}
+                        {good?.name === 'Картонный бюст' ? (
+                            <>
+                                <span>
+                                    Бюст из слоёв плотного картона, который собирается без клея по подробной инструкции.
+                                </span> <br />
+                                <br />
+                                <span>— Высота ~18 см</span> <br />
+                                <span>— Чёткий силуэт и узнаваемый профиль</span> <br />
+                                <span>— Собирается за вечер</span> <br />
+                                <span>— Подходит как творческий подарок и совместная активность</span>
+                            </>
+                        ) : (
+                            <>
+                                <span>Печатаем бюст на 3D-принтере из PLA эко пластика</span><br />
+                                <br />
+                                <span>— Высоты: 10, 12, 14, 16, 18, 20 см</span> <br />
+                                <span>— Матовый пластик, аккуратная проработка лица и формы</span> <br />
+                                <span>— Готов к вручению «из коробки»</span>
+                            </>
+                        )}
                     </div>
                 )}
                 {forConstructor ? (
