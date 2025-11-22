@@ -66,7 +66,14 @@ export default function Certificate({ certificate, id, isPrototype }) {
                             <Button color='golden'>Выбрать номинал</Button>
                         </HashLink>
                     ) : (
-                        <Button color='golden' onClick={handleAddTocart}>Добавить</Button>
+                        <div>
+                            <Button color='golden' onClick={handleAddTocart}>Добавить</Button>
+                            <Button color='white' >
+                                <a href="https://www.wildberries.ru/catalog/622369541/detail.aspx?targetUrl=GP" style={{ all: 'unset' }}>
+                                    Заказать на Wildberries
+                                </a>
+                            </Button>
+                        </div>
                     )}
                 </div>
             </div>
