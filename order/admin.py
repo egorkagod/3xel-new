@@ -131,12 +131,7 @@ class BaseOrderStatusAdmin(admin.ModelAdmin):
         if not goods_rows and not cert_rows:
             return '-'
 
-        rows = format_html(
-            '',
-            '{}{}',
-            goods_rows,
-            cert_rows,
-        )
+        rows = format_html('{}{}', goods_rows, cert_rows)
         return format_html('<ol style="margin:0;padding-left:18px">{}</ol>', rows)
     order_items.short_description = 'Состав заказа'
 
