@@ -7,7 +7,7 @@ class CdekInfoSchema(BaseModel):
     city: str
     address: str
     tariff_code: int    
-    pvz_code: int | None
+    pvz_code: str | None
     
 
 class OrderCreateSchema(BaseModel):
