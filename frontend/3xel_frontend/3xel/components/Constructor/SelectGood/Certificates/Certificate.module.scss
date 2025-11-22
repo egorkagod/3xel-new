@@ -105,6 +105,11 @@
                 cursor: pointer;
             }
         }
+
+        .buttonsBlock {
+            display: flex;
+            gap: 20px;
+        }
     }
 
     @media (max-width: 767px) {
