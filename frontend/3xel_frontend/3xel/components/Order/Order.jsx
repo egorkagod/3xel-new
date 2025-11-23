@@ -13,10 +13,9 @@ export default function Order() {
     const error = useSelector(state => state.order.error)
     const order = useSelector(state => state.order.order)
     const navigate = useNavigate()
-    console.log(order)
 
     const goodsAmount = useMemo(() => {
-        order.items.reduce((acc, cur) => (acc + cur.good_variant.price) * cur.quantity, 0)
+        order.items?.reduce((acc, cur) => (acc + cur.good_variant.price) * cur.quantity, 0)
     }, [order])
 
     const dispatcher = useDispatch()
