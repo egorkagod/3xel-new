@@ -191,6 +191,14 @@ export default function GoodCard({ goods, forConstructor }) {
                         ) : (null)}
                     </div>
                 </div>
+                {forConstructor ? (
+                    null
+                ) : (
+                    <div className={classes.priceBlock}>
+                        <span className={classes.priceHeader}>Цена</span>
+                        <span className={classes.price}>{selectedGood?.cost} ₽</span>
+                    </div>
+                )}
                 {good?.name === 'Картонный бюст' ? null : (
                     <div className={classes.colorsBlock}>
                         {forConstructor ? (

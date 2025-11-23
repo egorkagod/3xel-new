@@ -74,6 +74,29 @@
             }
         }
 
+        .priceBlock {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .priceHeader {
+                font-size: 14px;
+                color: #6e6a65;
+            }
+
+            .price {
+                background: #d8b98a59;
+                padding: 6px 10px;
+                color: #000;
+                box-shadow: 0 0 0 2px #d8b98a59;
+                border: 1px solid rgba(0,0,0,.06);
+                border-radius: 999px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
         .description {
             color: #6E6A60;
             font-size: 16px;
