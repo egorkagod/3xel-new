@@ -15,7 +15,7 @@ export default function Order() {
     const navigate = useNavigate()
 
     const goodsAmount = useMemo(() => {
-        order.items?.reduce((acc, cur) => (acc + Number(cur.good_variant?.price)) * Number(cur.quantity), 0)
+        return order.items?.reduce((acc, cur) => (acc + Number(cur.good_variant?.price)) * Number(cur.quantity), 0)
     }, [order])
 
     const dispatcher = useDispatch()
@@ -74,9 +74,9 @@ export default function Order() {
                             <Button color='white'>Назад</Button>
                         </Link>
                         {order.status === 'Завершен' ? (
-                                <Button color='golden' onClick={() => navigate('/constructor#select', {
-                                    state: { value: order.id, label: `Заказ #${String(order.id ?? '')}` }
-                                })}>Повторить заказ</Button>
+                            <Button color='golden' onClick={() => navigate('/constructor#select', {
+                                state: { value: order.id, label: `Заказ #${String(order.id ?? '')}` }
+                            })}>Повторить заказ</Button>
                         ) : null}
                     </div>
                 </div>
