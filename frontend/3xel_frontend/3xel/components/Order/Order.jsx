@@ -51,7 +51,8 @@ export default function Order() {
                                     <span className={classes.color}>Цвет:</span>
                                     <div style={{ borderRadius: '50%', width: '24px', height: '24px', background: item.good_variant.color }}></div>
                                 </div>
-                                <span className={classes.cost}>{item.good_variant.cost} ₽</span>
+                                <span className={classes.cost}>{item.good_variant.price} ₽</span>
+                                <span>Количество: {item.good_variant.quantity} шт.</span>
                                 <HashLink style={{ all: 'unset' }} to='/constructor#goods'>
                                     <Button color='golden'>К товарам</Button>
                                 </HashLink>
