@@ -13,6 +13,7 @@ export default function Order() {
     const error = useSelector(state => state.order.error)
     const order = useSelector(state => state.order.order)
     const navigate = useNavigate()
+    console.log(order)
 
     const dispatcher = useDispatch()
     const { id } = useParams()

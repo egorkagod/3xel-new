@@ -9,7 +9,6 @@ export default function Cart() {
 
     const cart = useSelector(state => state.cart.items)
     const dispatcher = useDispatch()
-    console.log(cart)
 
     return (
         <section className={classes.cartSection}>
