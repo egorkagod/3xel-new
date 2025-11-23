@@ -14,8 +14,8 @@ export default function Order() {
     const order = useSelector(state => state.order.order)
     const navigate = useNavigate()
 
-    const goodsAmount = useMemo(() => {
-        return order.items?.reduce((acc, cur) => (acc + Number(cur.good_variant?.price)) * Number(cur.quantity), 0)
+    const goodsAmountQuantity = useMemo(() => {
+        return order.items?.reduce((acc, cur) => acc + cur.quantity, 0)
     }, [order])
 
     const dispatcher = useDispatch()
@@ -66,9 +66,9 @@ export default function Order() {
                 <div className={classes.orderResult}>
                     <div className={classes.costAmount}>
                         <strong>Итоговая стоимость:</strong>
-                        <span className={classes.result}>{order.amount} ₽ (Включая доставку: {order.amount - goodsAmount} ₽)</span>
+                        <span className={classes.result}>{order.amount} ₽</span>
                     </div>
-                    <span className={classes.itemsAmount}>Количество товаров: <b>{order?.items?.length}</b></span>
+                    <span className={classes.itemsAmount}>Количество товаров: <b>{goodsAmountQuantity}</b></span>
                     <div className={classes.buttons}>
                         <Link style={{ all: 'unset' }} to='/profile'>
                             <Button color='white'>Назад</Button>
