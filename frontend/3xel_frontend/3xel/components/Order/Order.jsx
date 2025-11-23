@@ -15,7 +15,7 @@ export default function Order() {
     const navigate = useNavigate()
 
     const goodsAmount = useMemo(() => {
-        order.items?.reduce((acc, cur) => (acc + cur.good_variant.price) * cur.quantity, 0)
+        order.items?.reduce((acc, cur) => (acc + Number(cur.good_variant?.price)) * Number(cur.quantity), 0)
     }, [order])
 
     const dispatcher = useDispatch()
