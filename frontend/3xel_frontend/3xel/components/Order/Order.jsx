@@ -2,7 +2,7 @@ import classes from './Order.module.scss'
 import { useParams } from 'react-router-dom'
 import { fetchOrder } from '../../store/orderSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import Button from '../Button/Button'
 import { HashLink } from 'react-router-hash-link'
 import { Link, useNavigate } from 'react-router-dom'
@@ -14,6 +14,10 @@ export default function Order() {
     const order = useSelector(state => state.order.order)
     const navigate = useNavigate()
     console.log(order)
+
+    const goodsAmount = useMemo(() => {
+        order.items.reduce((acc, cur) => (acc + cur.good_variant.price) * cur.quantity, 0)
+    }, [order])
 
     const dispatcher = useDispatch()
     const { id } = useParams()
@@ -63,7 +67,7 @@ export default function Order() {
                 <div className={classes.orderResult}>
                     <div className={classes.costAmount}>
                         <strong>Итоговая стоимость:</strong>
-                        <span className={classes.result}>{order.amount} ₽</span>
+                        <span className={classes.result}>{order.amount} ₽ (Включая доставку: {order.amount - goodsAmount} ₽)</span>
                     </div>
                     <span className={classes.itemsAmount}>Количество товаров: <b>{order?.items?.length}</b></span>
                     <div className={classes.buttons}>
