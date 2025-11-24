@@ -12,6 +12,11 @@ const DEFAULT_COLOR = '#d8b98a'
 
 export default function GoodCard({ goods, forConstructor }) {
 
+    useEffect(() => {
+        if (goods) {
+            console.log(goods)
+        }
+    }, [goods])
     const dispatcher = useDispatch()
     const good = goods?.[0]
 
@@ -194,7 +199,7 @@ export default function GoodCard({ goods, forConstructor }) {
                 {forConstructor ? (
                     <div className={classes.priceBlock}>
                         <span className={classes.priceHeader}>Цена</span>
-                        <span className={classes.price}>{selectedGood?.cost} ₽</span>
+                        <span className={classes.price}>{selectedGood.cost} ₽</span>
                     </div>
                 ) : (
                     null
