@@ -9,7 +9,7 @@ import { apiFetch } from '../../../utils/apiClient'
 import { uploadFileChunks } from '../../../utils/fileUpload'
 import { setIsRepeat, clearCart, setPromo } from '../../../store/cartSlice'
 
-const MAX_FILE_SIZE = 500 * 1024 * 1024
+const MAX_FILE_SIZE = 1500 * 1024 * 1024
 
 export default function OrderForm() {
     const location = useLocation()
@@ -243,7 +243,7 @@ export default function OrderForm() {
 
         if (file.size > MAX_FILE_SIZE) {
             setSelectedFile(null)
-            setError('file', { type: 'manual', message: 'Размер файла не должен превышать 500 МБ' })
+            setError('file', { type: 'manual', message: 'Размер файла не должен превышать 1,5 ГБ' })
             event.target.value = ''
             return
         }
