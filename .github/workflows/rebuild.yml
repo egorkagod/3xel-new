@@ -21,6 +21,5 @@ jobs:
             git pull origin
             make npm-install
             make build
-            pkill gunicorn
             make migrate
-            make gun-start
+            make restart-site

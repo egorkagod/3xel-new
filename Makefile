@@ -13,7 +13,7 @@ REDIS_PID := /var/run/redis/redis-server.pid
 .PHONY: gun-start gun-stop gun-restart \
         celery-start celery-stop celery-restart \
         redis-start redis-stop redis-restart \
-        restart-site
+        restart-site npm-install build migrate
 
 # Ensure directories exist
 prepare-dirs:
@@ -108,6 +108,19 @@ restart-site: gun-restart celery-restart redis-restart
 	@echo "==============================="
 	@echo "       SITE RESTARTED ✔"
 	@echo "==============================="
+
+#######################################
+#           Frontend & Django
+#######################################
+
+npm-install:
+	cd frontend/3xel_frontend/3xel && npm ci
+
+build:
+	cd frontend/3xel_frontend/3xel && npm run build
+
+migrate:
+	$(PYTHON) manage.py migrate --noinput
 
 push:
 	git add . && git commit -m "update" && git push
