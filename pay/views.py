@@ -47,3 +47,9 @@ class PromocodeCheckView(APIView):
             return Response({'message': 'Промокод не найден или был использован'}, status=status.HTTP_400_BAD_REQUEST)
         id, denomination = result
         return Response({'id': id, 'denomination': denomination}, status=status.HTTP_200_OK)
+    
+
+class PromocodeGetPrices(APIView):
+    def get(self, request):
+        denominations = promo_service.get_all_prices()
+        return Response({'promocodes': denominations})

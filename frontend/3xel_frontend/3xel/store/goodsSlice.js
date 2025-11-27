@@ -83,8 +83,8 @@ const initialState = {
       height: 1,
       weight: 100,
       images: [
-        '/media/images/certificates/1.png',
-        '/media/images/certificates/2.png',
+        '/media/images/certificates/1.webp',
+        '/media/images/certificates/2.webp',
       ],
       description: 'Карточный сертификат — это осязаемый знак внимания. Его приятно держать в руках, дарить лично и открывать как маленький секрет. Получатель сам определит, какое видео станет основой для бюста и какой вариант исполнения ему ближе. Такой подарок запоминается надолго.',
     },

@@ -6,7 +6,7 @@ import csv
 import io
 from openpyxl import load_workbook
 
-from .models import Payment, Promocode
+from .models import Payment, Promocode, PromocodePrices
 
 
 @admin.register(Payment)
@@ -118,3 +118,9 @@ class PromocodeAdmin(admin.ModelAdmin):
                 updated += 1
 
         return created, updated, skipped
+
+
+@admin.register(PromocodePrices)
+class PromocodePricesAdmin(admin.ModelAdmin):
+    fields = ['price']
+    list_display = ['price']

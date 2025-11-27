@@ -70,3 +70,11 @@ class Promocode(models.Model):
     )    
     promo = models.CharField(max_length=40, unique=True)
     is_used = models.BooleanField(default=False)
+
+
+class PromocodePrices(models.Model):
+    class Meta:
+        verbose_name = 'Номинал промокода'
+        verbose_name_plural = 'Номиналы промокодов'
+        
+    price = models.IntegerField()

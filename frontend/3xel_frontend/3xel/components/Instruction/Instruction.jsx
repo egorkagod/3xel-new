@@ -10,7 +10,7 @@ export default function Instruction() {
             </div>
             <section className={classes.recomendations}>
                 <h2>Быстрый чек-лист перед съёмкой</h2>
-                <Point number={1} header='Протрите объективы.' img='/media/images/instruction/clear_cam.png' alt='Чистый объектив камеры'>
+                <Point number={1} header='Протрите объективы.' img='/media/images/instruction/clear_cam.webp' alt='Чистый объектив камеры'>
                     Салфеткой или мягкой тканью — меньше бликов и размытия.
                 </Point>
                 <Point number={2} header='Поставьте правильное качество.' img='/media/images/instruction/options.jpg' alt='Настройка 4K/60FPS'>
@@ -83,7 +83,7 @@ export default function Instruction() {
                         </span>
                     </div>
                 </div>
-                <img src='/media/images/instruction/steps.png' alt="Схема: четыре круга вокруг бюста" />
+                <img src='/media/images/instruction/steps.webp' alt="Схема: четыре круга вокруг бюста" />
             </section>
             <section className={classes.examples}>
                 <div className={classes.examplesTitle}>

@@ -1,5 +1,5 @@
 import uuid
-from pay.models import Promocode
+from pay.models import Promocode, PromocodePrices
 
 
 def check(promocode: str) -> tuple[str, int] | None:
@@ -14,3 +14,8 @@ def confirm(promocode: uuid.UUID | None) -> int:
     if promo_obj:
         return promo_obj.denomination
     return 0
+
+
+def get_all_prices() -> list[int]:
+    denominations = PromocodePrices.objects.values_list('price', flat=True)
+    return list(denominations)
